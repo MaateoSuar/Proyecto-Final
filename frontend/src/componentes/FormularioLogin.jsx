@@ -12,14 +12,40 @@ export default function FormularioLogin() {
     setMostrarContrasena(!mostrarContrasena);
   };
 
-  const manejarLogin = () => {
+  const handleLogin = async () => {
     if (!correo || !contrasena) {
       alert('Por favor, completa todos los campos.');
       return;
     }
-
-    alert('Login simulado: listo para conectarse al backend MERN!');
+  
+    try {
+      const respuesta = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: correo,
+          password: contrasena,
+        }),
+      });
+  
+      const data = await respuesta.json();
+  
+      if (!respuesta.ok) {
+        throw new Error(data.message || 'Credenciales inválidas');
+      }
+  
+      // Acá podrías guardar el token si tu backend lo envía
+      alert('Inicio de sesión exitoso');
+      // Redirigir o guardar el token según lo que necesites
+      console.log('Token:', data.token);
+  
+    } catch (error) {
+      alert('Error al iniciar sesión: ' + error.message);
+    }
   };
+  
 
   return (
     <div className="contenedor-login">
@@ -56,7 +82,7 @@ export default function FormularioLogin() {
 
       <div className="olvide-contrasena">¿Olvidaste tu contraseña?</div>
 
-      <button className="boton-login" onClick={manejarLogin}>
+      <button className="boton-login" onClick={handleLogin}>
         Ingresar
       </button>
 
