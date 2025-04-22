@@ -1,4 +1,6 @@
+// src/componentes/FormularioLogin.jsx
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../estilos/login.css';
 
 export default function FormularioLogin() {
@@ -55,14 +57,13 @@ export default function FormularioLogin() {
       <div className="olvide-contrasena">¿Olvidaste tu contraseña?</div>
 
       <button className="boton-login" onClick={manejarLogin}>
-        INGRESAR
+        Ingresar
       </button>
 
       <div className="divisor"></div>
 
       <div className="crear-cuenta">
-        ¿No tienes una cuenta?
-        <a href="#">Crear cuenta</a>
+        ¿No tienes una cuenta? <Link to="/registro">Crear cuenta</Link>
       </div>
     </div>
   );
