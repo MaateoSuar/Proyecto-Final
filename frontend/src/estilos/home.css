@@ -1,0 +1,245 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #fdf5dc;
+  font-family: 'Segoe UI', sans-serif;
+  overflow-x: hidden;
+}
+
+.pagina-home {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  background-color: #fdf5dc;
+  color: #333;
+}
+
+/* Header usuario */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-top: 10px;
+}
+
+.avatar {
+  background-color: #d6e6c3;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+}
+
+.greeting .name {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.greeting .subtext {
+  color: #9c9c9c;
+  font-size: 14px;
+}
+
+/* Cajas secciones */
+.pets-box,
+.services-box,
+.plans-box,
+.care-box {
+  background-color: #fdf9e9;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #875e39;
+}
+
+/* Mascotas */
+.pets {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pet-img, .pet-add {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.pet-img {
+  background-color: #ddd;
+  background-size: cover;
+  background-position: center;
+}
+
+.pet-add {
+  border: 2px dashed #a06d44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #a06d44;
+  cursor: pointer;
+}
+
+/* Busqueda */
+.search-box {
+  display: flex;
+  align-items: center;
+  border: 2px solid #caa878;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #fdf5dc;
+  color: #333;
+}
+
+.search-icon {
+  width: 36px;
+  height: 36px;
+  background-color: #a06d44;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Servicios */
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 12px;
+}
+
+.service-card {
+  background-color: #dce8c3;
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #3d3d3d;
+}
+
+.service-card img {
+  width: 36px;
+  margin-bottom: 6px;
+}
+
+/* Planes */
+.plans {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+}
+
+.plan-card {
+  background-color: #f1f7e7;
+  padding: 12px;
+  border-radius: 12px;
+  min-width: 180px;
+  font-size: 14px;
+}
+
+.plan-card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+.plan-card strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.view-btn {
+  margin-top: 10px;
+  display: inline-block;
+  font-size: 13px;
+  color: white;
+  background-color: #a06d44;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* Cuidadores */
+.care-card {
+  background-color: #fdf9e9;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.care-person {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.care-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd;
+  background-size: cover;
+  background-position: center;
+}
+
+.care-info {
+  font-size: 14px;
+}
+
+.care-info .name {
+  font-weight: bold;
+}
+
+/* Footer */
+.footer {
+  margin-top: 30px;
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+  color: #875e39;
+}
+
+.footer span {
+  color: #e15757;
+}
+
+/* Responsive para tablets y desktop */
+@media (min-width: 768px) {
+  .pagina-home {
+    max-width: 700px;
+    margin-top: 40px;
+  }
+
+  .plans {
+    gap: 20px;
+  }
+
+  .plan-card {
+    min-width: 200px;
+  }
+
+  .pets {
+    justify-content: flex-start;
+  }
+}

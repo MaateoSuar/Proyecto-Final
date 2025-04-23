@@ -1,12 +1,12 @@
-// src/componentes/FormularioLogin.jsx
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../estilos/login.css';
 
 export default function FormularioLogin() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const navigate = useNavigate();
 
   const alternarContrasena = () => {
     setMostrarContrasena(!mostrarContrasena);
@@ -18,7 +18,17 @@ export default function FormularioLogin() {
       return;
     }
 
-    alert('Login simulado: listo para conectarse al backend MERN!');
+    // Simular autenticación
+    const usuario = {
+      nombre: 'Juan', // Puedes reemplazar esto cuando conectes con el backend
+      correo: correo
+    };
+
+    // Guardar usuario en localStorage
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+
+    // Redirigir a página principal
+    navigate('/inicio');
   };
 
   return (
