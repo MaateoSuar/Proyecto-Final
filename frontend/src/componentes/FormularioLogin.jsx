@@ -1,3 +1,4 @@
+// src/componentes/FormularioLogin.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../estilos/login.css';
@@ -6,30 +7,46 @@ export default function FormularioLogin() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const alternarContrasena = () => {
     setMostrarContrasena(!mostrarContrasena);
   };
 
-  const manejarLogin = () => {
+  const handleLogin = async () => {
     if (!correo || !contrasena) {
       alert('Por favor, completa todos los campos.');
       return;
     }
-
-    // Simular autenticación
-    const usuario = {
-      nombre: 'Juan', // Puedes reemplazar esto cuando conectes con el backend
-      correo: correo
-    };
-
-    // Guardar usuario en localStorage
-    localStorage.setItem('usuario', JSON.stringify(usuario));
-
-    // Redirigir a página principal
-    navigate('/inicio');
+  
+    try {
+      const respuesta = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: correo,
+          password: contrasena,
+        }),
+      });
+  
+      const data = await respuesta.json();
+  
+      if (!respuesta.ok) {
+        throw new Error(data.message || 'Credenciales inválidas');
+      }
+  
+      // Acá podrías guardar el token si tu backend lo envía
+      alert('Inicio de sesión exitoso');
+      navigate('/inicio');
+      console.log('Token:', data.token);
+  
+    } catch (error) {
+      alert('Error al iniciar sesión: ' + error.message);
+    }
   };
+  
 
   return (
     <div className="contenedor-login">
@@ -54,7 +71,7 @@ export default function FormularioLogin() {
             type={mostrarContrasena ? 'text' : 'password'}
             id="contrasena"
             className="input-contrasena"
-            placeholder="**********"
+            placeholder="****"
             value={contrasena}
             onChange={(e) => setContrasena(e.target.value)}
           />
@@ -66,7 +83,7 @@ export default function FormularioLogin() {
 
       <div className="olvide-contrasena">¿Olvidaste tu contraseña?</div>
 
-      <button className="boton-login" onClick={manejarLogin}>
+      <button className="boton-login" onClick={handleLogin}>
         Ingresar
       </button>
 

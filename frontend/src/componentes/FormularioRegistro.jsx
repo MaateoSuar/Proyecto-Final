@@ -21,20 +21,38 @@ export default function FormularioRegistro() {
     setFormulario({ ...formulario, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (formulario.password !== formulario.confirmPassword) {
       alert('Las contraseñas no coinciden.');
       return;
     }
-
-    // Simulación: aquí iría tu POST al backend
-    console.log('Registrado:', formulario);
-    alert('Registro simulado exitoso. Redirigiendo al login...');
-
   
-    navigate('/login');
+    try {
+      const respuesta = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fullName: formulario.fullName,
+          email: formulario.email,
+          password: formulario.password,
+        }),
+      });
+  
+      const data = await respuesta.json();
+  
+      if (!respuesta.ok) {
+        throw new Error(data.message || 'Error al registrarse');
+      }
+  
+      alert('Registro exitoso. Redirigiendo al login...');
+      navigate('/login');
+    } catch (error) {
+      alert('Error: ' + error.message);
+    }
   };
 
   return (
