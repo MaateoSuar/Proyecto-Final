@@ -1,7 +1,6 @@
 export default function Planes() {
     return (
       <div className="plans-box">
-        <div className="section-title">Planes</div>
         <div className="plans">
           <div className="plan-card">
             <img src="/img/plan1.jpg" alt="Baño Canino" />

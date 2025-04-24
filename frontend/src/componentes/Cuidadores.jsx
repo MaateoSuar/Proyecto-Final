@@ -1,7 +1,6 @@
 export default function Cuidadores() {
     return (
       <div className="care-box">
-        <div className="section-title">Cuidadores cerca de ti</div>
         <div className="care-card">
           <div className="care-person">
             <div className="care-avatar" style={{ backgroundImage: "url('/img/user1.jpg')" }}></div>
