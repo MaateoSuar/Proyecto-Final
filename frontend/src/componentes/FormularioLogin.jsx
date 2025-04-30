@@ -36,9 +36,11 @@ export default function FormularioLogin() {
       if (!respuesta.ok) {
         throw new Error(data.message || 'Credenciales inválidas');
       }
+      
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('usuario', JSON.stringify(data.usuario));
   
       // Acá podrías guardar el token si tu backend lo envía
-      alert('Inicio de sesión exitoso');
       navigate('/inicio');
       console.log('Token:', data.token);
   

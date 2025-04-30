@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import "../estilos/profile.css";
 
 export default function UsuarioEdit() {
@@ -10,18 +11,31 @@ export default function UsuarioEdit() {
     faceVerification: true,
   });
 
+  const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
 
   // ✅ Cargar datos desde localStorage
   useEffect(() => {
-    const usuario = JSON.parse(localStorage.getItem("usuario"));
-    if (usuario?.fullName) {
-      setForm((prev) => ({
-        ...prev,
-        name: usuario.fullName,  // Asigna el nombre completo al estado
-      }));
-    }
+    const token = localStorage.getItem("token"); // Asegúrate que esté guardado tras login
+  
+    fetch("http://localhost:5000/api/auth/perfil", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setForm({
+          name: data.fullName || "",
+          phone: data.phone || "",
+          address: data.address || "", // asegurate que coincida con el nombre de campo real
+          idPhoto: true, // ajustar si tenés esos datos en backend
+          faceVerification: true,
+        });
+      })
+      .catch((err) => console.error("Error al obtener perfil:", err));
   }, []); // Se ejecuta solo al cargar el componente
 
   const handleChange = (e) => {
@@ -32,10 +46,37 @@ export default function UsuarioEdit() {
     }));
   };
 
-  const handleSave = () => {
-    console.log("Formulario guardado:", form);
-    alert("Datos guardados correctamente.");
-  };
+  const handleSave = async () => {
+    const token = localStorage.getItem("token");
+  
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/perfil", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          fullName: form.name,
+          address: form.address,
+          phone: form.phone,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.msg || "Error al actualizar los datos.");
+      }
+  
+      alert("Datos guardados correctamente.");
+      navigate('/inicio');
+      console.log("Respuesta:", data);
+    } catch (error) {
+      console.error("Error al guardar:", error);
+      alert("Ocurrió un error al guardar los datos.");
+    }
+  };  
 
   const handleAvatarClick = () => {
     fileInputRef.current.click();

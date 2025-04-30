@@ -1,3 +1,4 @@
+// controller/authController.js
 const Usuario = require('../models/Usuario.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -14,7 +15,9 @@ const registrarUsuario = async (req, res) => {
     const nuevoUsuario = new Usuario({
       fullName,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      address: "",
+      phone: ""
     });
 
     await nuevoUsuario.save();
@@ -28,6 +31,19 @@ const registrarUsuario = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ msg: 'Error del servidor' });
+  }
+};
+
+const obtenerPerfil = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const usuario = await Usuario.findById(userId).select('-password'); // excluye password
+    if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" });
+
+    res.json(usuario);
+  } catch (error) {
+    res.status(500).json({ msg: "Error al obtener el perfil" });
   }
 };
 
@@ -52,4 +68,21 @@ const loginUsuario = async (req, res) => {
     res.status(500).json({ msg: 'Error del servidor' });
   }
 };
-module.exports = {	loginUsuario, registrarUsuario };
+
+const updateProfile = async (req, res) => {
+  const userId = req.user.id; // asumimos que el middleware agrega `req.user`
+  const { fullName, address, phone } = req.body;
+
+  try {
+    const updatedUser = await Usuario.findByIdAndUpdate(
+      userId,
+      { fullName, address, phone },
+      { new: true, runValidators: true }
+    );
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ error: "Error al actualizar perfil" });
+  }
+};
+
+module.exports = {	loginUsuario, registrarUsuario, updateProfile, obtenerPerfil };
