@@ -3,8 +3,7 @@ import "../estilos/profile.css";
 
 export default function UsuarioEdit() {
   const [form, setForm] = useState({
-    firstName: "Juanse",
-    lastName: "Gutierrez",
+    name: "Juanse Gutierrez",
     phone: "+54 381 123-4567",
     address: "69 Perón Ave, Yerba Buena, TUC",
     idPhoto: true,
@@ -62,21 +61,11 @@ export default function UsuarioEdit() {
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
         <label>
-          <span>First Name</span>
+          <span>Name</span>
           <input
-            name="firstName"
+            name="name"
             type="text"
-            value={form.firstName}
-            onChange={handleChange}
-          />
-        </label>
-
-        <label>
-          <span>Last Name</span>
-          <input
-            name="lastName"
-            type="text"
-            value={form.lastName}
+            value={form.name}
             onChange={handleChange}
           />
         </label>
