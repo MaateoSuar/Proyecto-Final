@@ -14,7 +14,9 @@ const registrarUsuario = async (req, res) => {
     const nuevoUsuario = new Usuario({
       fullName,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      adress: "",
+      phone: ""
     });
 
     await nuevoUsuario.save();
@@ -46,4 +48,21 @@ const loginUsuario = async (req, res) => {
     res.status(500).json({ msg: 'Error del servidor' });
   }
 };
-module.exports = {	loginUsuario, registrarUsuario };
+
+const updateProfile = async (req, res) => {
+  const userId = req.user.id; // asumimos que el middleware agrega `req.user`
+  const { fullName, adress, phone } = req.body;
+
+  try {
+    const updatedUser = await Usuario.findByIdAndUpdate(
+      userId,
+      { fullName, adress, phone },
+      { new: true, runValidators: true }
+    );
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ error: "Error al actualizar perfil" });
+  }
+};
+
+module.exports = {	loginUsuario, registrarUsuario, updateProfile };
