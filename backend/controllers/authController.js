@@ -19,7 +19,13 @@ const registrarUsuario = async (req, res) => {
 
     await nuevoUsuario.save();
 
-    res.status(201).json({ msg: 'Usuario registrado correctamente' });
+    res.status(201).json({ 
+      msg: 'Usuario registrado correctamente',
+      usuario: {
+        fullName: nuevoUsuario.fullName,
+        email: nuevoUsuario.email,
+      }
+    });
   } catch (error) {
     res.status(500).json({ msg: 'Error del servidor' });
   }

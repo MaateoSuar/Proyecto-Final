@@ -48,12 +48,19 @@ export default function FormularioRegistro() {
         throw new Error(data.message || 'Error al registrarse');
       }
   
-      alert('Registro exitoso. Redirigiendo al login...');
-      navigate('/login');
+      // ✅ GUARDAR EN LOCALSTORAGE
+      localStorage.setItem(
+        'usuario',
+        JSON.stringify({ fullName: formulario.fullName })
+      );
+  
+      // ✅ REDIRIGIR A EDICIÓN DE PERFIL
+      navigate('/editar-usuario');
     } catch (error) {
       alert('Error: ' + error.message);
     }
   };
+  
 
   return (
     <div className="contenedor-login">

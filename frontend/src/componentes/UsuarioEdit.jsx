@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../estilos/profile.css";
 
 export default function UsuarioEdit() {
   const [form, setForm] = useState({
-    name: "Juanse Gutierrez",
+    name: "",
     phone: "+54 381 123-4567",
     address: "69 Perón Ave, Yerba Buena, TUC",
     idPhoto: true,
@@ -12,6 +12,17 @@ export default function UsuarioEdit() {
 
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
+
+  // ✅ Cargar datos desde localStorage
+  useEffect(() => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    if (usuario?.fullName) {
+      setForm((prev) => ({
+        ...prev,
+        name: usuario.fullName,  // Asigna el nombre completo al estado
+      }));
+    }
+  }, []); // Se ejecuta solo al cargar el componente
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,8 +54,7 @@ export default function UsuarioEdit() {
 
   return (
     <div className="container">
-
-     <div className="avatar" onClick={handleAvatarClick}>
+      <div className="avatar" onClick={handleAvatarClick}>
         {avatar ? (
           <img src={avatar} alt="Avatar" className="avatar-img" />
         ) : (
@@ -57,7 +67,7 @@ export default function UsuarioEdit() {
           ref={fileInputRef}
           style={{ display: "none" }}
         />
-     </div>
+      </div>
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
         <label>
@@ -105,4 +115,3 @@ export default function UsuarioEdit() {
     </div>
   );
 }
-
