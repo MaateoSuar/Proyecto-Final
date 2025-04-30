@@ -125,7 +125,7 @@ export default function UsuarioEdit() {
           <span>Phone</span>
           <input
             name="phone"
-            type="text"
+            type="number"
             value={form.phone}
             onChange={handleChange}
           />
