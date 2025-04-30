@@ -3,10 +3,14 @@ const mongoose = require('mongoose');
 
 const petSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  type: { type: String, required: true }, // Perro, gato, etc.
-  age: { type: Number },
+  type: { type: String, required: true },
   breed: { type: String },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }, // Relación con el usuario
+  birthdate: { type: Date },
+  weight: { type: Number },
+  spayed: { type: Boolean, default: false },
+  vaccines: [{ type: String }],
+  allergies: [{ type: String }],
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Pet', petSchema);

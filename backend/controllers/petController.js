@@ -3,12 +3,16 @@ const Pet = require('../models/Pet.js');
 
 const createPet = async (req, res) => {
   try {
-    const { name, type, age, breed } = req.body;
+    const { name, type, breed, birthdate, weight, spayed, vaccines, allergies } = req.body;
     const newPet = new Pet({
       name,
       type,
-      age,
       breed,
+      birthdate,
+      weight,
+      spayed,
+      vaccines,
+      allergies,
       owner: req.user.id, // viene del middleware de autenticación
     });
     await newPet.save();
