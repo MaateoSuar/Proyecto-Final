@@ -48,13 +48,13 @@ export default function FormularioRegistro() {
         throw new Error(data.message || 'Error al registrarse');
       }
   
-      // ✅ GUARDAR EN LOCALSTORAGE
+      // GUARDAR EN LOCALSTORAGE
       localStorage.setItem(
         'usuario',
         JSON.stringify({ fullName: formulario.fullName })
       );
   
-      // ✅ REDIRIGIR A EDICIÓN DE PERFIL
+      // REDIRIGIR A EDICIÓN DE PERFIL
       navigate('/editar-usuario');
     } catch (error) {
       alert('Error: ' + error.message);
