@@ -1,0 +1,94 @@
+.detalle-cuidador {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff8e7;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.detalle-cuidador .header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.detalle-cuidador h2 {
+  color: #a67c52;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.foto-perfil {
+  width: 100%;
+  height: auto;
+  border-radius: 15px;
+  object-fit: cover;
+  max-height: 200px;
+}
+
+.detalle-cuidador h3 {
+  font-size: 24px;
+  margin: 15px 0 5px;
+  color: #333;
+}
+
+.detalle-cuidador p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.datos {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+}
+
+.descripcion {
+  background-color: #f9f9f9;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.detalle-cuidador button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.detalle-cuidador button:first-of-type {
+  background-color: #e0e9d7;
+  color: #4a5e32;
+}
+
+.detalle-cuidador button:first-of-type:hover {
+  background-color: #c8d9b7;
+}
+
+.detalle-cuidador button:last-of-type {
+  background-color: #a86f4c;
+  color: white;
+}
+
+.detalle-cuidador button:last-of-type:hover {
+  background-color: #8d5b3e;
+}
+
+.care-person {
+  cursor: pointer;
+}
