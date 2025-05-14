@@ -15,10 +15,10 @@ export default function UsuarioEdit() {
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
 
-  // ✅ Cargar datos desde localStorage
+  // ✅ Cargar datos desde localStorage y backend
   useEffect(() => {
-    const token = localStorage.getItem("token"); // Asegúrate que esté guardado tras login
-  
+    const token = localStorage.getItem("token");
+
     fetch("http://localhost:5000/api/auth/perfil", {
       method: "GET",
       headers: {
@@ -30,13 +30,13 @@ export default function UsuarioEdit() {
         setForm({
           name: data.fullName || "",
           phone: data.phone || "",
-          address: data.address || "", // asegurate que coincida con el nombre de campo real
-          idPhoto: true, // ajustar si tenés esos datos en backend
+          address: data.address || "",
+          idPhoto: true,
           faceVerification: true,
         });
       })
       .catch((err) => console.error("Error al obtener perfil:", err));
-  }, []); // Se ejecuta solo al cargar el componente
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,7 +48,7 @@ export default function UsuarioEdit() {
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
-  
+
     try {
       const response = await fetch("http://localhost:5000/api/auth/perfil", {
         method: "PUT",
@@ -62,21 +62,25 @@ export default function UsuarioEdit() {
           phone: form.phone,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.msg || "Error al actualizar los datos.");
       }
-  
+
+      // ✅ Actualizar localStorage con el nuevo nombre
+      const storedUser = JSON.parse(localStorage.getItem("usuario")) || {};
+      storedUser.fullName = data.fullName || form.name;
+      localStorage.setItem("usuario", JSON.stringify(storedUser));
+
       alert("Datos guardados correctamente.");
-      navigate('/inicio');
-      console.log("Respuesta:", data);
+      navigate("/inicio");
     } catch (error) {
       console.error("Error al guardar:", error);
       alert("Ocurrió un error al guardar los datos.");
     }
-  };  
+  };
 
   const handleAvatarClick = () => {
     fileInputRef.current.click();
@@ -125,14 +129,14 @@ export default function UsuarioEdit() {
           <span>Phone</span>
           <input
             name="phone"
-            type="number"
+            type="text"
             value={form.phone}
             onChange={handleChange}
           />
         </label>
 
         <label>
-          <span>Adress</span>
+          <span>Address</span>
           <input
             name="address"
             type="text"

@@ -55,7 +55,7 @@ export default function FormularioRegistro() {
       );
   
       // ✅ REDIRIGIR A EDICIÓN DE PERFIL
-      navigate('/editar-usuario');
+      navigate('/inicio');
     } catch (error) {
       alert('Error: ' + error.message);
     }
