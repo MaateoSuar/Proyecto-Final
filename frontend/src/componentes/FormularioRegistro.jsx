@@ -54,8 +54,8 @@ export default function FormularioRegistro() {
         JSON.stringify({ fullName: formulario.fullName })
       );
   
-      // REDIRIGIR A EDICIÓN DE PERFIL
-      navigate('/editar-usuario');
+      // ✅ REDIRIGIR A EDICIÓN DE PERFIL
+      navigate('/inicio');
     } catch (error) {
       alert('Error: ' + error.message);
     }
