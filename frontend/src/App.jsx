@@ -5,6 +5,7 @@ import PaginaLogin from './paginas/PaginaLogin';
 import PaginaRegistro from './paginas/PaginaRegistro';
 import PaginaHome from './paginas/PaginaHome'; // nueva
 import PaginaUsuario from './paginas/PaginaUsuario';
+import DetalleCuidador from "./paginas/DetalleCuidador";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="/registro" element={<PaginaRegistro />} />
         <Route path="/inicio" element={<PaginaHome />} />
         <Route path="/profile" element={<PaginaUsuario />} />
+        <Route path="/detalle-cuidador" element={<DetalleCuidador />} />
         <Route path="*" element={<PaginaLogin />} />
       </Routes>
     </BrowserRouter>
