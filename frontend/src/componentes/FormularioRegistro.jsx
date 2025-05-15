@@ -5,7 +5,7 @@ import '../estilos/registro.css';
 
 export default function FormularioRegistro() {
   const navigate = useNavigate();
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const [formulario, setFormulario] = useState({
     fullName: '',
     email: '',
@@ -28,9 +28,9 @@ export default function FormularioRegistro() {
       alert('Las contraseñas no coinciden.');
       return;
     }
-  
+
     try {
-      const respuesta = await fetch('http://localhost:5000/api/auth/register', {
+      const respuesta = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

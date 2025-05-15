@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import '../estilos/login.css';
 
 export default function FormularioLogin() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -20,7 +21,7 @@ export default function FormularioLogin() {
     }
   
     try {
-      const respuesta = await fetch('http://localhost:5000/api/auth/login', {
+      const respuesta = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -18,6 +18,7 @@ const PerfilMascotas = () => {
   const [fotoMascota, setFotoMascota] = useState(null);
   const [nuevaVacuna, setNuevaVacuna] = useState('');
   const [nuevaAlergia, setNuevaAlergia] = useState('');
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -77,7 +78,7 @@ const PerfilMascotas = () => {
       allergies: formData.alergias,
     };
 
-    const response = await axios.post('http://localhost:5000/api/pets', datosAGuardar, {
+    const response = await axios.post(`${API_URL}/pets`, datosAGuardar, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`, // si usas JWT
       }

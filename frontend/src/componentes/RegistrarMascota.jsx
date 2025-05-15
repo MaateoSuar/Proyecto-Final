@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import "../estilos/profile.css";
 
 export default function RegistrarMascota() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [form, setForm] = useState({
     name: "",
     phone: "+54 381 123-4567",
@@ -19,7 +20,7 @@ export default function RegistrarMascota() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/api/auth/perfil", {
+    fetch(`${API_URL}/auth/perfil`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -50,7 +51,7 @@ export default function RegistrarMascota() {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/perfil", {
+      const response = await fetch(`${API_URL}/auth/perfil`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
