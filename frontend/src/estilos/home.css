@@ -1,31 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap");
+
 html, body {
-  margin: 0;
   padding: 0;
-  background-color: #fdf5dc;
+  margin: 0;
+  background-color: #fceecf;
   font-family: 'Segoe UI', sans-serif;
   overflow-x: hidden;
-  min-height: 100vh;
   box-sizing: border-box;
 }
 
 .pagina-home {
   width: 100%;
   max-width: 430px;
-  margin: 40px auto 0 auto;
-  padding: 16px;
-  background-color: #fdf5dc;
+  padding: 30px 20px;
+  background-color: #fceecf;
   color: #333;
   box-sizing: border-box;
   min-height: 100vh;
-  padding-left: 20px;
-  padding-right: 20px;
-  margin-top: 40em;
+  margin: 0 auto;
 }
 
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   text-align: center;
   margin-bottom: 20px;
-  padding-top: 10px;
 }
 
 .avatar {
@@ -33,7 +33,6 @@ html, body {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  margin: 0 auto 10px;
 }
 
 .greeting .name {
@@ -46,15 +45,17 @@ html, body {
   font-size: 14px;
 }
 
-.pets-box,
-.services-box,
-.plans-box,
-.care-box {
-  background-color: #f3e2c7 !important; /* Color marrón claro */
+.pets-box, .services-box, .plans-box, .care-box {
+  background-color: #FEFAE0 !important; /* Color marrón claro */
   border-radius: 20px !important;
   padding: 20px !important;
   margin-bottom: 24px !important;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+.pets-box h2, .services-box h2, .plans-box h2, .care-box h2 {
+  margin-top: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700; /* Bold */
 }
 
 .section-title {
@@ -164,7 +165,6 @@ html, body {
 }
 
 .plan-card {
-  background-color: #f1f7e7;
   padding: 12px;
   border-radius: 12px;
   min-width: 180px;
@@ -192,13 +192,6 @@ html, body {
   border-radius: 6px;
   text-decoration: none;
   text-align: center;
-}
-
-.care-card {
-  background-color: #fdf9e9;
-  padding: 14px;
-  border-radius: 12px;
-  margin-bottom: 10px;
 }
 
 .care-person {

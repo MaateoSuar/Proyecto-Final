@@ -1,9 +1,3 @@
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-    background-color: #fceecf;
-}
-
 .container {
   background-color: #fceecf;
   min-height: 100vh;
@@ -14,22 +8,28 @@ body {
 }
 
 .avatar {
-  width: 110px;
-  height: 110px;
+  width: 70px;
+  height: 70px;
   background-color: #b77b4b;
   border-radius: 50%;
   font-size: 50px;
   color: white;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-top: 20px;
-  margin-bottom: 30px;
+  margin-right: 15px;
+  justify-content: center;  
   cursor: pointer;
   overflow: hidden;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+.greeting {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 
 .avatar span {
   z-index: 1;

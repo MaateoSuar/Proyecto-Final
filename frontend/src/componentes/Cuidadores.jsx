@@ -8,7 +8,6 @@ export default function Cuidadores() {
   };
 
   return (
-    <div className="care-box">
       <div className="care-card">
         {/* ENZO */}
         <div
@@ -58,7 +57,6 @@ export default function Cuidadores() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 

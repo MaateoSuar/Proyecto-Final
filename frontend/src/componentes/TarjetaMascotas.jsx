@@ -24,7 +24,7 @@ export default function TarjetaMascotas() {
   }, []);
 
   return (
-    <div className="pets-box">
+    <div className="pets-box2">
       <div className="pets">
         {mascotas.map((mascota) => (
           <div
