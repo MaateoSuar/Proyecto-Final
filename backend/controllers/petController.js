@@ -1,9 +1,26 @@
 // controllers/petController.js
 const Pet = require('../models/Pet.js');
+const { cloudinary } = require('../config/cloudinary.js');
 
 const createPet = async (req, res) => {
   try {
     const { name, type, breed, birthdate, weight, spayed, vaccines, allergies } = req.body;
+    let imageUrl = null;
+
+    if (req.file && req.file.buffer) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'pets' },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      imageUrl = result.secure_url;
+    }
+
     const newPet = new Pet({
       name,
       type,
@@ -13,14 +30,16 @@ const createPet = async (req, res) => {
       spayed,
       vaccines: JSON.parse(vaccines),
       allergies: JSON.parse(allergies),
-      image: req.file ? `/uploads/${req.file.filename}` : null,
-      owner: req.user.id, // viene del middleware de autenticación
+      image: imageUrl,
+      owner: req.user.id,
     });
+
     await newPet.save();
     res.status(201).json(newPet);
+
   } catch (err) {
-    res.status(500).json({ message: err });
-     console.error('Error en createPet:', err);
+    console.error('Error en createPet:', err);
+    res.status(500).json({ message: err.message });
   }
 };
 

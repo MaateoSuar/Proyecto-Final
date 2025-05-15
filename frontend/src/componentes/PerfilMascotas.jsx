@@ -81,7 +81,8 @@ const PerfilMascotas = () => {
       const blob = await (await fetch(fotoMascota)).blob();
       form.append('image', blob, 'mascota.jpg');
     }
-
+    console.log(form);
+    
     const response = await axios.post(`${API_URL}/pets`, form, {
       headers: {
         'Content-Type': 'multipart/form-data',

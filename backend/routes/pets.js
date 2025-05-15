@@ -5,18 +5,7 @@ const verifyToken = require('../middlewares/verifyToken.js');
 const multer = require('multer');
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Asegurate que esta carpeta exista
-  },
-  filename: (req, file, cb) => {
-    const ext = file.originalname.split('.').pop();
-    cb(null, `${Date.now()}.${ext}`);
-  }
-});
-
-const upload = multer({ storage });
+const upload = require('../middlewares/upload.js');
 
 router.post('/', verifyToken, upload.single('image'), createPet);
 router.get('/', verifyToken, getMyPets);

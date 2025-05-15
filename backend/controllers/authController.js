@@ -2,6 +2,7 @@
 const Usuario = require('../models/Usuario.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { cloudinary } = require('../config/cloudinary.js');
 
 const registrarUsuario = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -72,12 +73,23 @@ const loginUsuario = async (req, res) => {
 const updateProfile = async (req, res) => {
   const userId = req.user.id;
   const { fullName, address, phone } = req.body;
-  const profileImage = req.file ? req.file.filename : undefined;
-
   const updateFields = { fullName, address, phone };
-  if (profileImage) updateFields.profileImage = profileImage;
 
   try {
+    if (req.file) {
+      const result = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: 'profiles' },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(req.file.buffer);
+      });
+      updateFields.profileImage = result.secure_url;
+    }
+
     const updatedUser = await Usuario.findByIdAndUpdate(
       userId,
       updateFields,
@@ -85,6 +97,7 @@ const updateProfile = async (req, res) => {
     );
     res.json(updatedUser);
   } catch (error) {
+    console.error(error);
     res.status(400).json({ error: "Error al actualizar perfil" });
   }
 };

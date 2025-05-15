@@ -34,7 +34,7 @@ export default function HeaderUsuario() {
     <div className="header">
       <div className="avatar" onClick={handleClick}>
         {user.image ? (
-          <img src={`${BACK_URL}/uploads/${user.image}`} alt="Avatar" className="avatar-img" />
+          <img src={user.image} alt="Avatar" className="avatar-img" />
         ) : (
           <span>+</span>
         )}

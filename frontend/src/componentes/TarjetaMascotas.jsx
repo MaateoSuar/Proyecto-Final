@@ -30,7 +30,7 @@ export default function TarjetaMascotas() {
           <div
             key={mascota._id}
             className="pet-img"
-            style={{ backgroundImage: `url(${BACK_URL}${mascota.image})` }}
+            style={{ backgroundImage: `url(${mascota.image})` }}
             title={mascota.name}
           ></div>
         ))}
