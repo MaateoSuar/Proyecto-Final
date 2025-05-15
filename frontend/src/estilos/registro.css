@@ -1,10 +1,9 @@
   .contenedor-login {
-    background-color: #fdf5dc;
+    background-color: #fceecf;
     width: 100%;
     max-width: 360px;
     padding: 40px 30px;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
     text-align: center;
   }
   

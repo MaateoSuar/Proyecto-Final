@@ -15,7 +15,7 @@
   font-size: 50px;
   color: white;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   margin-right: 15px;
   justify-content: center;  
   cursor: pointer;

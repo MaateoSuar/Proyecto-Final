@@ -5,9 +5,6 @@ import "../estilos/profile.css";
 export default function UsuarioEdit() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [form, setForm] = useState({
-    name: "",
-    phone: "+54 381 123-4567",
-    address: "69 Perón Ave, Yerba Buena, TUC",
     idPhoto: true,
     faceVerification: true,
   });
@@ -49,19 +46,22 @@ export default function UsuarioEdit() {
 
   const handleSave = async () => {
     const token = localStorage.getItem("token");
+    const formData = new FormData();
+
+    formData.append("fullName", form.name);
+    formData.append("address", form.address);
+    formData.append("phone", form.phone);
+    if (fileInputRef.current.files[0]) {
+      formData.append("profileImage", fileInputRef.current.files[0]); // clave "foto"
+    }
 
     try {
       const response = await fetch(`${API_URL}/auth/perfil`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // NO pongas Content-Type, fetch lo hace solo
         },
-        body: JSON.stringify({
-          fullName: form.name,
-          address: form.address,
-          phone: form.phone,
-        }),
+        body: formData,
       });
 
       const data = await response.json();
@@ -70,9 +70,9 @@ export default function UsuarioEdit() {
         throw new Error(data.msg || "Error al actualizar los datos.");
       }
 
-      // ✅ Actualizar localStorage con el nuevo nombre
       const storedUser = JSON.parse(localStorage.getItem("usuario")) || {};
       storedUser.fullName = data.fullName || form.name;
+      storedUser.foto = data.foto || storedUser.foto;
       localStorage.setItem("usuario", JSON.stringify(storedUser));
 
       alert("Datos guardados correctamente.");

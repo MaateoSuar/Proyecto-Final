@@ -52,6 +52,9 @@ html, body {
   margin-bottom: 24px !important;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
 }
+.search-box {
+  margin-bottom: 24px;
+}
 .pets-box h2, .services-box h2, .plans-box h2, .care-box h2 {
   margin-top: 0;
   font-family: 'Poppins', sans-serif;
@@ -94,16 +97,18 @@ html, body {
   cursor: pointer;
 }
 
-.search-box {
+.search {
   display: flex;
   align-items: center;
   border: 2px solid #caa878;
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 20px;
+  width: 100%;
+  margin-bottom: 0;
 }
 
-.search-box input {
+.search input {
   flex: 1;
   border: none;
   padding: 10px;
@@ -199,11 +204,6 @@ html, body {
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
-}
-
-.search {
-  width: 100%;
-  margin-bottom: 0;
 }
 
 .care-avatar {

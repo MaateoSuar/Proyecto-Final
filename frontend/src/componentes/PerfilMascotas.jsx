@@ -250,12 +250,12 @@ const PerfilMascotas = () => {
 
 const styles = {
   container: {
-    minHeight: '100vh',
     backgroundColor: '#fdefce',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 16,
+    padding: 10,
+    marginTop: 40,
   },
   card: {
     width: '100%',

@@ -70,13 +70,17 @@ const loginUsuario = async (req, res) => {
 };
 
 const updateProfile = async (req, res) => {
-  const userId = req.user.id; // asumimos que el middleware agrega `req.user`
+  const userId = req.user.id;
   const { fullName, address, phone } = req.body;
+  const profileImage = req.file ? req.file.filename : undefined;
+
+  const updateFields = { fullName, address, phone };
+  if (profileImage) updateFields.profileImage = profileImage;
 
   try {
     const updatedUser = await Usuario.findByIdAndUpdate(
       userId,
-      { fullName, address, phone },
+      updateFields,
       { new: true, runValidators: true }
     );
     res.json(updatedUser);
