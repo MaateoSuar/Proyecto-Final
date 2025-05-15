@@ -67,27 +67,31 @@ const PerfilMascotas = () => {
 
   const handleSave = async () => {
   try {
-    const datosAGuardar = {
-      name: formData.nombre,
-      type: "dog", // puedes cambiar esto o agregar un selector
-      breed: formData.raza,
-      birthdate: formData.fechaNacimiento,
-      weight: formData.peso,
-      spayed: formData.esterilizado,
-      vaccines: formData.vacunas,
-      allergies: formData.alergias,
-    };
+    const form = new FormData();
+    form.append('name', formData.nombre);
+    form.append('type', 'dog');
+    form.append('breed', formData.raza);
+    form.append('birthdate', formData.fechaNacimiento);
+    form.append('weight', formData.peso);
+    form.append('spayed', formData.esterilizado);
+    form.append("vaccines", JSON.stringify(formData.vacunas));
+    form.append("allergies", JSON.stringify(formData.alergias));
 
-    const response = await axios.post(`${API_URL}/pets`, datosAGuardar, {
+    if (fotoMascota) {
+      const blob = await (await fetch(fotoMascota)).blob();
+      form.append('image', blob, 'mascota.jpg');
+    }
+
+    const response = await axios.post(`${API_URL}/pets`, form, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // si usas JWT
-      }
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
     });
+    console.log('Token enviado:', localStorage.getItem('token'));
 
     alert('¡Mascota registrada!');
-    console.log(response.data);
     navigate('/inicio');
-
   } catch (error) {
     console.error(error);
     alert('Error al guardar la mascota');

@@ -10,6 +10,7 @@ const petSchema = new mongoose.Schema({
   spayed: { type: Boolean, default: false },
   vaccines: [{ type: String }],
   allergies: [{ type: String }],
+  image: { type: String },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }
 }, { timestamps: true });
 
