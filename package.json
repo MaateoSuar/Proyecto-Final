@@ -1,0 +1,25 @@
+{
+  "name": "proyecto-final",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/MaateoSuar/Proyecto-Final#readme",
+  "bugs": {
+    "url": "https://github.com/MaateoSuar/Proyecto-Final/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaateoSuar/Proyecto-Final.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "postinstall": "npm install --prefix frontend && npm install --prefix backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
