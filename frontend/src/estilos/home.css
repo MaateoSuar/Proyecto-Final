@@ -88,13 +88,21 @@ html, body {
 }
 
 .pet-add {
-  border: 2px dashed #a06d44;
+  width: 60px;
+  height: 60px;
+  background-color: #a57449;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 24px;
-  color: #a06d44;
+  color: white;
   cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pet-add:hover {
+  background-color: #875e39;
 }
 
 .search {
@@ -312,24 +320,10 @@ html, body {
 }
 
 /* Responsive ajustes */
-@media (max-width: 375px) {
-  .pagina-home {
-    padding: 12px;
-    margin-top: 10em;
-    width: 100%;
-  }
-
+@media (max-width: 480px) {
   .section-title {
     font-size: 16px;
     margin-bottom: 8px;
-  }
-
-  .greeting .name {
-    font-size: 16px;
-  }
-
-  .greeting .subtext {
-    font-size: 12px;
   }
 
   .pet-img, .pet-add {
@@ -344,7 +338,7 @@ html, body {
   .plan-card {
     min-width: 150px;
     font-size: 13px;
-    paddin.pg: 10px;
+    padding: 10px;
   }
 
   .view-btn {
@@ -363,31 +357,64 @@ html, body {
   }
 }
 
-@media (max-width: 320px) {
-  .pagina-home {
-    padding: 10px;
-    margin-top: 6em;
-  }
+.pets-box2 {
+  margin-top: 15px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
 
-  .service-card {
-    font-size: 11px;
-  }
+.pets {
+  display: flex;
+  gap: 15px;
+}
 
-  .plan-card {
-    min-width: 140px;
-    font-size: 12px;
-  }
+.pet-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-  .view-btn {
-    font-size: 11px;
-    padding: 4px 8px;
-  }
+.pet-img {
+  width: 60px;
+  height: 60px;
+  background-color: #dce8c3;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
 
-  .greeting .name {
-    font-size: 14px;
-  }
+.pet-edit {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  background-color: #a57449;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: background-color 0.2s;
+}
 
-  .greeting .subtext {
-    font-size: 11px;
-  }
+.pet-edit:hover {
+  background-color: #875e39;
+}
+
+.pet-name {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.text-center {
+  text-align: center;
 }

@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const EditarMascota = () => {
+export default function EditarMascota() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const API_URL = import.meta.env.VITE_API_URL;
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const [formData, setFormData] = useState({
     nombre: '',
     raza: '',
@@ -14,66 +18,63 @@ const EditarMascota = () => {
     vacunas: [],
     alergias: [],
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [originalData, setOriginalData] = useState({});
+
   const [fotoMascota, setFotoMascota] = useState(null);
   const [nuevaVacuna, setNuevaVacuna] = useState('');
   const [nuevaAlergia, setNuevaAlergia] = useState('');
-  const API_URL = 'http://localhost:5000/api';
 
+  // Cargar datos de la mascota
   useEffect(() => {
     const cargarDatosMascota = async () => {
+      if (!id) {
+        setError('ID de mascota no proporcionado');
+        setIsLoading(false);
+        return;
+      }
+      
       try {
+        setIsLoading(true);
+        setError(null);
         const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('No hay token de autenticación');
-        }
-
+        
         const response = await axios.get(`${API_URL}/pets/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (!response.data) {
-          throw new Error('No se encontraron datos de la mascota');
-        }
-
         const mascota = response.data;
-        const formData = {
+        console.log('Datos recibidos de la mascota:', mascota);
+
+        // Actualizar el estado con los datos recibidos
+        setFormData({
           nombre: mascota.name || '',
           raza: mascota.breed || '',
           fechaNacimiento: mascota.birthdate ? mascota.birthdate.split('T')[0] : '',
           peso: mascota.weight || '',
-          esterilizado: mascota.spayed || false,
-          vacunas: mascota.vaccines || [],
-          alergias: mascota.allergies || [],
-        };
-        setFormData(formData);
-        setOriginalData(formData);
+          esterilizado: Boolean(mascota.spayed),
+          vacunas: Array.isArray(mascota.vaccines) ? mascota.vaccines : [],
+          alergias: Array.isArray(mascota.allergies) ? mascota.allergies : [],
+        });
+
+        // Establecer la imagen si existe
         if (mascota.image) {
           setFotoMascota(mascota.image);
         }
       } catch (error) {
         console.error('Error al cargar la mascota:', error);
-        setError(error.message || 'Error al cargar los datos de la mascota');
-        setTimeout(() => {
-          navigate('/inicio');
-        }, 3000);
+        setError(error.response?.data?.message || 'Error al cargar los datos de la mascota');
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     cargarDatosMascota();
-  }, [id, navigate]);
+  }, [id, API_URL]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
@@ -88,18 +89,11 @@ const EditarMascota = () => {
     }
   };
 
-  const handleToggleChange = () => {
-    setFormData(prev => ({
-      ...prev,
-      esterilizado: !prev.esterilizado
-    }));
-  };
-
   const handleAddVacuna = () => {
     if (nuevaVacuna.trim()) {
       setFormData(prev => ({
         ...prev,
-        vacunas: [...prev.vacunas, nuevaVacuna.trim()],
+        vacunas: [...prev.vacunas, nuevaVacuna.trim()]
       }));
       setNuevaVacuna('');
     }
@@ -109,7 +103,7 @@ const EditarMascota = () => {
     if (nuevaAlergia.trim()) {
       setFormData(prev => ({
         ...prev,
-        alergias: [...prev.alergias, nuevaAlergia.trim()],
+        alergias: [...prev.alergias, nuevaAlergia.trim()]
       }));
       setNuevaAlergia('');
     }
@@ -131,34 +125,21 @@ const EditarMascota = () => {
 
   const handleSave = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
       const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No hay token de autenticación');
-      }
-
       const form = new FormData();
-      
-      // Solo enviamos los campos que han sido modificados
-      if (formData.nombre !== originalData.nombre) {
-        form.append('name', formData.nombre);
-      }
-      if (formData.raza !== originalData.raza) {
-        form.append('breed', formData.raza);
-      }
-      if (formData.fechaNacimiento !== originalData.fechaNacimiento) {
-        form.append('birthdate', formData.fechaNacimiento);
-      }
-      if (formData.peso !== originalData.peso) {
-        form.append('weight', formData.peso);
-      }
-      if (formData.esterilizado !== originalData.esterilizado) {
-        form.append('spayed', formData.esterilizado);
-      }
-      
-      // Las vacunas y alergias siempre se envían completas
-      form.append("vaccines", JSON.stringify(formData.vacunas));
-      form.append("allergies", JSON.stringify(formData.alergias));
 
+      // Agregar todos los campos al FormData
+      form.append('name', formData.nombre);
+      form.append('breed', formData.raza);
+      form.append('birthdate', formData.fechaNacimiento);
+      form.append('weight', formData.peso);
+      form.append('spayed', formData.esterilizado);
+      form.append('vaccines', JSON.stringify(formData.vacunas));
+      form.append('allergies', JSON.stringify(formData.alergias));
+
+      // Solo agregar la imagen si es nueva (no es una URL)
       if (fotoMascota && !fotoMascota.startsWith('http')) {
         const blob = await (await fetch(fotoMascota)).blob();
         form.append('image', blob, 'mascota.jpg');
@@ -174,16 +155,18 @@ const EditarMascota = () => {
       alert('¡Mascota actualizada con éxito!');
       navigate('/inicio');
     } catch (error) {
-      console.error('Error al actualizar la mascota:', error);
-      alert(error.response?.data?.message || 'Error al actualizar la mascota');
+      console.error('Error al actualizar:', error);
+      setError(error.response?.data?.message || 'Error al actualizar la mascota');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <div className="container-mascotas">
-        <div className="card-mascota">
-          <p className="loading-text">Cargando datos de la mascota...</p>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <p style={styles.loadingText}>Cargando datos de la mascota...</p>
         </div>
       </div>
     );
@@ -191,153 +174,321 @@ const EditarMascota = () => {
 
   if (error) {
     return (
-      <div className="container-mascotas">
-        <div className="card-mascota">
-          <p className="error-text">Error: {error}</p>
-          <p>Redirigiendo al inicio...</p>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <p style={styles.errorText}>{error}</p>
+          <button style={styles.button} onClick={() => navigate('/inicio')}>
+            Volver al inicio
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container-mascotas">
-      <div className="card-mascota">
-        <div className="header-mascota">
-          <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
-            {fotoMascota ? (
-              <img
-                src={fotoMascota}
-                alt="Mascota"
-                className="foto-mascota"
+    <>
+      <style>{`
+        input[type="date"]::-webkit-calendar-picker-indicator {
+          filter: invert(1);
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+          filter: invert(1);
+        }
+        input[type="number"] {
+          color-scheme: dark;
+        }
+      `}</style>
+
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <div style={styles.header}>
+            <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
+              {fotoMascota ? (
+                <img
+                  src={fotoMascota}
+                  alt="Mascota"
+                  style={styles.previewFoto}
+                />
+              ) : (
+                <div style={styles.icon}>+</div>
+              )}
+            </label>
+            <input
+              id="fotoInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImagenChange}
+              style={{ display: 'none' }}
+            />
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre"
+              value={formData.nombre}
+              onChange={handleInputChange}
+              style={styles.nameInput}
+            />
+          </div>
+
+          <div style={styles.list}>
+            <div style={styles.item}>
+              <input
+                type="text"
+                name="raza"
+                placeholder="Raza"
+                value={formData.raza}
+                onChange={handleInputChange}
+                style={styles.input}
               />
-            ) : (
-              <div className="icon-mascota">+</div>
-            )}
-          </label>
-          <input
-            id="fotoInput"
-            type="file"
-            accept="image/*"
-            onChange={handleImagenChange}
-            style={{ display: 'none' }}
-          />
-        </div>
-
-        <div>
-          <label className="label-mascota">Nombre:</label>
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleInputChange}
-            className="input-mascota"
-          />
-        </div>
-
-        <div>
-          <label className="label-mascota">Raza:</label>
-          <input
-            type="text"
-            name="raza"
-            value={formData.raza}
-            onChange={handleInputChange}
-            className="input-mascota"
-          />
-        </div>
-
-        <div>
-          <label className="label-mascota">Fecha de Nacimiento:</label>
-          <input
-            type="date"
-            name="fechaNacimiento"
-            value={formData.fechaNacimiento}
-            onChange={handleInputChange}
-            className="input-mascota"
-          />
-        </div>
-
-        <div>
-          <label className="label-mascota">Peso (kg):</label>
-          <input
-            type="number"
-            name="peso"
-            value={formData.peso}
-            onChange={handleInputChange}
-            className="input-mascota"
-          />
-        </div>
-
-        <label className="checkbox-label-mascota">
-          <input
-            type="checkbox"
-            checked={formData.esterilizado}
-            onChange={handleToggleChange}
-            className="checkbox-mascota"
-          />
-          Esterilizado
-        </label>
-
-        <div className="list-container-mascota">
-          <label className="label-mascota">Vacunas:</label>
-          <div className="input-group-mascota">
-            <input
-              type="text"
-              value={nuevaVacuna}
-              onChange={(e) => setNuevaVacuna(e.target.value)}
-              className="input-mascota"
-              style={{ marginBottom: 0 }}
-            />
-            <button onClick={handleAddVacuna} className="add-button-mascota">
-              Agregar
-            </button>
-          </div>
-          {formData.vacunas.map((vacuna, index) => (
-            <div key={index} className="list-item-mascota">
-              {vacuna}
-              <button
-                onClick={() => handleRemoveVacuna(index)}
-                className="remove-button-mascota"
-              >
-                Eliminar
-              </button>
             </div>
-          ))}
-        </div>
 
-        <div className="list-container-mascota">
-          <label className="label-mascota">Alergias:</label>
-          <div className="input-group-mascota">
-            <input
-              type="text"
-              value={nuevaAlergia}
-              onChange={(e) => setNuevaAlergia(e.target.value)}
-              className="input-mascota"
-              style={{ marginBottom: 0 }}
-            />
-            <button onClick={handleAddAlergia} className="add-button-mascota">
-              Agregar
-            </button>
-          </div>
-          {formData.alergias.map((alergia, index) => (
-            <div key={index} className="list-item-mascota">
-              {alergia}
-              <button
-                onClick={() => handleRemoveAlergia(index)}
-                className="remove-button-mascota"
-              >
-                Eliminar
-              </button>
+            <div style={styles.item}>
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleInputChange}
+                style={styles.input}
+              />
             </div>
-          ))}
-        </div>
 
-        <button onClick={handleSave} className="button-mascota">
-          Guardar Cambios
-        </button>
+            <div style={styles.item}>
+              <input
+                type="number"
+                name="peso"
+                placeholder="Peso (kg)"
+                value={formData.peso}
+                onChange={handleInputChange}
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.item}>
+              <span style={styles.label}>Esterilizado</span>
+              <label style={styles.switch}>
+                <input
+                  type="checkbox"
+                  name="esterilizado"
+                  checked={formData.esterilizado}
+                  onChange={handleInputChange}
+                  style={{ display: 'none' }}
+                />
+                <span
+                  style={{
+                    ...styles.slider,
+                    backgroundColor: formData.esterilizado ? '#a57449' : '#ccc',
+                  }}
+                >
+                  <span
+                    style={{
+                      ...styles.knob,
+                      transform: formData.esterilizado
+                        ? 'translateX(18px)'
+                        : 'translateX(0px)',
+                    }}
+                  />
+                </span>
+              </label>
+            </div>
+
+            <div style={styles.item}>
+              <span style={styles.label}>Vacunas</span>
+            </div>
+            <div style={styles.item}>
+              <input
+                type="text"
+                placeholder="Añadir vacuna"
+                value={nuevaVacuna}
+                onChange={(e) => setNuevaVacuna(e.target.value)}
+                style={{ ...styles.input, flex: 1 }}
+              />
+              <button onClick={handleAddVacuna} style={styles.addBtn}>+</button>
+            </div>
+            {formData.vacunas.map((vacuna, i) => (
+              <div style={{ ...styles.item, color: '#000' }} key={i}>
+                {vacuna}
+                <button onClick={() => handleRemoveVacuna(i)} style={styles.removeBtn}>×</button>
+              </div>
+            ))}
+
+            <div style={styles.item}>
+              <span style={styles.label}>Alergias</span>
+            </div>
+            <div style={styles.item}>
+              <input
+                type="text"
+                placeholder="Añadir alergia"
+                value={nuevaAlergia}
+                onChange={(e) => setNuevaAlergia(e.target.value)}
+                style={{ ...styles.input, flex: 1 }}
+              />
+              <button onClick={handleAddAlergia} style={styles.addBtn}>+</button>
+            </div>
+            {formData.alergias.map((alergia, i) => (
+              <div style={{ ...styles.item, color: '#000' }} key={i}>
+                {alergia}
+                <button onClick={() => handleRemoveAlergia(i)} style={styles.removeBtn}>×</button>
+              </div>
+            ))}
+          </div>
+
+          <button 
+            style={styles.button} 
+            onClick={handleSave}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
-};
+}
 
-export default EditarMascota; 
+const styles = {
+  container: {
+    backgroundColor: '#fdefce',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 40,
+    minHeight: '100vh',
+  },
+  card: {
+    width: '100%',
+    maxWidth: 320,
+    backgroundColor: '#fdefce',
+    borderRadius: 16,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  icon: {
+    width: 100,
+    height: 100,
+    backgroundColor: '#a57449',
+    color: 'white',
+    fontSize: 48,
+    borderRadius: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  previewFoto: {
+    width: 100,
+    height: 100,
+    borderRadius: '50%',
+    objectFit: 'cover',
+  },
+  nameInput: {
+    marginTop: 10,
+    border: 'none',
+    background: 'none',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#a57449',
+    textAlign: 'center',
+    outline: 'none',
+  },
+  list: {
+    backgroundColor: '#fff8dc',
+    width: '100%',
+    borderRadius: 12,
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    overflow: 'hidden',
+  },
+  item: {
+    padding: '12px 16px',
+    borderBottom: '1px solid #eee1bd',
+    fontSize: 15,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  input: {
+    width: '100%',
+    border: 'none',
+    backgroundColor: 'transparent',
+    color: '#000',
+    fontSize: 15,
+    outline: 'none',
+  },
+  label: {
+    color: '#000',
+    fontWeight: 500,
+  },
+  addBtn: {
+    marginLeft: 8,
+    backgroundColor: '#a57449',
+    color: 'white',
+    border: 'none',
+    borderRadius: 6,
+    padding: '4px 10px',
+    cursor: 'pointer',
+  },
+  removeBtn: {
+    background: 'none',
+    border: 'none',
+    color: '#ff4444',
+    fontSize: 20,
+    cursor: 'pointer',
+  },
+  button: {
+    marginTop: 20,
+    width: '100%',
+    padding: 12,
+    backgroundColor: '#a57449',
+    color: 'white',
+    fontWeight: 'bold',
+    border: 'none',
+    borderRadius: 8,
+    cursor: 'pointer',
+    opacity: props => props.disabled ? 0.7 : 1,
+  },
+  switch: {
+    position: 'relative',
+    display: 'inline-block',
+    width: 40,
+    height: 22,
+  },
+  slider: {
+    position: 'absolute',
+    cursor: 'pointer',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    transition: '0.4s',
+    borderRadius: 22,
+  },
+  knob: {
+    position: 'absolute',
+    height: 18,
+    width: 18,
+    left: 2,
+    bottom: 2,
+    backgroundColor: 'white',
+    borderRadius: '50%',
+    transition: '0.4s',
+  },
+  loadingText: {
+    textAlign: 'center',
+    color: '#a57449',
+    fontSize: 16,
+    margin: '20px 0',
+  },
+  errorText: {
+    textAlign: 'center',
+    color: '#dc3545',
+    fontSize: 16,
+    margin: '20px 0',
+  },
+}; 

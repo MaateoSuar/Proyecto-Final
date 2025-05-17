@@ -1,3 +1,179 @@
 #root {
     width: 100%;
 }
+
+.container-mascotas {
+  background-color: #fdefce;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.card-mascota {
+  width: 100%;
+  max-width: 400px;
+  background-color: #fff8dc;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.header-mascota {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.foto-container {
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.foto-mascota {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.icon-mascota {
+  width: 120px;
+  height: 120px;
+  background-color: #a57449;
+  color: white;
+  font-size: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-mascota {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  width: 100%;
+}
+
+.input-mascota {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.lista-grupo {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.lista-grupo h3 {
+  margin: 0 0 10px 0;
+  color: #875e39;
+  font-size: 16px;
+}
+
+.add-item {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.btn-add {
+  background-color: #a57449;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-add:hover {
+  background-color: #875e39;
+}
+
+.lista-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: #f5f5f5;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #ff4444;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.btn-remove:hover {
+  color: #cc0000;
+}
+
+.btn-guardar {
+  background-color: #a57449;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s;
+}
+
+.btn-guardar:hover {
+  background-color: #875e39;
+}
+
+.loading-text {
+  text-align: center;
+  color: #a57449;
+  font-size: 16px;
+  margin: 20px 0;
+}
+
+.error-text {
+  text-align: center;
+  color: #dc3545;
+  font-size: 16px;
+  margin: 20px 0;
+}
