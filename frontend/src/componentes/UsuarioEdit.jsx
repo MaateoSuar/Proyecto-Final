@@ -5,6 +5,9 @@ import "../estilos/profile.css";
 export default function UsuarioEdit() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    address: "",
     idPhoto: true,
     faceVerification: true,
   });
@@ -32,6 +35,10 @@ export default function UsuarioEdit() {
           idPhoto: true,
           faceVerification: true,
         });
+        // Establecer la imagen de perfil actual
+        if (data.profileImage) {
+          setAvatar(data.profileImage);
+        }
       })
       .catch((err) => console.error("Error al obtener perfil:", err));
   }, []);
@@ -52,14 +59,14 @@ export default function UsuarioEdit() {
     formData.append("address", form.address);
     formData.append("phone", form.phone);
     if (fileInputRef.current.files[0]) {
-      formData.append("profileImage", fileInputRef.current.files[0]); // clave "foto"
+      formData.append("profileImage", fileInputRef.current.files[0]);
     }
 
     try {
       const response = await fetch(`${API_URL}/auth/perfil`, {
         method: "PUT",
         headers: {
-          Authorization: `Bearer ${token}`, // NO pongas Content-Type, fetch lo hace solo
+          Authorization: `Bearer ${token}`,
         },
         body: formData,
       });
@@ -72,7 +79,7 @@ export default function UsuarioEdit() {
 
       const storedUser = JSON.parse(localStorage.getItem("usuario")) || {};
       storedUser.fullName = data.fullName || form.name;
-      storedUser.foto = data.foto || storedUser.foto;
+      storedUser.profileImage = data.profileImage || avatar;
       localStorage.setItem("usuario", JSON.stringify(storedUser));
 
       alert("Datos guardados correctamente.");
@@ -117,7 +124,7 @@ export default function UsuarioEdit() {
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
         <label>
-          <span>Name</span>
+          <span>Nombre</span>
           <input
             name="name"
             type="text"
@@ -127,7 +134,7 @@ export default function UsuarioEdit() {
         </label>
 
         <label>
-          <span>Phone</span>
+          <span>Teléfono</span>
           <input
             name="phone"
             type="text"
@@ -137,7 +144,7 @@ export default function UsuarioEdit() {
         </label>
 
         <label>
-          <span>Address</span>
+          <span>Dirección</span>
           <input
             name="address"
             type="text"
@@ -147,15 +154,15 @@ export default function UsuarioEdit() {
         </label>
 
         <div className="item">
-          ID Photo {form.idPhoto && <span className="check">✔</span>}
+          Foto de ID {form.idPhoto && <span className="check">✔</span>}
         </div>
 
         <div className="item">
-          Face Verification {form.faceVerification && <span className="check">✔</span>}
+          Verificación facial {form.faceVerification && <span className="check">✔</span>}
         </div>
 
         <button type="submit" className="save-button" onClick={handleSave}>
-          Save
+          Guardar
         </button>
       </form>
     </div>
