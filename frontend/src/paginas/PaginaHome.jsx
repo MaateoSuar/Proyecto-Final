@@ -21,7 +21,7 @@ export default function PaginaHome() {
       </div>
 
       <div className="services-box">
-        <h2 className="section-title">Servicios</h2>
+        <h2 className="section-title" style={{marginBottom: '5px'}}>Servicios</h2>
         <Servicios />
       </div>
 

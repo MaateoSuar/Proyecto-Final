@@ -28,7 +28,7 @@ const prestadorSchema = new mongoose.Schema({
   services: [{
     type: {
       type: String,
-      enum: ['paseo', 'cuidado', 'peluqueria'],
+      enum: ['paseo', 'cuidado', 'peluqueria', 'dentista'],
       required: true
     },
     description: String,
