@@ -5,13 +5,10 @@ import { useNavigate } from 'react-router-dom';
 
 // Dentro del componente
 
-
-
 const categories = [
-  { label: 'Cuidado', value: 'cuidado' },
   { label: 'Peluquería', value: 'peluqueria' },
   { label: 'Paseo', value: 'paseo' },
-  { label: 'Dentista', value: 'dentista' },
+  { label: 'Cuidado', value: 'cuidado' },
 ];
 const API_URL = import.meta.env.VITE_API_URL;
 
