@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const petRoutes = require('./routes/pets');
-const prestadorRoutes = require('./routes/prestadorRoutes');
+const prestadorRoutes = require('./routes/prestador');
 const path = require('path');
 
 dotenv.config();

@@ -21,7 +21,7 @@ const getAllPrestadores = async (req, res) => {
         if (!prestadores.length) {
             return res.status(404).json({
                 success: false,
-                message: tipoServicio 
+                message: tipoServicio
                     ? `No se encontraron prestadores que ofrezcan el servicio de ${tipoServicio}`
                     : 'No se encontraron prestadores'
             });
@@ -46,7 +46,7 @@ const getAllPrestadores = async (req, res) => {
 const createManyPrestadores = async (req, res) => {
     try {
         const prestadores = req.body.prestadores;
-        
+
         if (!Array.isArray(prestadores)) {
             return res.status(400).json({
                 success: false,
@@ -70,7 +70,55 @@ const createManyPrestadores = async (req, res) => {
     }
 };
 
+const updateAvailability = async (req, res) => {
+    try {
+        const { proveedorId } = req.params;
+        const { day, slot } = req.body;
+
+        if (!proveedorId || !day || !slot) {
+            return res.status(400).json({ success: false, message: `${proveedorId, day, slot}Faltan parámetros requeridos (providerId, day o slot).` });
+        }
+
+        const prestador = await Prestador.findById(proveedorId);
+        if (!prestador) {
+            return res.status(404).json({ success: false, message: 'Prestador no encontrado.' });
+        }
+
+        const dayEntry = prestador.availability.find(d => d.day === day);
+        if (!dayEntry) {
+            return res.status(400).json({ success: false, message: 'Día no encontrado en la disponibilidad del prestador.' });
+        }
+
+        const slotIndex = dayEntry.slots.indexOf(slot);
+        if (slotIndex === -1) {
+            return res.status(400).json({ success: false, message: 'Horario no encontrado en el día especificado.' });
+        }
+
+        // Eliminar el slot
+        dayEntry.slots.splice(slotIndex, 1);
+
+        // Si no quedan horarios, eliminar el día completo
+        if (dayEntry.slots.length === 0) {
+            prestador.availability = prestador.availability.filter(d => d.day !== day);
+        }
+
+        await prestador.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Disponibilidad actualizada correctamente.',
+            availability: prestador.availability
+        });
+
+    } catch (error) {
+        console.error('Error al actualizar disponibilidad:', error);
+        return res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+    }
+};
+
+
 module.exports = {
     getAllPrestadores,
-    createManyPrestadores
+    createManyPrestadores,
+    updateAvailability
 }; 
