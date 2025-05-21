@@ -8,6 +8,7 @@ import PaginaUsuario from './paginas/PaginaUsuario';
 import DetalleCuidador from "./paginas/DetalleCuidador";
 import PaginaRegistroMascotas from './paginas/PaginaRegistroMascota';
 import PaginaEditarMascota from './paginas/PaginaEditarMascota';
+import PaginaPerfilProveedor from './paginas/PaginaPerfilProveedor';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/detalle-cuidador" element={<DetalleCuidador />} />
         <Route path="/registromascota" element={<PaginaRegistroMascotas />} />
         <Route path="/editar-mascota/:id" element={<PaginaEditarMascota />} />
+        <Route path="/perfil-proveedor" element={<PaginaPerfilProveedor />} />
         <Route path="*" element={<PaginaLogin />} />
       </Routes>
     </BrowserRouter>

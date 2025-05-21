@@ -1,0 +1,230 @@
+/* Root style */
+:root {
+  --primary: #A87B54;
+  --secondary: #FEFAE0;
+  --background: #FAEDCD;
+  --text: #4b3928;
+  --gray: #666;
+  --green: #cfe1c4;
+  --radius: 16px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --font-main: 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  background-color: #fefcf7;
+}
+
+.profile-container {
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  padding: 40px 20px;
+  background-color: var(--background);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: transparent;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 0;
+  margin-right: 12px;
+}
+
+.section-title {
+  flex: 1;
+  text-align: center;
+  font-size: 16px;
+  color: var(--primary);
+  margin: 0;
+}
+
+/* Image */
+.image-container {
+  padding: 0 16px;
+}
+
+.walker-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--radius);
+}
+
+/* Content */
+.profile-content {
+  padding: 16px;
+}
+
+.walker-name {
+  margin: 12px 0 4px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.walker-role {
+  font-size: 14px;
+  color: var(--gray);
+  margin-bottom: 12px;
+}
+
+/* Info cards */
+.info-cards {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 8px;
+}
+
+.info-card {
+  flex: 1;
+  background-color: var(--secondary);
+  border-radius: var(--radius);
+  padding: 12px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.info-main {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--primary);
+  margin: 0;
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--gray);
+}
+
+/* About section */
+.about-section h4 {
+  margin-bottom: 4px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.about-section p {
+  font-size: 13px;
+  color: var(--gray);
+  margin-top: 0;
+}
+
+/* Availability */
+.availability {
+  margin-top: 20px;
+}
+
+.availability h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.days,
+.times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.day-button,
+.time-button {
+  background-color: var(--secondary);
+  color: var(--text);
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.day-button.selected,
+.time-button.selected {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Buttons */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.location-button {
+  background-color: var(--green);
+  border: none;
+  padding: 12px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--text);
+  transition: 0.2s ease;
+}
+
+.location-button:hover {
+  background-color: #b6d4aa;
+}
+
+.book-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.book-button:hover {
+  background-color: #9e6d49;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .profile-container {
+    margin: 16px;
+  }
+
+  .walker-image {
+    height: 160px;
+  }
+
+  .info-cards {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .day-button,
+  .time-button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .walker-name {
+    font-size: 20px;
+  }
+}
