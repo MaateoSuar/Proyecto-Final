@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+// Dentro del componente
+
 
 
 const categories = [
@@ -14,6 +18,11 @@ const API_URL = import.meta.env.VITE_API_URL;
 // ...
 
 const ProviderList = () => {
+  const navigate = useNavigate();
+
+const handleProviderClick = (provider) => {
+  navigate(`/proveedor/${provider._id}`, { state: { provider } });
+};
   const location = useLocation();
   const [providers, setProviders] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -58,19 +67,18 @@ const ProviderList = () => {
   };
 
   const randomDistance = () => (Math.random() * 3 + 0.5).toFixed(1);
-
   return (
     <div style={{ backgroundColor: '#fceecf', minHeight: '100vh', padding: '1rem' }}>
       <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#000' }}>Nuestros Servicios</h2>
 
-      <div className='filtros' style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', overflowX: 'auto' }}>
+      <div className='filtros' style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', overflowX: 'auto' }} >
         {categories.map(cat => (
           <button
             key={cat.value}
             onClick={() => handleCategoryClick(cat.value)}
             style={{
               backgroundColor: selectedCategory === cat.value ? '#d4a373' : '#FEFAE0',
-              color: '#000', // forzar letra negra
+              color: '#000',
               fontWeight: selectedCategory === cat.value ? 'bold' : 'normal',
               padding: '0.5rem 1rem',
               borderRadius: '20px',
@@ -92,16 +100,21 @@ const ProviderList = () => {
         <p style={{ textAlign: 'center', color: '#333' }}>No se encontraron proveedores para esta categoría.</p>
       ) : (
         providers.map(provider => (
-          <div key={provider._id} style={{
-            backgroundColor: '#FEFAE0',
-            borderRadius: '16px',
-            padding: '1rem',
-            marginBottom: '1rem',
-            display: 'flex',
-            alignItems: 'center',
-            boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-            color: '#000' // fuerza letra negra
-          }}>
+          <div
+            key={provider._id}
+            onClick={() => handleProviderClick(provider)} // ← Aquí redirige al perfil
+            style={{
+              backgroundColor: '#FEFAE0',
+              borderRadius: '16px',
+              padding: '1rem',
+              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
+              color: '#000',
+              cursor: 'pointer' // ← Indicador visual de clic
+            }}
+          >
             <img
               src={provider.profileImage?.replace(/\u200E|\u202A|\u202C/g, '')}
               alt={provider.name}
@@ -127,6 +140,7 @@ const ProviderList = () => {
       )}
     </div>
   );
+
 };
 
 export default ProviderList;

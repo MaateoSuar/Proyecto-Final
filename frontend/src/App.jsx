@@ -10,6 +10,7 @@ import PaginaRegistroMascotas from './paginas/PaginaRegistroMascota';
 import PaginaEditarMascota from './paginas/PaginaEditarMascota';
 import PaginaPerfilProveedor from './paginas/PaginaPerfilProveedor';
 import ProviderList from './componentes/ProviderList';
+import PerfilProveedor from './componentes/PerfilProveedor';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/editar-mascota/:id" element={<PaginaEditarMascota />} />
         <Route path="/perfil-proveedor" element={<PaginaPerfilProveedor />} />
         <Route path="/proveedores" element={<ProviderList />} />
+        <Route path="/proveedor/:id" element={<PerfilProveedor />} />
         <Route path="*" element={<PaginaLogin />} />
       </Routes>
     </BrowserRouter>
