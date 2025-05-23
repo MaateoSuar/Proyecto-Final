@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../estilos/perfilproveedor.css';
 
@@ -8,6 +8,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const PerfilProveedor = () => {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const [proveedor, setProveedor] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -39,7 +40,6 @@ const PerfilProveedor = () => {
     if (res.data.success) {
       alert(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}.`);
 
-      // Actualizar disponibilidad localmente en el estado
       const nuevaDisponibilidad = proveedor.availability.map(a => {
         if (a.day === selectedDay) {
           return {
@@ -66,7 +66,25 @@ const PerfilProveedor = () => {
     <div className="profile-container" style={{color:'black'}}>
       {/* ... Aquí puedes reemplazar proveedorData con proveedor */}
       <div className="header">
-        <button className="back-button" onClick={() => window.history.back()}>&larr;</button>
+      <button
+       className="back-button"
+       onClick={() => {
+       if (location.state?.from) {
+       navigate(location.state.from, {
+        replace: true,
+        state: {
+          selectedCategory: location.state.selectedCategory,
+          orderPrice: location.state.orderPrice
+        }
+         });
+         } else {
+        navigate(-1);
+       }
+     }}
+    >
+
+    &larr;
+  </button>
         <h2 className="section-title">Perfil Proveedor</h2>
       </div>
 

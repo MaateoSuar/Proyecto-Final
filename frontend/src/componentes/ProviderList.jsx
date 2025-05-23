@@ -1,39 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
-// Dentro del componente
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FaFilter } from 'react-icons/fa';
 
 const categories = [
   { label: 'Peluquería', value: 'peluqueria' },
   { label: 'Paseo', value: 'paseo' },
   { label: 'Cuidado', value: 'cuidado' },
 ];
-const API_URL = import.meta.env.VITE_API_URL;
 
-// ...
+const API_URL = import.meta.env.VITE_API_URL;
 
 const ProviderList = () => {
   const navigate = useNavigate();
-
-const handleProviderClick = (provider) => {
-  navigate(`/proveedor/${provider._id}`, { state: { provider } });
-};
   const location = useLocation();
   const [providers, setProviders] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(location.state?.selectedCategory || null);
+  const [orderPrice, setOrderPrice] = useState(location.state?.orderPrice || null);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const filterRef = useRef();
 
-  const fetchProviders = async (tipoServicio = null) => {
+  const fetchProviders = async (tipoServicio = null, ordenPrecio = null) => {
     try {
       const res = await axios.get(`${API_URL}/prestadores`, {
-        params: tipoServicio ? { tipoServicio } : {},
+        params: {
+          ...(tipoServicio ? { tipoServicio } : {}),
+          ...(ordenPrecio ? { ordenPrecio } : {})
+        },
       });
 
-      if (res.data.success) {
-        const activos = res.data.data.filter(p => p.isActive);
-        setProviders(activos);
-      } else {
+if (res.data.success) {
+  let activos = res.data.data.filter(p => p.isActive);
+
+  if (ordenPrecio) {
+    activos.sort((a, b) => {
+      const precioA = a.services?.[0]?.price ?? Infinity;
+      const precioB = b.services?.[0]?.price ?? Infinity;
+      return ordenPrecio === 'asc' ? precioA - precioB : precioB - precioA;
+    });
+  }
+
+  setProviders(activos);
+}
+ else {
         setProviders([]);
       }
     } catch (error) {
@@ -42,21 +51,63 @@ const handleProviderClick = (provider) => {
     }
   };
 
+
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const categoria = params.get('categoria');
+  const precio = params.get('precio');
+  if (categoria) setSelectedCategory(categoria);
+  if (precio) setOrderPrice(precio);
+}, [location.search]);
+
+
+
   useEffect(() => {
-    const filtroInicial = location.state?.filtro || null;
-    setSelectedCategory(filtroInicial);
-    fetchProviders(filtroInicial);
+    fetchProviders(selectedCategory, orderPrice);
+  }, [selectedCategory, orderPrice]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setShowFilterMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleCategoryClick = (value) => {
-    if (value === selectedCategory) {
-      setSelectedCategory(null);
-      fetchProviders();
-    } else {
-      setSelectedCategory(value);
-      fetchProviders(value);
+const handleProviderClick = (provider) => {
+  navigate(
+    {
+      pathname: `/proveedor/${provider._id}`,
+      search: location.search
+    },
+    {
+      state: {
+        provider,
+        from: `${location.pathname}${location.search}`,
+        selectedCategory,
+        orderPrice
+      }
     }
-  };
+  );
+};
+
+
+
+const handleCategoryClick = (value) => {
+  const newCategory = value === selectedCategory ? null : value;
+  setSelectedCategory(newCategory);
+
+  const params = new URLSearchParams(location.search);
+  if (newCategory) {
+    params.set('categoria', newCategory);
+  } else {
+    params.delete('categoria');
+  }
+  navigate({ search: params.toString() }, { replace: true });
+};
+
 
   const renderServices = (services) => {
     if (!services || services.length === 0) return 'Sin servicios';
@@ -64,11 +115,83 @@ const handleProviderClick = (provider) => {
   };
 
   const randomDistance = () => (Math.random() * 3 + 0.5).toFixed(1);
+
   return (
     <div style={{ backgroundColor: '#fceecf', minHeight: '100vh', padding: '1rem' }}>
-      <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem', color: '#000' }}>Nuestros Servicios</h2>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '1rem'
+      }}>
+        <h2 style={{ fontSize: '1.2rem', color: '#000' }}>Nuestros Servicios</h2>
 
-      <div className='filtros' style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', overflowX: 'auto' }} >
+        {/* Filtro de precio */}
+        <div ref={filterRef} style={{ position: 'relative' }}>
+          <button
+            onClick={() => setShowFilterMenu(!showFilterMenu)}
+            style={{
+              backgroundColor: '#FEFAE0',
+              border: '1px solid #ccc',
+              borderRadius: '50%',
+              padding: '0.5rem',
+              cursor: 'pointer',
+              color: '#000'
+            }}
+          >
+            <FaFilter />
+          </button>
+          {showFilterMenu && (
+            <div style={{
+              position: 'absolute',
+              top: '2.5rem',
+              right: 0,
+              backgroundColor: '#FEFAE0',
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
+              zIndex: 10,
+              fontSize: '0.9rem',
+              color: '#000',
+              minWidth: '180px'
+            }}>
+              <div
+            onClick={() => {
+             const params = new URLSearchParams(location.search);
+             params.set('precio', 'asc');                        
+              navigate({ search: params.toString() }, { replace: true });
+              setOrderPrice('asc');
+              setShowFilterMenu(false);
+              }}
+
+                style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}
+              >
+                Precio: Menor - Mayor
+              </div>
+              <div
+                onClick={() => {
+               const params = new URLSearchParams(location.search); // 🔁 CAMBIO
+               params.set('precio', 'desc');                        // 🔁 CAMBIO
+                navigate({ search: params.toString() }, { replace: true }); // 🔁 CAMBIO
+               setOrderPrice('desc');
+               setShowFilterMenu(false);
+              }}
+
+                style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}
+              >
+                Precio: Mayor - Menor
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className='filtros' style={{
+        display: 'flex',
+        gap: '1rem',
+        marginBottom: '1.5rem',
+        overflowX: 'auto'
+      }}>
         {categories.map(cat => (
           <button
             key={cat.value}
@@ -99,7 +222,7 @@ const handleProviderClick = (provider) => {
         providers.map(provider => (
           <div
             key={provider._id}
-            onClick={() => handleProviderClick(provider)} // ← Aquí redirige al perfil
+            onClick={() => handleProviderClick(provider)}
             style={{
               backgroundColor: '#FEFAE0',
               borderRadius: '16px',
@@ -109,7 +232,7 @@ const handleProviderClick = (provider) => {
               alignItems: 'center',
               boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
               color: '#000',
-              cursor: 'pointer' // ← Indicador visual de clic
+              cursor: 'pointer'
             }}
           >
             <img
@@ -137,7 +260,6 @@ const handleProviderClick = (provider) => {
       )}
     </div>
   );
-
 };
 
 export default ProviderList;
