@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const petRoutes = require('./routes/pets');
 const prestadorRoutes = require('./routes/prestador');
 const path = require('path');
+const reservationRoutes = require('./routes/reservations')
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/pets', petRoutes);
+app.use('/api/reservas', reservationRoutes);
 app.use('/api/prestadores', prestadorRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

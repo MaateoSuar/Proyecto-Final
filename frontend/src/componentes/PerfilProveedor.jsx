@@ -32,33 +32,58 @@ const PerfilProveedor = () => {
   }
 
   try {
-    const res = await axios.put(`${API_URL}/prestadores/${proveedor._id}/availability`, {
-      day: selectedDay,
-      slot: selectedTime
-    });
+    const token = localStorage.getItem('token'); // o donde lo estés guardando
 
-    if (res.data.success) {
+    // 1. Crear reserva
+    const resReserva = await axios.post(
+      `${API_URL}/reservas`,
+      {
+        provider: proveedor._id,
+        pet: 'ID_DE_LA_MASCOTA_DEL_USUARIO', // ← REEMPLAZAR dinámicamente
+        date: selectedDay,
+        time: selectedTime
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    if (resReserva.status === 201) {
       alert(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}.`);
 
-      const nuevaDisponibilidad = proveedor.availability.map(a => {
-        if (a.day === selectedDay) {
-          return {
-            ...a,
-            slots: a.slots.filter(h => h !== selectedTime)
-          };
+      // 2. Actualizar disponibilidad en backend
+      const resDisponibilidad = await axios.put(
+        `${API_URL}/prestadores/${proveedor._id}/availability`,
+        { day: selectedDay, slot: selectedTime },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-        return a;
-      });
+      );
 
-      setProveedor({ ...proveedor, availability: nuevaDisponibilidad });
-      setSelectedDay(null);
-      setSelectedTime(null);
+      if (resDisponibilidad.data.success) {
+        const nuevaDisponibilidad = proveedor.availability.map(a =>
+          a.day === selectedDay
+            ? { ...a, slots: a.slots.filter(h => h !== selectedTime) }
+            : a
+        );
+
+        setProveedor({ ...proveedor, availability: nuevaDisponibilidad });
+        setSelectedDay(null);
+        setSelectedTime(null);
+      }
     }
   } catch (err) {
-    console.error('Error al reservar horario:', err);
-    alert('❌ Ocurrió un error al reservar el horario. Intenta nuevamente.');
+    console.error('Error al reservar:', err);
+    console.log(err);
+    
+    alert('❌ Ocurrió un error al reservar. Intenta nuevamente.');
   }
 };
+
 
   if (!proveedor) return <p style={{ padding: "1rem" }}>Cargando proveedor...</p>;
 
