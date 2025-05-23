@@ -5,19 +5,21 @@ const Provider = require('../models/Prestador');
 
 const createReservation = async (req, res) => {
   try {
-    const { provider, date, time } = req.body;
+    const { provider, pet, date, time } = req.body;
     const userId = req.user.id; // Asegúrate de tener middleware de autenticación que agregue req.user
 
     // Validar existencia del proveedor y la mascota
+    const existingPet = await Pet.findById(pet);
     const existingProvider = await Provider.findById(provider);
 
-    if (!existingProvider) {
+    if (!existingPet || !existingProvider) {
       return res.status(404).json({ message: 'Pet or provider not found' });
     }
 
     const reservation = new Reservation({
       user: userId,
       provider,
+      pet,
       date,
       time
     });
@@ -32,8 +34,8 @@ const createReservation = async (req, res) => {
 
 const getAllReservations = async (req, res) => {
   try {
-    const reservations = await Reservation.find()
-      .populate('user', 'name email')
+    const reservations = await Reservation.find({ user: req.user.id }) // solo las del usuario logueado
+      .populate('user', 'fullName email') // si querés los datos del usuario
       .populate('provider', 'name email')
       .populate('pet', 'name type');
 
@@ -43,6 +45,8 @@ const getAllReservations = async (req, res) => {
     res.status(500).json({ message: 'Error fetching reservations' });
   }
 };
+
+
 
 module.exports = {
   createReservation,

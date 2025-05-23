@@ -12,6 +12,8 @@ const PerfilProveedor = () => {
   const [proveedor, setProveedor] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [misMascotas, setMisMascotas] = useState([]);
+  const [mascotaSeleccionada, setMascotaSeleccionada] = useState('');
 
   useEffect(() => {
     if (location.state?.provider) {
@@ -23,23 +25,31 @@ const PerfilProveedor = () => {
         })
         .catch(err => console.error('Error al cargar proveedor', err));
     }
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get(`${API_URL}/pets`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => setMisMascotas(res.data))
+        .catch(err => console.error('Error al cargar mascotas', err));
+    }
   }, [id, location.state]);
 
   const handleBook = async () => {
-  if (!selectedDay || !selectedTime) {
-    alert("Por favor selecciona un día y hora.");
+  if (!selectedDay || !selectedTime || !mascotaSeleccionada) {
+    alert("Por favor selecciona un día, hora y una mascota.");
     return;
   }
 
   try {
-    const token = localStorage.getItem('token'); // o donde lo estés guardando
+    const token = localStorage.getItem('token');
 
-    // 1. Crear reserva
     const resReserva = await axios.post(
       `${API_URL}/reservas`,
       {
         provider: proveedor._id,
-        pet: 'ID_DE_LA_MASCOTA_DEL_USUARIO', // ← REEMPLAZAR dinámicamente
+        pet: mascotaSeleccionada, // ✅ Aquí va el ID de la mascota seleccionada
         date: selectedDay,
         time: selectedTime
       },
@@ -53,7 +63,6 @@ const PerfilProveedor = () => {
     if (resReserva.status === 201) {
       alert(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}.`);
 
-      // 2. Actualizar disponibilidad en backend
       const resDisponibilidad = await axios.put(
         `${API_URL}/prestadores/${proveedor._id}/availability`,
         { day: selectedDay, slot: selectedTime },
@@ -74,42 +83,42 @@ const PerfilProveedor = () => {
         setProveedor({ ...proveedor, availability: nuevaDisponibilidad });
         setSelectedDay(null);
         setSelectedTime(null);
+        setMascotaSeleccionada(''); // limpiar selección
       }
     }
   } catch (err) {
     console.error('Error al reservar:', err);
-    console.log(err);
-    
     alert('❌ Ocurrió un error al reservar. Intenta nuevamente.');
   }
 };
 
 
+
   if (!proveedor) return <p style={{ padding: "1rem" }}>Cargando proveedor...</p>;
 
   return (
-    <div className="profile-container" style={{color:'black'}}>
+    <div className="profile-container" style={{ color: 'black' }}>
       {/* ... Aquí puedes reemplazar proveedorData con proveedor */}
       <div className="header">
-      <button
-       className="back-button"
-       onClick={() => {
-       if (location.state?.from) {
-       navigate(location.state.from, {
-        replace: true,
-        state: {
-          selectedCategory: location.state.selectedCategory,
-          orderPrice: location.state.orderPrice
-        }
-         });
-         } else {
-        navigate(-1);
-       }
-     }}
-    >
+        <button
+          className="back-button"
+          onClick={() => {
+            if (location.state?.from) {
+              navigate(location.state.from, {
+                replace: true,
+                state: {
+                  selectedCategory: location.state.selectedCategory,
+                  orderPrice: location.state.orderPrice
+                }
+              });
+            } else {
+              navigate(-1);
+            }
+          }}
+        >
 
-    &larr;
-  </button>
+          &larr;
+        </button>
         <h2 className="section-title">Perfil Proveedor</h2>
       </div>
 
@@ -190,6 +199,36 @@ const PerfilProveedor = () => {
           >
             📍 Ver ubicación
           </button>
+          <div className="pet-selector" style={{ marginTop: '1rem' }}>
+  <label style={{ fontWeight: 'bold' }}>Selecciona tu mascota:</label>
+  <div className="pet-list" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+    {misMascotas.map((pet) => (
+      <div
+        key={pet._id}
+        onClick={() => setMascotaSeleccionada(pet._id)}
+        className={`pet-card ${mascotaSeleccionada === pet._id ? 'selected' : ''}`}
+        style={{
+          border: mascotaSeleccionada === pet._id ? '2px solid #007bff' : '1px solid #ccc',
+          padding: '0.5rem',
+          borderRadius: '10px',
+          cursor: 'pointer',
+          width: '120px',
+          textAlign: 'center',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        }}
+      >
+        <img
+          src={pet.image || 'https://via.placeholder.com/100'}
+          alt={pet.name}
+          style={{ width: '100px', height: '100px', borderRadius: '10px', objectFit: 'cover' }}
+        />
+        <p style={{ margin: '0.5rem 0 0', fontWeight: 'bold' }}>{pet.name}</p>
+        <small>{pet.breed}</small>
+      </div>
+    ))}
+  </div>
+</div>
+
           <button className="book-button" onClick={handleBook}>
             Reservar ahora
           </button>
