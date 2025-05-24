@@ -15,6 +15,11 @@ const PerfilProveedor = () => {
   const [misMascotas, setMisMascotas] = useState([]);
   const [mascotaSeleccionada, setMascotaSeleccionada] = useState('');
 
+
+  function upper(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   useEffect(() => {
     if (location.state?.provider) {
       setProveedor(location.state.provider);
@@ -25,6 +30,36 @@ const PerfilProveedor = () => {
         })
         .catch(err => console.error('Error al cargar proveedor', err));
     }
+
+    const fetchProveedor = async () => {
+      try {
+        let dataProveedor;
+
+        if (location.state?.provider) {
+          dataProveedor = location.state.provider;
+        } else {
+          const res = await axios.get(`${API_URL}/prestadores/${id}`);
+          if (res.data.success) {
+            dataProveedor = res.data.data;
+          }
+        }
+
+        if (dataProveedor) {
+          setProveedor(dataProveedor);
+
+          // Establecer selectedDay automáticamente si hay disponibilidad
+          const diasOrdenados = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+          const diasDisponibles = dataProveedor.availability?.map(d => d.day.toLowerCase());
+
+          const primerDiaDisponible = diasOrdenados.find(dia => diasDisponibles.includes(dia));
+          if (primerDiaDisponible) setSelectedDay(primerDiaDisponible);
+        }
+      } catch (err) {
+        console.error('Error al cargar proveedor', err);
+      }
+    };
+
+    fetchProveedor();
 
     const token = localStorage.getItem('token');
     if (token) {
@@ -37,35 +72,22 @@ const PerfilProveedor = () => {
   }, [id, location.state]);
 
   const handleBook = async () => {
-  if (!selectedDay || !selectedTime || !mascotaSeleccionada) {
-    alert("Por favor selecciona un día, hora y una mascota.");
-    return;
-  }
+    if (!selectedDay || !selectedTime || !mascotaSeleccionada) {
+      alert("Por favor selecciona un día, hora y una mascota.");
+      return;
+    }
 
-  try {
-    const token = localStorage.getItem('token');
+    try {
+      const token = localStorage.getItem('token');
 
-    const resReserva = await axios.post(
-      `${API_URL}/reservas`,
-      {
-        provider: proveedor._id,
-        pet: mascotaSeleccionada, // ✅ Aquí va el ID de la mascota seleccionada
-        date: selectedDay,
-        time: selectedTime
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      }
-    );
-
-    if (resReserva.status === 201) {
-      alert(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}.`);
-
-      const resDisponibilidad = await axios.put(
-        `${API_URL}/prestadores/${proveedor._id}/availability`,
-        { day: selectedDay, slot: selectedTime },
+      const resReserva = await axios.post(
+        `${API_URL}/reservas`,
+        {
+          provider: proveedor._id,
+          pet: mascotaSeleccionada, // ✅ Aquí va el ID de la mascota seleccionada
+          date: selectedDay,
+          time: selectedTime
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -73,24 +95,39 @@ const PerfilProveedor = () => {
         }
       );
 
-      if (resDisponibilidad.data.success) {
-        const nuevaDisponibilidad = proveedor.availability.map(a =>
-          a.day === selectedDay
-            ? { ...a, slots: a.slots.filter(h => h !== selectedTime) }
-            : a
-        );
+      if (resReserva.status === 201) {
+        alert(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}.`);
 
-        setProveedor({ ...proveedor, availability: nuevaDisponibilidad });
-        setSelectedDay(null);
-        setSelectedTime(null);
-        setMascotaSeleccionada(''); // limpiar selección
+        const resDisponibilidad = await axios.put(
+          `${API_URL}/prestadores/${proveedor._id}/availability`,
+          { day: selectedDay, slot: selectedTime },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        console.log(resDisponibilidad);
+
+        if (resDisponibilidad.data.success) {
+          const nuevaDisponibilidad = proveedor.availability.map(a =>
+            a.day === selectedDay
+              ? { ...a, slots: a.slots.filter(h => h !== selectedTime) }
+              : a
+          );
+
+          setProveedor({ ...proveedor, availability: nuevaDisponibilidad });
+          setSelectedDay(null);
+          setSelectedTime(null);
+          setMascotaSeleccionada(''); // limpiar selección
+        }
       }
+    } catch (err) {
+      console.error('Error al reservar:', err);
+      console.error('Error al reservar:', err.response?.data || err.message);
+      alert('❌ Ocurrió un error al reservar. Intenta nuevamente.');
     }
-  } catch (err) {
-    console.error('Error al reservar:', err);
-    alert('❌ Ocurrió un error al reservar. Intenta nuevamente.');
-  }
-};
+  };
 
 
 
@@ -132,7 +169,7 @@ const PerfilProveedor = () => {
 
       <div className="profile-content">
         <h3 className="walker-name">{proveedor.name}</h3>
-        <p className="walker-role">{proveedor.services?.map(s => s.type).join(', ')}</p>
+        <p className="walker-role">{upper(proveedor.services?.map(s => s.type).join(', '))}</p>
 
         <div className="info-cards">
           <div className="info-card">
@@ -154,7 +191,7 @@ const PerfilProveedor = () => {
           <p>Servicios ofrecidos:</p>
           <ul>
             {proveedor.services?.map((s, idx) => (
-              <li key={idx}><strong>{s.type}</strong>: {s.description} (${s.price})</li>
+              <li key={idx}><strong>{upper(s.type)}</strong>: {s.description}</li>
             ))}
           </ul>
         </div>
@@ -191,6 +228,24 @@ const PerfilProveedor = () => {
               ))}
           </div>
         </div>
+        <div className="pet-selector">
+          <label>Selecciona tu mascota:</label>
+          <div className="pet-thumbnails">
+            {misMascotas.map((pet) => (
+              <div
+                key={pet._id}
+                className={`pet-thumb ${mascotaSeleccionada === pet._id ? 'selected' : ''}`}
+                onClick={() => setMascotaSeleccionada(pet._id)}
+                title={pet.name}
+              >
+                <img
+                  src={pet.image || 'https://via.placeholder.com/80'}
+                  alt={pet.name}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
 
         <div className="buttons">
           <button
@@ -199,35 +254,6 @@ const PerfilProveedor = () => {
           >
             📍 Ver ubicación
           </button>
-          <div className="pet-selector" style={{ marginTop: '1rem' }}>
-  <label style={{ fontWeight: 'bold' }}>Selecciona tu mascota:</label>
-  <div className="pet-list" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
-    {misMascotas.map((pet) => (
-      <div
-        key={pet._id}
-        onClick={() => setMascotaSeleccionada(pet._id)}
-        className={`pet-card ${mascotaSeleccionada === pet._id ? 'selected' : ''}`}
-        style={{
-          border: mascotaSeleccionada === pet._id ? '2px solid #007bff' : '1px solid #ccc',
-          padding: '0.5rem',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          width: '120px',
-          textAlign: 'center',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-        }}
-      >
-        <img
-          src={pet.image || 'https://via.placeholder.com/100'}
-          alt={pet.name}
-          style={{ width: '100px', height: '100px', borderRadius: '10px', objectFit: 'cover' }}
-        />
-        <p style={{ margin: '0.5rem 0 0', fontWeight: 'bold' }}>{pet.name}</p>
-        <small>{pet.breed}</small>
-      </div>
-    ))}
-  </div>
-</div>
 
           <button className="book-button" onClick={handleBook}>
             Reservar ahora
