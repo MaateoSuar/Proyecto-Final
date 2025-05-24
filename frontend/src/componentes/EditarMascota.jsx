@@ -22,6 +22,7 @@ export default function EditarMascota() {
   const [fotoMascota, setFotoMascota] = useState(null);
   const [nuevaVacuna, setNuevaVacuna] = useState('');
   const [nuevaAlergia, setNuevaAlergia] = useState('');
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   // Cargar datos de la mascota
   useEffect(() => {
@@ -162,6 +163,32 @@ export default function EditarMascota() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!showConfirmDelete) {
+      setShowConfirmDelete(true);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+      const token = localStorage.getItem('token');
+      
+      await axios.delete(`${API_URL}/pets/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      alert('Mascota eliminada con éxito');
+      navigate('/inicio');
+    } catch (error) {
+      console.error('Error al eliminar:', error);
+      setError(error.response?.data?.message || 'Error al eliminar la mascota');
+    } finally {
+      setIsLoading(false);
+      setShowConfirmDelete(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div style={styles.container}>
@@ -197,6 +224,41 @@ export default function EditarMascota() {
         }
         input[type="number"] {
           color-scheme: dark;
+        }
+        .delete-button {
+          margin-top: 10px;
+          width: 100%;
+          padding: 12px;
+          background-color: #dc3545;
+          color: white;
+          font-weight: bold;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+        }
+        .confirm-delete {
+          background-color: #dc3545;
+          color: white;
+          padding: 10px;
+          margin-top: 10px;
+          border-radius: 8px;
+          text-align: center;
+        }
+        .confirm-delete button {
+          margin: 5px;
+          padding: 5px 15px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+        .confirm-delete button.confirm {
+          background-color: #fff;
+          color: #dc3545;
+        }
+        .confirm-delete button.cancel {
+          background-color: transparent;
+          color: #fff;
+          border: 1px solid #fff;
         }
       `}</style>
 
@@ -340,6 +402,18 @@ export default function EditarMascota() {
           >
             {isLoading ? 'Guardando...' : 'Guardar Cambios'}
           </button>
+
+          {showConfirmDelete ? (
+            <div className="confirm-delete">
+              <p>¿Estás seguro de que deseas eliminar esta mascota?</p>
+              <button className="confirm" onClick={handleDelete}>Sí, eliminar</button>
+              <button className="cancel" onClick={() => setShowConfirmDelete(false)}>Cancelar</button>
+            </div>
+          ) : (
+            <button className="delete-button" onClick={handleDelete}>
+              Eliminar Mascota
+            </button>
+          )}
         </div>
       </div>
     </>

@@ -120,4 +120,24 @@ const updatePet = async (req, res) => {
   }
 };
 
-module.exports = { createPet, getMyPets, getPetById, updatePet };
+const deletePet = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Verificar que la mascota existe y pertenece al usuario
+    const pet = await Pet.findOne({ _id: id, owner: req.user.id });
+    if (!pet) {
+      return res.status(404).json({ message: 'Mascota no encontrada' });
+    }
+
+    // Eliminar la mascota
+    await Pet.findByIdAndDelete(id);
+
+    res.json({ message: 'Mascota eliminada con éxito' });
+  } catch (err) {
+    console.error('Error al eliminar mascota:', err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { createPet, getMyPets, getPetById, updatePet, deletePet };
