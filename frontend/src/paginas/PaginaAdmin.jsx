@@ -64,7 +64,9 @@ export default function PaginaAdmin() {
     navigate('/login');
   };
 
-  const toggleEstadoPrestador = async (prestadorId, estadoActual) => {
+  const toggleEstadoPrestador = async (prestadorId, estadoActual, nombrePrestador) => {
+    const accion = estadoActual ? 'desactivar' : 'activar';
+
     try {
       const response = await fetch(`${API_URL}/api/prestadores/${prestadorId}/toggle-status`, {
         method: 'PUT',
@@ -85,15 +87,15 @@ export default function PaginaAdmin() {
           p._id === prestadorId ? { ...p, isActive: !p.isActive } : p
         )
       );
-      toast.success(`Prestador ${!estadoActual ? 'activado' : 'desactivado'} exitosamente`);
+      toast.success(`Prestador ${nombrePrestador} ${!estadoActual ? 'activado' : 'desactivado'} exitosamente`);
     } catch (error) {
       console.error('Error al actualizar estado:', error);
-      toast.error(error.message);
+      toast.error(`Error al ${accion} prestador: ${error.message}`);
     }
   };
 
-  const eliminarUsuario = async (userId) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este usuario?')) return;
+  const eliminarUsuario = async (userId, nombreUsuario) => {
+    if (!confirm(`¿Estás seguro de que deseas eliminar al usuario ${nombreUsuario}?`)) return;
 
     try {
       const response = await fetch(`${API_URL}/api/auth/users/${userId}`, {
@@ -107,15 +109,15 @@ export default function PaginaAdmin() {
       }
 
       setUsuarios(prev => prev.filter(u => u._id !== userId));
-      toast.success('Usuario eliminado exitosamente');
+      toast.success(`Usuario ${nombreUsuario} eliminado exitosamente`);
     } catch (error) {
       console.error('Error al eliminar usuario:', error);
-      toast.error(error.message);
+      toast.error(`Error al eliminar usuario: ${error.message}`);
     }
   };
 
-  const eliminarPrestador = async (prestadorId) => {
-    if (!confirm('¿Estás seguro de que deseas eliminar este prestador?')) return;
+  const eliminarPrestador = async (prestadorId, nombrePrestador) => {
+    if (!confirm(`¿Estás seguro de que deseas eliminar al prestador ${nombrePrestador}?`)) return;
 
     try {
       const response = await fetch(`${API_URL}/api/prestadores/${prestadorId}`, {
@@ -129,10 +131,10 @@ export default function PaginaAdmin() {
       }
 
       setPrestadores(prev => prev.filter(p => p._id !== prestadorId));
-      toast.success('Prestador eliminado exitosamente');
+      toast.success(`Prestador ${nombrePrestador} eliminado exitosamente`);
     } catch (error) {
       console.error('Error al eliminar prestador:', error);
-      toast.error(error.message);
+      toast.error(`Error al eliminar prestador: ${error.message}`);
     }
   };
 
@@ -176,7 +178,7 @@ export default function PaginaAdmin() {
                     <td>{usuario.address || 'N/A'}</td>
                     <td>
                       <button 
-                        onClick={() => eliminarUsuario(usuario._id)}
+                        onClick={() => eliminarUsuario(usuario._id, usuario.fullName)}
                         className="delete-button"
                       >
                         Eliminar
@@ -222,13 +224,13 @@ export default function PaginaAdmin() {
                     <td>
                       <div className="action-buttons">
                         <button 
-                          onClick={() => toggleEstadoPrestador(prestador._id, prestador.isActive)}
+                          onClick={() => toggleEstadoPrestador(prestador._id, prestador.isActive, prestador.name)}
                           className={prestador.isActive ? 'deactivate-button' : 'activate-button'}
                         >
                           {prestador.isActive ? 'Desactivar' : 'Activar'}
                         </button>
                         <button 
-                          onClick={() => eliminarPrestador(prestador._id)}
+                          onClick={() => eliminarPrestador(prestador._id, prestador.name)}
                           className="delete-button"
                         >
                           Eliminar
