@@ -16,7 +16,7 @@ export default function FormularioLogin() {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Evita recargar la página
+    e.preventDefault();
 
     if (!correo || !contrasena) {
       toast.warning('Por favor, completa todos los campos.');
@@ -38,15 +38,20 @@ export default function FormularioLogin() {
       const data = await respuesta.json();
 
       if (!respuesta.ok) {
-        throw new Error(data.message || 'Credenciales inválidas');
+        throw new Error(data.msg || 'Credenciales inválidas');
       }
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
       toast.success('¡Inicio de sesión exitoso!');
-      navigate('/inicio');
-      console.log('Token:', data.token);
+      
+      // Redirigir según el email
+      if (correo === 'admin@admin.com') {
+        navigate('/admin');
+      } else {
+        navigate('/inicio');
+      }
 
     } catch (error) {
       toast.error('Error al iniciar sesión: ' + error.message);
