@@ -102,4 +102,67 @@ const updateProfile = async (req, res) => {
   }
 };
 
-module.exports = {	loginUsuario, registrarUsuario, updateProfile, obtenerPerfil };
+// Nuevo controlador para obtener todos los usuarios
+const getAllUsers = async (req, res) => {
+  try {
+    const usuarios = await Usuario.find()
+      .select('-password')
+      .sort({ fullName: 1 }); // Ordenar por nombre
+
+    if (!usuarios || usuarios.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No se encontraron usuarios'
+      });
+    }
+
+    res.json({
+      success: true,
+      data: usuarios,
+      count: usuarios.length
+    });
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error al obtener usuarios',
+      error: error.message 
+    });
+  }
+};
+
+// Nuevo controlador para eliminar usuario
+const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const usuario = await Usuario.findByIdAndDelete(userId);
+    
+    if (!usuario) {
+      return res.status(404).json({
+        success: false,
+        message: 'Usuario no encontrado'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Usuario eliminado correctamente'
+    });
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Error al eliminar usuario',
+      error: error.message 
+    });
+  }
+};
+
+module.exports = {	
+  loginUsuario, 
+  registrarUsuario, 
+  updateProfile, 
+  obtenerPerfil,
+  getAllUsers,
+  deleteUser
+};

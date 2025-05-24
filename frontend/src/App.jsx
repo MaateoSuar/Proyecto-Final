@@ -13,6 +13,7 @@ import PaginaEditarMascota from './paginas/PaginaEditarMascota';
 import PaginaPerfilProveedor from './paginas/PaginaPerfilProveedor';
 import ProviderList from './componentes/ProviderList';
 import PerfilProveedor from './componentes/PerfilProveedor';
+import PaginaAdmin from './paginas/PaginaAdmin';
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="/perfil-proveedor" element={<PaginaPerfilProveedor />} />
         <Route path="/proveedores" element={<ProviderList />} />
         <Route path="/proveedor/:id" element={<PerfilProveedor />} />
+        <Route path="/admin" element={<PaginaAdmin />} />
         <Route path="*" element={<PaginaLogin />} />
       </Routes>
     </BrowserRouter>
