@@ -3,7 +3,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useEffect } from 'react';
 import PaginaLogin from './paginas/PaginaLogin';
 import PaginaRegistro from './paginas/PaginaRegistro';
 import PaginaHome from './paginas/PaginaHome';
@@ -16,14 +15,6 @@ import ProviderList from './componentes/ProviderList';
 import PerfilProveedor from './componentes/PerfilProveedor';
 
 export default function App() {
-  useEffect(() => {
-    // Deshabilitar el comportamiento por defecto del botón atrás
-    window.history.pushState(null, null, window.location.pathname);
-    window.addEventListener('popstate', () => {
-      window.history.pushState(null, null, window.location.pathname);
-    });
-  }, []);
-
   return (
     <BrowserRouter>
       <ToastContainer
