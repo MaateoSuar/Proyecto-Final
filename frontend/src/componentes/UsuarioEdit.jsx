@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import "../estilos/profile.css";
 
 export default function UsuarioEdit() {
@@ -82,11 +83,11 @@ export default function UsuarioEdit() {
       storedUser.profileImage = data.profileImage || avatar;
       localStorage.setItem("usuario", JSON.stringify(storedUser));
 
-      alert("Datos guardados correctamente.");
+      toast.success("¡Datos guardados correctamente!");
       navigate("/inicio");
     } catch (error) {
       console.error("Error al guardar:", error);
-      alert("Ocurrió un error al guardar los datos.");
+      toast.error("Ocurrió un error al guardar los datos.");
     }
   };
 
