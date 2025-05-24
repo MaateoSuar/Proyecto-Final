@@ -95,47 +95,103 @@ export default function PaginaAdmin() {
   };
 
   const eliminarUsuario = async (userId, nombreUsuario) => {
-    if (!confirm(`¿Estás seguro de que deseas eliminar al usuario ${nombreUsuario}?`)) return;
+    const toastId = toast.warn(
+      <div>
+        <p>¿Estás seguro de que deseas eliminar al usuario {nombreUsuario}?</p>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+          <button
+            onClick={async () => {
+              toast.dismiss(toastId);
+              try {
+                const response = await fetch(`${API_URL}/api/auth/users/${userId}`, {
+                  method: 'DELETE'
+                });
 
-    try {
-      const response = await fetch(`${API_URL}/api/auth/users/${userId}`, {
-        method: 'DELETE'
-      });
+                const data = await response.json();
+                
+                if (!response.ok) {
+                  throw new Error(data.message || 'Error al eliminar usuario');
+                }
 
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al eliminar usuario');
+                setUsuarios(prev => prev.filter(u => u._id !== userId));
+                toast.success(`Usuario ${nombreUsuario} eliminado exitosamente`);
+              } catch (error) {
+                console.error('Error al eliminar usuario:', error);
+                toast.error(`Error al eliminar usuario: ${error.message}`);
+              }
+            }}
+            style={{
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginLeft: '10px'
+            }}
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>,
+      {
+        position: "top-right",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: true,
+        closeButton: true
       }
-
-      setUsuarios(prev => prev.filter(u => u._id !== userId));
-      toast.success(`Usuario ${nombreUsuario} eliminado exitosamente`);
-    } catch (error) {
-      console.error('Error al eliminar usuario:', error);
-      toast.error(`Error al eliminar usuario: ${error.message}`);
-    }
+    );
   };
 
   const eliminarPrestador = async (prestadorId, nombrePrestador) => {
-    if (!confirm(`¿Estás seguro de que deseas eliminar al prestador ${nombrePrestador}?`)) return;
+    const toastId = toast.warn(
+      <div>
+        <p>¿Estás seguro de que deseas eliminar al prestador {nombrePrestador}?</p>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}>
+          <button
+            onClick={async () => {
+              toast.dismiss(toastId);
+              try {
+                const response = await fetch(`${API_URL}/api/prestadores/${prestadorId}`, {
+                  method: 'DELETE'
+                });
 
-    try {
-      const response = await fetch(`${API_URL}/api/prestadores/${prestadorId}`, {
-        method: 'DELETE'
-      });
+                const data = await response.json();
+                
+                if (!response.ok) {
+                  throw new Error(data.message || 'Error al eliminar prestador');
+                }
 
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al eliminar prestador');
+                setPrestadores(prev => prev.filter(p => p._id !== prestadorId));
+                toast.success(`Prestador ${nombrePrestador} eliminado exitosamente`);
+              } catch (error) {
+                console.error('Error al eliminar prestador:', error);
+                toast.error(`Error al eliminar prestador: ${error.message}`);
+              }
+            }}
+            style={{
+              backgroundColor: '#dc3545',
+              color: 'white',
+              border: 'none',
+              padding: '5px 10px',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              marginLeft: '10px'
+            }}
+          >
+            Eliminar
+          </button>
+        </div>
+      </div>,
+      {
+        position: "top-right",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: true,
+        closeButton: true
       }
-
-      setPrestadores(prev => prev.filter(p => p._id !== prestadorId));
-      toast.success(`Prestador ${nombrePrestador} eliminado exitosamente`);
-    } catch (error) {
-      console.error('Error al eliminar prestador:', error);
-      toast.error(`Error al eliminar prestador: ${error.message}`);
-    }
+    );
   };
 
   if (loading) {
