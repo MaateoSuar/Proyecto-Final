@@ -1,6 +1,7 @@
 // src/componentes/FormularioRegistro.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import '../estilos/registro.css';
 
 export default function FormularioRegistro() {
@@ -25,7 +26,7 @@ export default function FormularioRegistro() {
     e.preventDefault();
   
     if (formulario.password !== formulario.confirmPassword) {
-      alert('Las contraseñas no coinciden.');
+      toast.error('Las contraseñas no coinciden');
       return;
     }
 
@@ -54,10 +55,19 @@ export default function FormularioRegistro() {
         JSON.stringify({ fullName: formulario.fullName })
       );
   
-      // ✅ REDIRIGIR A EDICIÓN DE PERFIL
+      toast.success('¡Cuenta creada con éxito! 🎉', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      
       navigate('/login');
     } catch (error) {
-      alert('Error: ' + error.message);
+      toast.error('Error en el registro: ' + error.message);
     }
   };
   

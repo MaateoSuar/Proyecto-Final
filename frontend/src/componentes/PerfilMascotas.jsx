@@ -1,6 +1,7 @@
 import React, { use, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const PerfilMascotas = () => {
@@ -66,38 +67,38 @@ const PerfilMascotas = () => {
   };
 
   const handleSave = async () => {
-  try {
-    const form = new FormData();
-    form.append('name', formData.nombre);
-    form.append('type', 'dog');
-    form.append('breed', formData.raza);
-    form.append('birthdate', formData.fechaNacimiento);
-    form.append('weight', formData.peso);
-    form.append('spayed', formData.esterilizado);
-    form.append("vaccines", JSON.stringify(formData.vacunas));
-    form.append("allergies", JSON.stringify(formData.alergias));
+    try {
+      const form = new FormData();
+      form.append('name', formData.nombre);
+      form.append('type', 'dog');
+      form.append('breed', formData.raza);
+      form.append('birthdate', formData.fechaNacimiento);
+      form.append('weight', formData.peso);
+      form.append('spayed', formData.esterilizado);
+      form.append("vaccines", JSON.stringify(formData.vacunas));
+      form.append("allergies", JSON.stringify(formData.alergias));
 
-    if (fotoMascota) {
-      const blob = await (await fetch(fotoMascota)).blob();
-      form.append('image', blob, 'mascota.jpg');
+      if (fotoMascota) {
+        const blob = await (await fetch(fotoMascota)).blob();
+        form.append('image', blob, 'mascota.jpg');
+      }
+      console.log(form);
+      
+      const response = await axios.post(`${API_URL}/pets`, form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      console.log('Token enviado:', localStorage.getItem('token'));
+
+      toast.success('¡Mascota registrada con éxito!');
+      navigate('/inicio');
+    } catch (error) {
+      console.error(error);
+      toast.error('Error al guardar la mascota');
     }
-    console.log(form);
-    
-    const response = await axios.post(`${API_URL}/pets`, form, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    console.log('Token enviado:', localStorage.getItem('token'));
-
-    alert('¡Mascota registrada!');
-    navigate('/inicio');
-  } catch (error) {
-    console.error(error);
-    alert('Error al guardar la mascota');
-  }
-};
+  };
 
   return (
     <>

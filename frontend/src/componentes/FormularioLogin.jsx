@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import '../estilos/login.css';
 
 export default function FormularioLogin() {
@@ -18,7 +19,7 @@ export default function FormularioLogin() {
     e.preventDefault(); // Evita recargar la página
 
     if (!correo || !contrasena) {
-      alert('Por favor, completa todos los campos.');
+      toast.warning('Por favor, completa todos los campos.');
       return;
     }
 
@@ -43,11 +44,12 @@ export default function FormularioLogin() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
 
+      toast.success('¡Inicio de sesión exitoso!');
       navigate('/inicio');
       console.log('Token:', data.token);
 
     } catch (error) {
-      alert('Error al iniciar sesión: ' + error.message);
+      toast.error('Error al iniciar sesión: ' + error.message);
     }
   };
 

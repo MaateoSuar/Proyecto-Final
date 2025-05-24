@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function EditarMascota() {
   const navigate = useNavigate();
@@ -153,10 +154,11 @@ export default function EditarMascota() {
         },
       });
 
-      alert('¡Mascota actualizada con éxito!');
+      toast.success('¡Mascota actualizada con éxito!');
       navigate('/inicio');
     } catch (error) {
       console.error('Error al actualizar:', error);
+      toast.error(error.response?.data?.message || 'Error al actualizar la mascota');
       setError(error.response?.data?.message || 'Error al actualizar la mascota');
     } finally {
       setIsLoading(false);
@@ -178,10 +180,11 @@ export default function EditarMascota() {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      alert('Mascota eliminada con éxito');
+      toast.success('Mascota eliminada con éxito');
       navigate('/inicio');
     } catch (error) {
       console.error('Error al eliminar:', error);
+      toast.error(error.response?.data?.message || 'Error al eliminar la mascota');
       setError(error.response?.data?.message || 'Error al eliminar la mascota');
     } finally {
       setIsLoading(false);
