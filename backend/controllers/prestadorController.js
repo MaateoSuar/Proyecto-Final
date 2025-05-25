@@ -4,11 +4,10 @@ const Prestador = require('../models/Prestador');
 const getAllPrestadores = async (req, res) => {
     try {
         const { tipoServicio } = req.query;
-        let query = { isActive: true };
+        let query = {};
 
         // Si se proporciona un tipo de servicio, filtrar prestadores que tengan ese servicio
         if (tipoServicio) {
-            // Usamos $elemMatch para buscar en el array de servicios
             query['services'] = {
                 $elemMatch: {
                     type: tipoServicio.toLowerCase()
@@ -27,7 +26,7 @@ const getAllPrestadores = async (req, res) => {
             });
         }
 
-        res.status(200).json({
+        res.json({
             success: true,
             data: prestadores,
             count: prestadores.length
@@ -116,9 +115,69 @@ const updateAvailability = async (req, res) => {
     }
 };
 
+// Activar/Desactivar prestador
+const togglePrestadorStatus = async (req, res) => {
+    try {
+        const { prestadorId } = req.params;
+        const { isActive } = req.body;
+
+        const prestador = await Prestador.findById(prestadorId);
+        if (!prestador) {
+            return res.status(404).json({
+                success: false,
+                message: 'Prestador no encontrado'
+            });
+        }
+
+        prestador.isActive = isActive;
+        await prestador.save();
+
+        res.json({
+            success: true,
+            message: `Prestador ${isActive ? 'activado' : 'desactivado'} correctamente`,
+            data: prestador
+        });
+    } catch (error) {
+        console.error('Error al actualizar estado del prestador:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar estado del prestador',
+            error: error.message
+        });
+    }
+};
+
+// Eliminar prestador
+const deletePrestador = async (req, res) => {
+    try {
+        const { prestadorId } = req.params;
+        const prestador = await Prestador.findByIdAndDelete(prestadorId);
+
+        if (!prestador) {
+            return res.status(404).json({
+                success: false,
+                message: 'Prestador no encontrado'
+            });
+        }
+
+        res.json({
+            success: true,
+            message: 'Prestador eliminado correctamente'
+        });
+    } catch (error) {
+        console.error('Error al eliminar prestador:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar prestador',
+            error: error.message
+        });
+    }
+};
 
 module.exports = {
     getAllPrestadores,
     createManyPrestadores,
-    updateAvailability
+    updateAvailability,
+    togglePrestadorStatus,
+    deletePrestador
 }; 

@@ -13,6 +13,8 @@ import PaginaEditarMascota from './paginas/PaginaEditarMascota';
 import PaginaPerfilProveedor from './paginas/PaginaPerfilProveedor';
 import ProviderList from './componentes/ProviderList';
 import Reservar from './componentes/Reservar';
+import PaginaAdmin from './paginas/PaginaAdmin';
+import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
 
 export default function App() {
   return (
@@ -46,6 +48,14 @@ export default function App() {
         <Route path="/perfil-proveedor" element={<PaginaPerfilProveedor />} />
         <Route path="/proveedores" element={<ProviderList />} />
         <Route path="/proveedor/:id" element={<Reservar />} />
+        <Route 
+          path="/admin" 
+          element={
+            <RutaProtegidaAdmin>
+              <PaginaAdmin />
+            </RutaProtegidaAdmin>
+          } 
+        />
         <Route path="*" element={<PaginaLogin />} />
       </Routes>
     </BrowserRouter>

@@ -121,7 +121,6 @@ const Reservar = () => {
 
   const isHorarioDisponible = (dia, horario) => {
     if (!proveedor?._id) return false;
-
     return !reservas.some(reserva =>
       reserva?.provider?._id === proveedor._id &&
       reserva?.date?.toLowerCase() === dia.toLowerCase() &&
