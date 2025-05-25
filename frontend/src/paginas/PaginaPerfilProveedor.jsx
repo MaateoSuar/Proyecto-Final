@@ -1,5 +1,5 @@
-import PerfilProveedor from '../componentes/PerfilProveedor';
+import Reservar from '../componentes/Reservar';
 
 export default function PaginaPerfilProveedor() {
-  return <PerfilProveedor />;
+  return <Reservar />;
 }

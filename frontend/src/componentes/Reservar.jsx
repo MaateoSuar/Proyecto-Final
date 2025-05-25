@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
-import '../estilos/perfilproveedor.css';
+import '../estilos/Reservar.css';
 import { toast } from 'react-toastify';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const PerfilProveedor = () => {
+const Reservar = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -120,23 +120,24 @@ const PerfilProveedor = () => {
   }, [id, location.state, navigate]);
 
   const isHorarioDisponible = (dia, horario) => {
-    // Verificar si ya existe una reserva para este proveedor en este día y horario
-    return !reservas.some(reserva => 
-      reserva.provider._id === proveedor._id && 
-      reserva.date.toLowerCase() === dia.toLowerCase() && 
-      reserva.time === horario
+    if (!proveedor?._id) return false;
+
+    return !reservas.some(reserva =>
+      reserva?.provider?._id === proveedor._id &&
+      reserva?.date?.toLowerCase() === dia.toLowerCase() &&
+      reserva?.time === horario
     );
   };
 
   const getHorariosDisponibles = () => {
     if (!selectedDay || !proveedor?.availability) return [];
-    
-    const diaSeleccionado = proveedor.availability.find(d => 
+
+    const diaSeleccionado = proveedor.availability.find(d =>
       d.day.toLowerCase() === selectedDay.toLowerCase()
     );
-    
+
     if (!diaSeleccionado) return [];
-    
+
     // Filtrar solo los horarios que no están reservados
     return diaSeleccionado.slots.filter(slot => isHorarioDisponible(selectedDay, slot));
   };
@@ -230,27 +231,27 @@ const PerfilProveedor = () => {
             })
             .filter(Boolean);
 
-            setProveedor(prevState => ({
-              ...prevState,
-              availability: nuevaDisponibilidad
-            }));
+          setProveedor(prevState => ({
+            ...prevState,
+            availability: nuevaDisponibilidad
+          }));
 
-            // Resetear selecciones
-            setSelectedTime(null);
-            setMascotaSeleccionada('');
+          // Resetear selecciones
+          setSelectedTime(null);
+          setMascotaSeleccionada('');
 
-            // Si el día actual ya no tiene horarios disponibles, seleccionar el siguiente día
-            const horariosRestantes = getHorariosDisponibles();
-            if (horariosRestantes.length === 0) {
-              const siguienteDia = nuevaDisponibilidad[0]?.day;
-              if (siguienteDia) {
-                setSelectedDay(siguienteDia);
-              } else {
-                setSelectedDay(null);
-              }
+          // Si el día actual ya no tiene horarios disponibles, seleccionar el siguiente día
+          const horariosRestantes = getHorariosDisponibles();
+          if (horariosRestantes.length === 0) {
+            const siguienteDia = nuevaDisponibilidad[0]?.day;
+            if (siguienteDia) {
+              setSelectedDay(siguienteDia);
+            } else {
+              setSelectedDay(null);
             }
+          }
 
-            toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}`);
+          toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}`);
         } catch (error) {
           console.error('Error al actualizar disponibilidad:', error);
           // No mostramos toast aquí ya que la reserva fue exitosa
@@ -279,7 +280,7 @@ const PerfilProveedor = () => {
 
   return (
     <div className="profile-container" style={{ color: 'black' }}>
-      <div className="header">
+      <div className="reservaHeader">
         <button
           className="back-button"
           onClick={() => {
@@ -403,8 +404,8 @@ const PerfilProveedor = () => {
             📍 Ver ubicación
           </button>
 
-          <button 
-            className="book-button" 
+          <button
+            className="book-button"
             onClick={handleBook}
             disabled={isLoading}
           >
@@ -416,4 +417,4 @@ const PerfilProveedor = () => {
   );
 };
 
-export default PerfilProveedor;
+export default Reservar;

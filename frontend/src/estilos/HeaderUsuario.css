@@ -1,0 +1,7 @@
+.headerUsuario {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    padding-bottom: 25px;
+}

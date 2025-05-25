@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "../estilos/HeaderUsuario.css";
 
 export default function HeaderUsuario() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function HeaderUsuario() {
   }, []);
 
   return (
-    <div className="header">
+    <div className="headerUsuario">
       <div className="avatar" onClick={handleClick}>
         {user.image ? (
           <img src={user.image} alt="Avatar" className="avatar-img" />

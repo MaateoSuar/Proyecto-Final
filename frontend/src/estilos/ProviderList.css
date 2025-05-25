@@ -1,0 +1,120 @@
+h3, h2 {
+    font-weight: 500;
+}
+.filtros button {
+    margin: 5px;
+}
+.provider-list-container {
+  background-color: #fceecf;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.headerList {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 1.2rem;
+  color: #000;
+}
+
+.filter-container {
+  position: relative;
+}
+
+.filter-button {
+  background-color: #FEFAE0;
+  border: 0.5px solid #ccc;
+  border-radius: 50%;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #000;
+}
+
+.filter-menu {
+  position: absolute;
+  top: 2.5rem;
+  right: 0;
+  background-color: #FEFAE0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  font-size: 0.9rem;
+  color: #000;
+  min-width: 180px;
+}
+
+.filter-option {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.filtros {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.category-button {
+  background-color: #FEFAE0;
+  color: #000;
+  font-weight: normal;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  white-space: nowrap;
+  margin: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.category-button.active {
+  background-color: #d4a373;
+  font-weight: bold;
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #000;
+}
+
+.no-providers {
+  text-align: center;
+  color: #333;
+}
+
+.provider-card {
+  background-color: #FEFAE0;
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  color: #000;
+  cursor: pointer;
+}
+
+.provider-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.provider-info h3,
+.provider-info p {
+  margin: 0;
+}
+
+.provider-info p {
+  font-size: 0.9rem;
+  margin: 0.2rem 0;
+}
