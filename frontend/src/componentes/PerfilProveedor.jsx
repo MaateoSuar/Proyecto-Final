@@ -120,11 +120,11 @@ const PerfilProveedor = () => {
   }, [id, location.state, navigate]);
 
   const isHorarioDisponible = (dia, horario) => {
-    // Verificar si ya existe una reserva para este proveedor en este día y horario
-    return !reservas.some(reserva => 
-      reserva.provider._id === proveedor._id && 
-      reserva.date.toLowerCase() === dia.toLowerCase() && 
-      reserva.time === horario
+    if (!proveedor?._id) return false;
+    return !reservas.some(reserva =>
+      reserva?.provider?._id === proveedor._id &&
+      reserva?.date?.toLowerCase() === dia.toLowerCase() &&
+      reserva?.time === horario
     );
   };
 
