@@ -64,6 +64,16 @@
   color: #000000;
   margin-top: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-disabled {
+  background-color: #f5f5f5 !important;
+  color: #666666 !important;
+  cursor: not-allowed;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .item {

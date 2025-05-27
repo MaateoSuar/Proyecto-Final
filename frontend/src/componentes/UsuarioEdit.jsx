@@ -9,8 +9,7 @@ export default function UsuarioEdit() {
     name: "",
     phone: "",
     address: "",
-    idPhoto: true,
-    faceVerification: true,
+    email: ""
   });
 
   const [passwordForm, setPasswordForm] = useState({
@@ -40,8 +39,7 @@ export default function UsuarioEdit() {
           name: data.fullName || "",
           phone: data.phone || "",
           address: data.address || "",
-          idPhoto: true,
-          faceVerification: true,
+          email: data.email || ""
         });
         // Establecer la imagen de perfil actual
         if (data.profileImage) {
@@ -188,6 +186,17 @@ export default function UsuarioEdit() {
         </label>
 
         <label>
+          <span>Email</span>
+          <input
+            name="email"
+            type="email"
+            value={form.email}
+            disabled
+            className="input-disabled"
+          />
+        </label>
+
+        <label>
           <span>Teléfono</span>
           <input
             name="phone"
@@ -206,14 +215,6 @@ export default function UsuarioEdit() {
             onChange={handleChange}
           />
         </label>
-
-        <div className="item">
-          Foto de ID {form.idPhoto && <span className="check">✔</span>}
-        </div>
-
-        <div className="item">
-          Verificación facial {form.faceVerification && <span className="check">✔</span>}
-        </div>
 
         <button type="submit" className="save-button" onClick={handleSave}>
           Guardar
