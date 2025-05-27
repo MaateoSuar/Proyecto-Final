@@ -10,6 +10,11 @@ const categories = [
   { label: 'Cuidado', value: 'cuidado' },
 ];
 
+function upper(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 const ProviderList = () => {
@@ -205,7 +210,7 @@ const ProviderList = () => {
             />
             <div className="provider-info">
               <h3>{provider.name}</h3>
-              <p>{renderServices(provider.services)}</p>
+              <p>{upper(renderServices(provider.services))}</p>
               <p>⭐ {provider.rating?.average ?? 'N/A'} · 📍 {randomDistance()} km</p>
             </div>
           </div>
