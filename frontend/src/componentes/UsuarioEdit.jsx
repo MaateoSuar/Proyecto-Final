@@ -13,6 +13,13 @@ export default function UsuarioEdit() {
     faceVerification: true,
   });
 
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
@@ -50,6 +57,52 @@ export default function UsuarioEdit() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPasswordForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleChangePassword = async () => {
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error("Las contraseñas nuevas no coinciden");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/auth/cambiar-password`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.msg || "Error al cambiar la contraseña");
+      }
+
+      toast.success("¡Contraseña actualizada correctamente!");
+      setPasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      setShowPasswordForm(false);
+    } catch (error) {
+      toast.error(error.message || "Error al cambiar la contraseña");
+    }
   };
 
   const handleSave = async () => {
@@ -165,6 +218,48 @@ export default function UsuarioEdit() {
         <button type="submit" className="save-button" onClick={handleSave}>
           Guardar
         </button>
+
+        <button type="button" className="change-password-button" onClick={() => setShowPasswordForm(!showPasswordForm)}>
+          {showPasswordForm ? "Cancelar cambio de contraseña" : "Cambiar contraseña"}
+        </button>
+
+        {showPasswordForm && (
+          <div className="password-form">
+            <label>
+              <span>Contraseña actual</span>
+              <input
+                name="currentPassword"
+                type="password"
+                value={passwordForm.currentPassword}
+                onChange={handlePasswordChange}
+              />
+            </label>
+
+            <label>
+              <span>Nueva contraseña</span>
+              <input
+                name="newPassword"
+                type="password"
+                value={passwordForm.newPassword}
+                onChange={handlePasswordChange}
+              />
+            </label>
+
+            <label>
+              <span>Confirmar nueva contraseña</span>
+              <input
+                name="confirmPassword"
+                type="password"
+                value={passwordForm.confirmPassword}
+                onChange={handlePasswordChange}
+              />
+            </label>
+
+            <button type="button" className="save-password-button" onClick={handleChangePassword}>
+              Actualizar contraseña
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );
