@@ -18,6 +18,12 @@ export default function UsuarioEdit() {
     confirmPassword: "",
   });
 
+  const [showPasswords, setShowPasswords] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false
+  });
+
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
@@ -157,6 +163,13 @@ export default function UsuarioEdit() {
     }
   };
 
+  const togglePasswordVisibility = (field) => {
+    setShowPasswords(prev => ({
+      ...prev,
+      [field]: !prev[field]
+    }));
+  };
+
   return (
     <div className="container">
       <div className="avatar" onClick={handleAvatarClick}>
@@ -228,32 +241,56 @@ export default function UsuarioEdit() {
           <div className="password-form">
             <label>
               <span>Contraseña actual</span>
-              <input
-                name="currentPassword"
-                type="password"
-                value={passwordForm.currentPassword}
-                onChange={handlePasswordChange}
-              />
+              <div className="password-input-container">
+                <input
+                  name="currentPassword"
+                  type={showPasswords.currentPassword ? "text" : "password"}
+                  value={passwordForm.currentPassword}
+                  onChange={handlePasswordChange}
+                />
+                <span 
+                  className="toggle-password"
+                  onClick={() => togglePasswordVisibility('currentPassword')}
+                >
+                  {showPasswords.currentPassword ? '🙉' : '🙈'}
+                </span>
+              </div>
             </label>
 
             <label>
               <span>Nueva contraseña</span>
-              <input
-                name="newPassword"
-                type="password"
-                value={passwordForm.newPassword}
-                onChange={handlePasswordChange}
-              />
+              <div className="password-input-container">
+                <input
+                  name="newPassword"
+                  type={showPasswords.newPassword ? "text" : "password"}
+                  value={passwordForm.newPassword}
+                  onChange={handlePasswordChange}
+                />
+                <span 
+                  className="toggle-password"
+                  onClick={() => togglePasswordVisibility('newPassword')}
+                >
+                  {showPasswords.newPassword ? '🙉' : '🙈'}
+                </span>
+              </div>
             </label>
 
             <label>
               <span>Confirmar nueva contraseña</span>
-              <input
-                name="confirmPassword"
-                type="password"
-                value={passwordForm.confirmPassword}
-                onChange={handlePasswordChange}
-              />
+              <div className="password-input-container">
+                <input
+                  name="confirmPassword"
+                  type={showPasswords.confirmPassword ? "text" : "password"}
+                  value={passwordForm.confirmPassword}
+                  onChange={handlePasswordChange}
+                />
+                <span 
+                  className="toggle-password"
+                  onClick={() => togglePasswordVisibility('confirmPassword')}
+                >
+                  {showPasswords.confirmPassword ? '🙉' : '🙈'}
+                </span>
+              </div>
             </label>
 
             <button type="button" className="save-password-button" onClick={handleChangePassword}>
