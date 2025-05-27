@@ -8,49 +8,56 @@ export default function PaginaAdmin() {
   const [prestadores, setPrestadores] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    console.log('API_URL:', API_URL);
+    console.log('Componente montado, API_URL:', API_URL);
     cargarDatos();
   }, []);
 
   const cargarDatos = async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem('token');
+      console.log('Token obtenido:', token ? 'Presente' : 'No encontrado');
       
       // Cargar usuarios
-      console.log('Intentando cargar usuarios...');
-      const respUsuarios = await fetch(`${API_URL}/api/auth/users`);
-      console.log('Respuesta usuarios:', respUsuarios);
+      console.log('URL de usuarios:', `${API_URL}/auth/usuarios`);
+      const respUsuarios = await fetch(`${API_URL}/auth/usuarios`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('Status de respuesta usuarios:', respUsuarios.status);
       
       const dataUsuarios = await respUsuarios.json();
-      console.log('Datos usuarios recibidos:', dataUsuarios);
+      console.log('Datos usuarios completos:', dataUsuarios);
       
       if (!respUsuarios.ok) {
         throw new Error(dataUsuarios.message || 'Error al cargar usuarios');
       }
       
-      if (dataUsuarios.success) {
-        setUsuarios(dataUsuarios.data || []);
-      } else {
-        setUsuarios([]);
-        console.warn('No se encontraron usuarios');
-      }
+      setUsuarios(dataUsuarios.data || []);
+      console.log('Usuarios establecidos en el estado:', dataUsuarios.data);
 
       // Cargar prestadores
-      console.log('Intentando cargar prestadores...');
-      const respPrestadores = await fetch(`${API_URL}/api/prestadores`);
-      console.log('Respuesta prestadores:', respPrestadores);
+      console.log('URL de prestadores:', `${API_URL}/prestadores`);
+      const respPrestadores = await fetch(`${API_URL}/prestadores`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('Status de respuesta prestadores:', respPrestadores.status);
       
       const dataPrestadores = await respPrestadores.json();
-      console.log('Datos prestadores recibidos:', dataPrestadores);
+      console.log('Datos prestadores completos:', dataPrestadores);
       
       if (!respPrestadores.ok) {
         throw new Error(dataPrestadores.message || 'Error al cargar prestadores');
       }
       
       setPrestadores(dataPrestadores.data || []);
+      console.log('Prestadores establecidos en el estado:', dataPrestadores.data);
 
     } catch (error) {
       console.error('Error detallado:', error);
@@ -68,7 +75,7 @@ export default function PaginaAdmin() {
     const accion = estadoActual ? 'desactivar' : 'activar';
 
     try {
-      const response = await fetch(`${API_URL}/api/prestadores/${prestadorId}/toggle-status`, {
+      const response = await fetch(`${API_URL}/prestadores/${prestadorId}/toggle-status`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -103,8 +110,12 @@ export default function PaginaAdmin() {
             onClick={async () => {
               toast.dismiss(toastId);
               try {
-                const response = await fetch(`${API_URL}/api/auth/users/${userId}`, {
-                  method: 'DELETE'
+                const token = localStorage.getItem('token');
+                const response = await fetch(`${API_URL}/auth/usuarios/${userId}`, {
+                  method: 'DELETE',
+                  headers: {
+                    'Authorization': `Bearer ${token}`
+                  }
                 });
 
                 const data = await response.json();
@@ -153,7 +164,7 @@ export default function PaginaAdmin() {
             onClick={async () => {
               toast.dismiss(toastId);
               try {
-                const response = await fetch(`${API_URL}/api/prestadores/${prestadorId}`, {
+                const response = await fetch(`${API_URL}/prestadores/${prestadorId}`, {
                   method: 'DELETE'
                 });
 
