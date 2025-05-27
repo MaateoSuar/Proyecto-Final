@@ -16,6 +16,8 @@ const ProviderList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [providers, setProviders] = useState([]);
+  const [filteredProviders, setFilteredProviders] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(location.state?.selectedCategory || null);
   const [orderPrice, setOrderPrice] = useState(location.state?.orderPrice || null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
@@ -42,12 +44,15 @@ const ProviderList = () => {
         }
 
         setProviders(activos);
+        setFilteredProviders(activos);
       } else {
         setProviders([]);
+        setFilteredProviders([]);
       }
     } catch (error) {
       console.error('Error al cargar prestadores:', error);
       setProviders([]);
+      setFilteredProviders([]);
     }
   };
 
@@ -72,6 +77,17 @@ const ProviderList = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim() === '') {
+      setFilteredProviders(providers);
+    } else {
+      const filtered = providers.filter(provider => 
+        provider.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredProviders(filtered);
+    }
+  }, [searchTerm, providers]);
 
   const handleProviderClick = (provider) => {
     navigate(
@@ -149,6 +165,16 @@ const ProviderList = () => {
         </div>
       </div>
 
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
+
       <div className="filtros">
         {categories.map(cat => (
           <button
@@ -163,10 +189,10 @@ const ProviderList = () => {
 
       <h3 className="subtitle">Especialistas disponibles</h3>
 
-      {providers.length === 0 ? (
-        <p className="no-providers">No se encontraron proveedores para esta categoría.</p>
+      {filteredProviders.length === 0 ? (
+        <p className="no-providers">No se encontraron proveedores para esta búsqueda.</p>
       ) : (
-        providers.map(provider => (
+        filteredProviders.map(provider => (
           <div
             className="provider-card"
             key={provider._id}

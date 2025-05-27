@@ -1,6 +1,5 @@
 import HeaderUsuario from '../componentes/HeaderUsuario'; 
 import TarjetaMascotas from '../componentes/TarjetaMascotas';
-import Busqueda from '../componentes/Busqueda';
 import Servicios from '../componentes/Servicios';
 import Planes from '../componentes/Planes';
 import Cuidadores from '../componentes/Cuidadores';
@@ -10,10 +9,6 @@ export default function PaginaHome() {
   return (
     <div className="pagina-home">
       <HeaderUsuario />
-
-      <div className="search-box">
-        <Busqueda />
-      </div>
 
       <div className="pets-box">
         <h2 className="section-title">Tus mascotas</h2>

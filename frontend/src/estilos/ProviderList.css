@@ -118,3 +118,24 @@ h3, h2 {
   font-size: 0.9rem;
   margin: 0.2rem 0;
 }
+
+.search-container {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #caa878;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #FEFAE0;
+  color: #333;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
