@@ -1,13 +1,12 @@
-//src/App.jsx
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 import PaginaLogin from './paginas/PaginaLogin';
 import PaginaRegistro from './paginas/PaginaRegistro';
 import PaginaHome from './paginas/PaginaHome';
 import PaginaUsuario from './paginas/PaginaUsuario';
-import DetalleCuidador from "./paginas/DetalleCuidador";
+import DetalleCuidador from './paginas/DetalleCuidador';
 import PaginaRegistroMascotas from './paginas/PaginaRegistroMascota';
 import PaginaEditarMascota from './paginas/PaginaEditarMascota';
 import PaginaPerfilProveedor from './paginas/PaginaPerfilProveedor';
@@ -15,6 +14,7 @@ import ProviderList from './componentes/ProviderList';
 import Reservar from './componentes/Reservar';
 import PaginaAdmin from './paginas/PaginaAdmin';
 import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
+import HistorialReservas from './componentes/HistorialReservas'; // ✅ Importamos el nuevo componente
 
 export default function App() {
   return (
@@ -48,6 +48,7 @@ export default function App() {
         <Route path="/perfil-proveedor" element={<PaginaPerfilProveedor />} />
         <Route path="/proveedores" element={<ProviderList />} />
         <Route path="/proveedor/:id" element={<Reservar />} />
+        <Route path="/mis-reservas" element={<HistorialReservas />} /> {/* ✅ Nueva ruta agregada */}
         <Route 
           path="/admin" 
           element={

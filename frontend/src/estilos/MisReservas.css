@@ -1,0 +1,105 @@
+.reservas-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.reservas-container h2 {
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.reservas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reserva-card {
+  background-color: var(--secondary);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.reserva-info {
+  flex: 1;
+}
+
+.reserva-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.reserva-header h3 {
+  margin: 0;
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.reserva-date {
+  color: var(--gray);
+  font-size: 0.9rem;
+}
+
+.reserva-pet {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+}
+
+.reservas-loading {
+  text-align: center;
+  color: var(--gray);
+  padding: 2rem;
+}
+
+.reservas-empty {
+  text-align: center;
+  color: var(--gray);
+  padding: 2rem;
+}
+
+.reservas-empty h3 {
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .reserva-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .reserva-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .cancel-button {
+    width: 100%;
+  }
+} 

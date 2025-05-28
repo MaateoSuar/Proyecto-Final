@@ -1,0 +1,75 @@
+/* Contenedor principal */
+.historial-contenedor {
+  width: 90%;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #fffdf5;
+  border-radius: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  font-family: inherit;
+}
+
+/* Título */
+.historial-contenedor h2 {
+  color: #7a5c3e;
+  font-weight: bold;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Tarjeta individual de reserva */
+.historial-reserva {
+  padding: 1rem;
+  border-bottom: 1px solid #e8e1d5;
+}
+
+.historial-reserva:last-child {
+  border-bottom: none;
+}
+
+/* Nombre de la mascota */
+.historial-nombre {
+  color: #3b2f1f;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+
+/* Información del cuidador y turno */
+.historial-info {
+  color: #5e4a3a;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+/* Botón cancelar */
+.historial-btn {
+  width: 100%;
+  background-color: #d7a844;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.historial-btn:hover {
+  background-color: #c3952e;
+}
+
+/* 🧠 Preparado para el próximo sprint con media queries */
+@media (min-width: 768px) {
+  .historial-contenedor {
+    padding: 2rem 2.5rem;
+  }
+
+  .historial-btn {
+    width: auto;
+  }
+}
