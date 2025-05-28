@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import "../estilos/profile.css";
 
-export default function UsuarioEdit() {
+export default function UsuarioEdit({ isEditMode }) {
   const API_URL = import.meta.env.VITE_API_URL;
   const [form, setForm] = useState({
     name: "",
@@ -171,6 +171,7 @@ export default function UsuarioEdit() {
   };
 
   return (
+    
     <div className="container">
       <div className="avatar" onClick={handleAvatarClick}>
         {avatar ? (
@@ -184,6 +185,7 @@ export default function UsuarioEdit() {
           onChange={handleAvatarChange}
           ref={fileInputRef}
           style={{ display: "none" }}
+          disabled={!isEditMode}
         />
       </div>
 
@@ -195,6 +197,7 @@ export default function UsuarioEdit() {
             type="text"
             value={form.name}
             onChange={handleChange}
+            disabled={!isEditMode}
           />
         </label>
 
@@ -216,6 +219,7 @@ export default function UsuarioEdit() {
             type="text"
             value={form.phone}
             onChange={handleChange}
+            disabled={!isEditMode}
           />
         </label>
 
@@ -226,16 +230,26 @@ export default function UsuarioEdit() {
             type="text"
             value={form.address}
             onChange={handleChange}
+            disabled={!isEditMode}
           />
         </label>
 
-        <button type="submit" className="save-button" onClick={handleSave}>
-          Guardar
-        </button>
+          {isEditMode && (
+            <>
+              <button type="submit" className="save-button" onClick={handleSave}>
+                Guardar
+              </button>
 
-        <button type="button" className="change-password-button" onClick={() => setShowPasswordForm(!showPasswordForm)}>
-          {showPasswordForm ? "Cancelar cambio de contraseña" : "Cambiar contraseña"}
-        </button>
+              <button
+                type="button"
+                className="change-password-button"
+                onClick={() => setShowPasswordForm(!showPasswordForm)}
+              >
+                {showPasswordForm ? "Cancelar cambio de contraseña" : "Cambiar contraseña"}
+              </button>
+            </>
+          )}
+
 
         {showPasswordForm && (
           <div className="password-form">
@@ -265,6 +279,7 @@ export default function UsuarioEdit() {
                   type={showPasswords.newPassword ? "text" : "password"}
                   value={passwordForm.newPassword}
                   onChange={handlePasswordChange}
+                  disabled={!isEditMode}
                 />
                 <span 
                   className="toggle-password"
