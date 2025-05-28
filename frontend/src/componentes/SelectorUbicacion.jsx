@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaMapMarkerAlt, FaHome, FaBriefcase, FaMapPin, FaTimes } from 'react-icons/fa';
-import './SelectorUbicacion.css';
+import '../estilos/home/ubicacion.css';
 
 const SelectorUbicacion = () => {
   const [mostrarModal, setMostrarModal] = useState(false);

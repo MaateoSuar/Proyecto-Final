@@ -1,0 +1,68 @@
+.pagina-home {
+  width: 100%;
+  max-width: 430px;
+  padding: 10px 20px;
+  background-color: #fceecf;
+  color: #333;
+  box-sizing: border-box;
+  min-height: 100vh;
+  margin: 0 auto;
+  position: relative;
+}
+
+.content-container {
+  display: block;
+}
+
+.left-column
+{
+  display: none;
+  width: 100%;
+}
+
+.right-column {
+  width: 100%;
+}
+
+/* Responsive Desktop */
+@media (min-width: 768px) {
+  .pagina-home {
+    max-width: 1500px;
+    padding: 30px 50px;
+  }
+  
+  .content-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0px;
+  }
+  
+  .left-column {
+    display: none;
+    flex: 1;
+  }
+  
+  .right-column {
+    flex: 2;
+  }
+}
+
+@media (min-width: 1200px) {
+  .pagina-home {
+    padding: 40px 80px;
+  }
+  
+  .content-container {
+    gap: 10px;
+  }
+  
+  .left-column {
+    display: flex;
+    margin: 0;
+    flex: 1;
+  }
+  
+  .right-column {
+    flex: 6;
+  }
+}

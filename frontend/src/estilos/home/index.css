@@ -1,0 +1,10 @@
+@import 'base.css';
+@import 'layout.css';
+@import 'componentes/header.css';
+@import 'componentes/search.css';
+@import 'componentes/pets.css';
+@import 'componentes/services.css';
+@import 'componentes/plans.css';
+@import 'componentes/care.css';
+@import 'componentes/footer.css';
+@import 'utilities.css';

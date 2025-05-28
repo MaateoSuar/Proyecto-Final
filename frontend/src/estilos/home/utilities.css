@@ -1,0 +1,27 @@
+/* Mobile first adjustments */
+@media (max-width: 480px) {
+  .section-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .service-card {
+    font-size: 12px;
+  }
+
+  .plan-card {
+    min-width: 150px;
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .view-btn {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+
+  .care-avatar {
+    width: 34px;
+    height: 34px;
+  }
+}
