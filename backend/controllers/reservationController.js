@@ -21,7 +21,8 @@ const createReservation = async (req, res) => {
       provider,
       pet,
       date,
-      time
+      time,
+      status: 'pendiente', // Estado inicial de la reserva
     });
 
     const saved = await reservation.save();
@@ -66,7 +67,7 @@ const cancelReservation = async (req, res) => {
 
     // Restaurar la disponibilidad del proveedor
     const dayAvailability = provider.availability.find(a => a.day.toLowerCase() === reservation.date.toLowerCase());
-    
+
     if (dayAvailability) {
       // Si el día ya existe, agregar el horario
       if (!dayAvailability.slots.includes(reservation.time)) {
@@ -84,9 +85,8 @@ const cancelReservation = async (req, res) => {
     // Guardar los cambios en el proveedor
     await provider.save();
 
-    // Eliminar la reserva
-    await Reservation.findByIdAndDelete(id);
-
+    reservation.status = "cancelada";
+    await reservation.save();
     res.status(200).json({ message: 'Reserva cancelada exitosamente' });
   } catch (err) {
     console.error(err);

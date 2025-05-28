@@ -22,11 +22,16 @@ const reservationSchema = new mongoose.Schema({
     required: true 
   },
   time: { 
-    type: String, // formato HH:mm o un ISO String si prefieres
+    type: String, 
     required: true 
   },
   notes: {
     type: String
+  },
+  status: {
+    type: String,
+    enum: ['pendiente', 'confirmada', 'completada', 'cancelada'],
+    default: 'pendiente'
   }
 }, { timestamps: true });
 

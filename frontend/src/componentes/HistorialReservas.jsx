@@ -1,43 +1,53 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "../estilos/HistorialReservas.css";
+import { toast } from 'react-toastify';
 
 const HistorialReservas = () => {
   const [reservas, setReservas] = useState([]);
 
-  useEffect(() => {
+  function upper(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  const getReservas = () => {
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:5000/api/reservas", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setReservas(data))
-      .catch((err) => console.error("Error al obtener reservas", err));
+    axios
+      .get("http://localhost:5000/api/reservas", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        setReservas(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener las reservas:", error);
+        toast.error(error.response?.data?.message || "Error al obtener las reservas");
+      });
+  }
+  useEffect(() => {
+    getReservas();
   }, []);
 
   const cancelarReserva = async (id) => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch(`http://localhost:5000/api/reservas/${id}`, {
-        method: "DELETE",
+      const response = await axios.delete(`http://localhost:5000/api/reservas/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      const data = await res.json();
-      if (res.ok) {
-        alert("Reserva cancelada");
-        setReservas(reservas.filter((r) => r._id !== id));
-      } else {
-        alert(data.message || "Error al cancelar");
-      }
-    } catch (err) {
-      console.error("Error:", err);
-      alert("Error al cancelar la reserva");
+      toast.success("Reserva cancelada exitosamente");
+      setReservas(prev =>
+        prev.map(r => r._id === id ? { ...r, status: "cancelada" } : r)
+      );
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error(error.response?.data?.message || "Error al cancelar la reserva");
     }
   };
 
@@ -46,16 +56,18 @@ const HistorialReservas = () => {
       <h2>Mis Reservas</h2>
       {reservas.map((reserva) => (
         <div key={reserva._id} className="historial-reserva">
-          <div className="historial-nombre">{reserva.pet.name}</div>
+          <div className="historial-nombre">{reserva.pet?.name || "Mascota desconocida"}</div>
           <div className="historial-info">
-            Con {reserva.provider.name} el {reserva.date} a las {reserva.time}
+            Con {reserva.provider?.name || "Proveedor desconocido"} el {reserva.date} a las {reserva.time}
           </div>
-          <button
-            className="historial-btn"
-            onClick={() => cancelarReserva(reserva._id)}
-          >
-            Cancelar
-          </button>
+          <div className="historial-status">
+            Estado: {upper(reserva.status)}
+          </div>
+          {reserva.status === "pendiente" && (
+            <button className="historial-btn" onClick={() => cancelarReserva(reserva._id)}>
+              Cancelar
+            </button>
+          )}
         </div>
       ))}
     </div>

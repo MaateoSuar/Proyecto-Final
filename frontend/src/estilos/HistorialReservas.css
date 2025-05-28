@@ -38,12 +38,13 @@
 }
 
 /* Información del cuidador y turno */
-.historial-info {
+.historial-info, .historial-status {
   color: #5e4a3a;
   font-size: 0.95rem;
   line-height: 1.4;
   margin-bottom: 0.5rem;
 }
+
 
 /* Botón cancelar */
 .historial-btn {

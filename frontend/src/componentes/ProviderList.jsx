@@ -11,9 +11,9 @@ const categories = [
 ];
 
 function upper(str) {
-    if (!str) return '';
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -87,7 +87,7 @@ const ProviderList = () => {
     if (searchTerm.trim() === '') {
       setFilteredProviders(providers);
     } else {
-      const filtered = providers.filter(provider => 
+      const filtered = providers.filter(provider =>
         provider.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredProviders(filtered);
