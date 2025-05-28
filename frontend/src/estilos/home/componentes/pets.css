@@ -1,0 +1,287 @@
+/* Contenedores principales */
+.pets-box, .pets-box2 {
+  background-color: #FEFAE0 !important;
+  border-radius: 20px !important;
+  padding: 20px !important;
+  margin-bottom: 24px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+}
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 12px;
+  color: #875e39;
+  font-size: 18px;
+}
+
+/* Versión Mobile (Horizontal) - Mostrar por defecto */
+.pets {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #a57449 #FEFAE0;
+}
+
+.pets::-webkit-scrollbar {
+  height: 6px;
+}
+
+.pets::-webkit-scrollbar-track {
+  background: #FEFAE0;
+  border-radius: 10px;
+}
+
+.pets::-webkit-scrollbar-thumb {
+  background-color: #a57449;
+  border-radius: 10px;
+}
+
+.pet-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pet-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #dce8c3;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #a57449;
+}
+
+.pet-add {
+  width: 70px;
+  height: 70px;
+  background-color: #a57449;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.pet-edit {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
+  background-color: #a57449;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  border: 2px solid #FEFAE0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.pet-name {
+  font-size: 14px;
+  color: #5a4a3a;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 500;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pets-box2 {
+  margin-top: 15px;
+}
+
+/* Versión Desktop (Vertical) - Ocultar por defecto */
+.pets-vertical-container {
+  display: none;
+  width: 250px;
+  background-color: #FEFAE0;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 10px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+.pets-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pet-add-vertical {
+  display: none;  
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #a57449;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+  margin: 15px auto 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pet-edit-vertical {
+  display: none;
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
+  background-color: #a57449;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  border: 2px solid #FEFAE0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.pet-name-vertical {
+  font-size: 14px;
+  color: #5a4a3a;
+  margin-top: 8px;
+  text-align: center;
+  font-weight: 500;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+
+.pet-vertical-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.pet-vertical-item:hover {
+  background-color: rgba(220, 232, 195, 0.3);
+}
+
+
+.pet-img-vertical {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #dce8c3;
+  background-size: cover;
+  background-position: center;
+  border: 2px solid #a57449;
+  position: relative;
+}
+
+.pet-add-vertical {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #a57449;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+  margin: 15px auto 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Efectos hover */
+@media (hover: hover) {
+  .pet-add:hover, .pet-edit:hover,
+  .pet-add-vertical:hover {
+    background-color: #875e39;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .pet-vertical-item:hover {
+    transform: translateX(5px);
+  }
+}
+
+/* Media Queries para Responsive */
+@media (min-width: 1200px) {
+  /* Ocultar versión mobile en desktop */
+  .pets-box, .pets-box2, .pets {
+    display: none;
+  }
+  
+  /* Mostrar versión vertical en desktop */
+  .pets-vertical-container {
+    display: block;
+    width: 155px;
+    background-color: #FEFAE0;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 20px;
+    max-height: 754px;
+    overflow-y: auto;
+  }
+  
+  .pets-vertical-container h3 {
+    color: #875e39;
+    font-size: 1.3rem;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #dce8c3;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+    .pet-container-vertical {
+    display: none;
+  }
+
+  .pet-img, .pet-add {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .pet-add {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+  
+  .pet-name {
+    font-size: 12px;
+    max-width: 60px;
+  }
+}

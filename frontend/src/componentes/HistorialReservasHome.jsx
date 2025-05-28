@@ -34,7 +34,6 @@ const HistorialReservas = () => {
 
   return (
     <div className="reservas-pendientes-container">
-      <h2 className="titulo">Reservas Pendientes</h2>
       {pendientes.length === 0 ? (
         <p className="sin-reservas">No tienes reservas pendientes.</p>
       ) : (
