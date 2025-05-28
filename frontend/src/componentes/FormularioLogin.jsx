@@ -70,6 +70,7 @@ export default function FormularioLogin() {
           <input
             type="email"
             id="correo"
+            className="input-contrasena"
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
             required
