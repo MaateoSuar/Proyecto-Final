@@ -418,3 +418,8 @@ html, body {
 .text-center {
   text-align: center;
 }
+
+.location-box {
+  margin: 16px 0 24px;
+  padding: 0;
+}

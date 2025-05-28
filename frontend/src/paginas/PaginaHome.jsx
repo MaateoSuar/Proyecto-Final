@@ -4,12 +4,17 @@ import Servicios from '../componentes/Servicios';
 import Planes from '../componentes/Planes';
 import Cuidadores from '../componentes/Cuidadores';
 import HistorialReservasHome from '../componentes/HistorialReservasHome';
+import SelectorUbicacion from '../componentes/SelectorUbicacion';
 import '../estilos/home.css';
 
 export default function PaginaHome() {
   return (
     <div className="pagina-home">
       <HeaderUsuario />
+
+      <div className="location-box">
+        <SelectorUbicacion />
+      </div>
 
       <div className="pets-box">
         <h2 className="section-title">Tus mascotas</h2>
@@ -30,7 +35,6 @@ export default function PaginaHome() {
         <h2 className="section-title"></h2>
         <HistorialReservasHome/>
       </div>
-
 
       <div className="care-box">
         <h2 className="section-title">Cuidadores cercanos</h2>
