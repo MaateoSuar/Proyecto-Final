@@ -3,6 +3,7 @@ import TarjetaMascotas from '../componentes/TarjetaMascotas';
 import Servicios from '../componentes/Servicios';
 import Planes from '../componentes/Planes';
 import Cuidadores from '../componentes/Cuidadores';
+import HistorialReservasHome from '../componentes/HistorialReservasHome';
 import '../estilos/home.css';
 
 export default function PaginaHome() {
@@ -24,6 +25,12 @@ export default function PaginaHome() {
         <h2 className="section-title">Planes recomendados</h2>
         <Planes />
       </div>
+
+      <div className="plans-box">
+        <h2 className="section-title"></h2>
+        <HistorialReservasHome/>
+      </div>
+
 
       <div className="care-box">
         <h2 className="section-title">Cuidadores cercanos</h2>

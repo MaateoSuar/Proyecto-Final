@@ -45,7 +45,7 @@ html, body {
   font-size: 14px;
 }
 
-.pets-box, .services-box, .plans-box, .care-box {
+.pets-box, .services-box, .plans-box, .care-box .reservas-box {
   background-color: #FEFAE0 !important; /* Color marrón claro */
   border-radius: 20px !important;
   padding: 20px !important;
