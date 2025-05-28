@@ -123,7 +123,7 @@ export default function FormularioRegistro() {
               required
             />
             <span
-              className="toggle-password"
+              className="monito"
               onClick={() => setMostrarPassword(!mostrarPassword)}
             >
               {mostrarPassword ? '🙉' : '🙈'}
@@ -145,7 +145,7 @@ export default function FormularioRegistro() {
               required
             />
             <span
-              className="toggle-password"
+              className="monito"
               onClick={() => setMostrarConfirmar(!mostrarConfirmar)}
             >
               {mostrarConfirmar ? '🙉' : '🙈'}

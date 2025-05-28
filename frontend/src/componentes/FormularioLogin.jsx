@@ -88,7 +88,7 @@ export default function FormularioLogin() {
               onChange={(e) => setContrasena(e.target.value)}
               required
             />
-            <span className="toggle-password" onClick={alternarContrasena}>
+            <span className="monito" onClick={alternarContrasena}>
               {mostrarContrasena ? '🙉' : '🙈'}
             </span>
           </div>

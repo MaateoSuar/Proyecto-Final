@@ -23,7 +23,6 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('🟢 Conectado a MongoDB');
-    app.listen(PORT, () => console.log(`Servidor en puerto ${process.env.PORT}`));
+    app.listen(PORT, () => console.log(`🟢 port: ${process.env.PORT}`));
   })
   .catch((err) => console.error('❌ Error de conexión:', err));

@@ -39,7 +39,20 @@
     display: block;
   }
 
-  input[type="email"], .input-contrasena {
+  .input-contrasena {
+    flex: 1;
+    height: 44px;
+    padding: 10px 12px;
+    border: 2px solid #caa878;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    color: #333;
+    outline: none;
+    box-sizing: border-box;
+}
+
+  input[type="email"] {
     width: calc(100% - 36px);
     height: 44px;
     padding: 10px 12px;
@@ -53,23 +66,20 @@
   }
 
   .envoltura-contrasena {
-    position: relative;
+    display: flex;
+    align-items: center;
     width: 100%;
   }
 
-  .toggle-password {
-    position: absolute;
-    right: -36px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 22px;
+  .monito {
     cursor: pointer;
+    width: 28px;
+    text-align: center;
+    margin-left: 8px;
+    font-size: 22px;
+    -webkit-user-select: none;
     user-select: none;
     line-height: 1;
-    width: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .olvide-contrasena {
