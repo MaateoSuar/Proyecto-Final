@@ -1,18 +1,18 @@
 .pagina-usuario {
   min-height: 100vh;
   background-color: #fceecf;
-  padding: 20px;
+  padding: 10px;
 }
 
 .tabs {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 0;
 }
 
 .tab-button {
-  padding: 10px 20px;
+  padding: 8px 16px;
   border: none;
   border-radius: 8px;
   background-color: #fffadd;
@@ -37,6 +37,7 @@
 .tab-content {
   max-width: 800px;
   margin: 0 auto;
+  padding-top: 0;
 }
 
 @media (max-width: 600px) {

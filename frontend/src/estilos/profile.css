@@ -1,10 +1,12 @@
 .container {
   background-color: #fceecf;
-  min-height: 100vh;
+  min-height: calc(100vh - 50px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  justify-content: flex-start;
+  padding: 0 10px;
+  margin: 0;
 }
 
 .avatar {
@@ -16,12 +18,19 @@
   color: white;
   display: flex;
   align-items: flex-end;
-  margin-right: 15px;
+  margin: 5px 0;
   justify-content: center;  
   cursor: pointer;
   overflow: hidden;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Avatar grande específico para la página de edición de perfil */
+.container > .avatar {
+  width: 150px;
+  height: 150px;
+  font-size: 70px;
 }
 
 .greeting {
@@ -46,6 +55,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  margin-top: 0;
 }
 
 .form label {
