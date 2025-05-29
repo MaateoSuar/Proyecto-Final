@@ -21,49 +21,46 @@ export default function PaginaAdmin() {
       }
 
       try {
-        const respUsuarios = await axios.get(`${API_URL}/auth/usuarios`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const dataUsuarios = respUsuarios.data;
-        setUsuarios(dataUsuarios.data);
+        setLoading(true);
+        const [respUsuarios, respPrestadores] = await Promise.all([
+          axios.get(`${API_URL}/auth/usuarios`, {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get(`${API_URL}/prestadores`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
 
-        const respPrestadores = await axios.get(`${API_URL}/prestadores`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const dataPrestadores = respPrestadores.data;
-        setPrestadores(dataPrestadores.data);
+        setUsuarios(respUsuarios.data.data || []);
+        setPrestadores(respPrestadores.data.data || []);
       } catch (error) {
         toast.error('Error al cargar los datos');
         if (error.response?.status === 401) {
           navigate('/login');
         }
+      } finally {
+        setLoading(false);
       }
     };
 
     obtenerDatos();
-  }, [navigate]);
+  }, [navigate, API_URL]);
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
     navigate('/login');
   };
 
   const toggleEstadoPrestador = async (prestadorId, estadoActual, nombrePrestador) => {
     const accion = estadoActual ? 'desactivar' : 'activar';
+    const token = localStorage.getItem('token');
 
     try {
-      const response = await fetch(`${API_URL}/prestadores/${prestadorId}/toggle-status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ isActive: !estadoActual })
-      });
-
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Error al actualizar estado');
-      }
+      const response = await axios.put(
+        `${API_URL}/prestadores/${prestadorId}/toggle-status`,
+        { isActive: !estadoActual },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
       setPrestadores(prev =>
         prev.map(p =>
@@ -72,8 +69,7 @@ export default function PaginaAdmin() {
       );
       toast.success(`Prestador ${nombrePrestador} ${!estadoActual ? 'activado' : 'desactivado'} exitosamente`);
     } catch (error) {
-      console.error('Error al actualizar estado:', error);
-      toast.error(`Error al ${accion} prestador: ${error.message}`);
+      toast.error(`Error al ${accion} prestador: ${error.response?.data?.message || 'Error desconocido'}`);
     }
   };
 
@@ -87,24 +83,14 @@ export default function PaginaAdmin() {
               toast.dismiss(toastId);
               try {
                 const token = localStorage.getItem('token');
-                const response = await fetch(`${API_URL}/auth/usuarios/${userId}`, {
-                  method: 'DELETE',
-                  headers: {
-                    'Authorization': `Bearer ${token}`
-                  }
+                await axios.delete(`${API_URL}/auth/usuarios/${userId}`, {
+                  headers: { Authorization: `Bearer ${token}` }
                 });
-
-                const data = await response.json();
-                
-                if (!response.ok) {
-                  throw new Error(data.message || 'Error al eliminar usuario');
-                }
 
                 setUsuarios(prev => prev.filter(u => u._id !== userId));
                 toast.success(`Usuario ${nombreUsuario} eliminado exitosamente`);
               } catch (error) {
-                console.error('Error al eliminar usuario:', error);
-                toast.error(`Error al eliminar usuario: ${error.message}`);
+                toast.error(`Error al eliminar usuario: ${error.response?.data?.message || 'Error desconocido'}`);
               }
             }}
             style={{
@@ -140,21 +126,15 @@ export default function PaginaAdmin() {
             onClick={async () => {
               toast.dismiss(toastId);
               try {
-                const response = await fetch(`${API_URL}/prestadores/${prestadorId}`, {
-                  method: 'DELETE'
+                const token = localStorage.getItem('token');
+                await axios.delete(`${API_URL}/prestadores/${prestadorId}`, {
+                  headers: { Authorization: `Bearer ${token}` }
                 });
-
-                const data = await response.json();
-                
-                if (!response.ok) {
-                  throw new Error(data.message || 'Error al eliminar prestador');
-                }
 
                 setPrestadores(prev => prev.filter(p => p._id !== prestadorId));
                 toast.success(`Prestador ${nombrePrestador} eliminado exitosamente`);
               } catch (error) {
-                console.error('Error al eliminar prestador:', error);
-                toast.error(`Error al eliminar prestador: ${error.message}`);
+                toast.error(`Error al eliminar prestador: ${error.response?.data?.message || 'Error desconocido'}`);
               }
             }}
             style={{
