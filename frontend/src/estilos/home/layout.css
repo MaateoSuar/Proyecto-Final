@@ -10,6 +10,11 @@
   position: relative;
 }
 
+.header-container {
+  display: block;
+  margin-bottom: 20px;
+}
+
 .content-container {
   display: block;
 }
@@ -29,6 +34,18 @@
   .pagina-home {
     max-width: 1500px;
     padding: 30px 50px;
+  }
+  
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .header-container .location-box {
+    width: 400px;
+    margin: 0;
   }
   
   .content-container {

@@ -50,7 +50,7 @@ html, body {
   border-radius: 20px !important;
   padding: 20px !important;
   margin-bottom: 24px !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .search-box {
   margin-bottom: 24px;

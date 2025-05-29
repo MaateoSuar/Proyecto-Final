@@ -10,7 +10,12 @@ import '../estilos/home/index.css';
 export default function PaginaHome() {
   return (
     <div className="pagina-home">
-      <HeaderUsuario />
+      <div className="header-container">
+        <HeaderUsuario />
+        <div className="location-box">
+          <SelectorUbicacion />
+        </div>
+      </div>
 
       <div className="content-container">
         {/* Columna izquierda - Sidebar en desktop */}
@@ -20,10 +25,6 @@ export default function PaginaHome() {
 
         {/* Columna derecha - Contenido principal */}
         <div className="right-column">
-          <div className="location-box">
-            <SelectorUbicacion />
-          </div>
-
           {/* Versión mobile de mascotas (oculta en desktop) */}
           <div className="pets-box">
             <h2 className="section-title">Tus mascotas</h2>

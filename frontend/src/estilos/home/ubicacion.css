@@ -2,21 +2,18 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  margin-bottom: 20px;
 }
 
 .ubicacion-principal {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #fdf5e6;
+  background: #FEFAE0;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  border: 1px solid #875e39;
-  margin: 10px 0;
 }
 
 .ubicacion-principal:hover {
@@ -49,6 +46,25 @@
   font-size: 14px;
 }
 
+@media (min-width: 768px) {
+  .selector-ubicacion {
+    margin: 0;
+  }
+
+  .ubicacion-principal {
+    height: 70px;
+    padding: 0 20px;
+  }
+
+  .etiqueta-ubicacion {
+    font-size: 15px;
+  }
+
+  .direccion-ubicacion {
+    font-size: 15px;
+  }
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;
@@ -65,7 +81,7 @@
 }
 
 .modal-contenido {
-  background: white;
+  background: #FEFAE0;
   width: 90%;
   max-width: 500px;
   border-radius: 12px;
@@ -114,7 +130,7 @@
 }
 
 .ubicacion-item:hover {
-  background-color: #f5f5f5;
+  background-color: #fceecf;
 }
 
 .ubicacion-item.seleccionada {
@@ -170,7 +186,6 @@
 }
 
 .separador span {
-  background: white;
   padding: 0 10px;
   color: #666;
   font-size: 14px;
@@ -199,7 +214,7 @@
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
-  background-color: white !important;
+  background-color: #FEFAE0;
   color: #333 !important;
 }
 
@@ -379,3 +394,7 @@
 .modal-contenido {
   max-width: 600px !important;
 } 
+
+.tipos-ubicacion button {
+  background: #FEFAE0;
+}
