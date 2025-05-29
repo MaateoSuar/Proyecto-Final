@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const petRoutes = require('./routes/pets');
 const prestadorRoutes = require('./routes/prestador');
+const ubicacionRoutes = require('./routes/ubicaciones');
 const path = require('path');
 const reservationRoutes = require('./routes/reservations')
 
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/pets', petRoutes);
 app.use('/api/reservas', reservationRoutes);
 app.use('/api/prestadores', prestadorRoutes);
+app.use('/api/ubicaciones', ubicacionRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 mongoose.connect(process.env.MONGO_URI)

@@ -1,10 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaMapMarkerAlt, FaHome, FaBriefcase, FaMapPin, FaTimes } from 'react-icons/fa';
+import { useUbicacion } from '../context/UbicacionContext';
 import '../estilos/home/ubicacion.css';
 
 const SelectorUbicacion = () => {
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [ubicacionActual, setUbicacionActual] = useState(null);
+  const { 
+    ubicacionActual, 
+    ubicacionesGuardadas, 
+    seleccionarUbicacion, 
+    guardarUbicacion,
+    cargando 
+  } = useUbicacion();
+
   const [nuevaUbicacion, setNuevaUbicacion] = useState({
     nombre: '',
     tipo: 'casa',
@@ -12,26 +20,6 @@ const SelectorUbicacion = () => {
     numero: '',
     referencia: ''
   });
-
-  // Ubicaciones de ejemplo (luego vendrán del backend)
-  const ubicacionesGuardadas = [
-    {
-      id: 1,
-      nombre: 'Mi Casa',
-      tipo: 'casa',
-      calle: 'Av. Mate de Luna',
-      numero: '2331',
-      referencia: 'Portón negro'
-    },
-    {
-      id: 2,
-      nombre: 'Oficina',
-      tipo: 'trabajo',
-      calle: 'San Martín',
-      numero: '850',
-      referencia: 'Edificio central'
-    }
-  ];
 
   const getIconoTipo = (tipo) => {
     switch (tipo) {
@@ -44,17 +32,28 @@ const SelectorUbicacion = () => {
     }
   };
 
-  const handleGuardarUbicacion = (e) => {
+  const handleGuardarUbicacion = async (e) => {
     e.preventDefault();
-    // Aquí irá la lógica para guardar en el backend
-    console.log('Nueva ubicación:', nuevaUbicacion);
-    setMostrarModal(false);
+    try {
+      const ubicacionGuardada = await guardarUbicacion(nuevaUbicacion);
+      seleccionarUbicacion(ubicacionGuardada);
+      setMostrarModal(false);
+      setNuevaUbicacion({
+        nombre: '',
+        tipo: 'casa',
+        calle: '',
+        numero: '',
+        referencia: ''
+      });
+    } catch (error) {
+      console.error('Error al guardar la ubicación:', error);
+      // Aquí podrías mostrar un mensaje de error al usuario
+    }
   };
 
-  const seleccionarUbicacion = (ubicacion) => {
-    setUbicacionActual(ubicacion);
-    setMostrarModal(false);
-  };
+  if (cargando) {
+    return <div className="selector-ubicacion">Cargando ubicaciones...</div>;
+  }
 
   return (
     <div className="selector-ubicacion">
@@ -90,9 +89,12 @@ const SelectorUbicacion = () => {
             <div className="ubicaciones-guardadas">
               {ubicacionesGuardadas.map(ubicacion => (
                 <div 
-                  key={ubicacion.id}
-                  className={`ubicacion-item ${ubicacionActual?.id === ubicacion.id ? 'seleccionada' : ''}`}
-                  onClick={() => seleccionarUbicacion(ubicacion)}
+                  key={ubicacion._id}
+                  className={`ubicacion-item ${ubicacionActual?._id === ubicacion._id ? 'seleccionada' : ''}`}
+                  onClick={() => {
+                    seleccionarUbicacion(ubicacion);
+                    setMostrarModal(false);
+                  }}
                 >
                   <div className="ubicacion-icono">
                     {getIconoTipo(ubicacion.tipo)}

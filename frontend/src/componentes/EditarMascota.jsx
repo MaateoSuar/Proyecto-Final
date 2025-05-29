@@ -44,9 +44,7 @@ export default function EditarMascota() {
         });
 
         const mascota = response.data;
-        console.log('Datos recibidos de la mascota:', mascota);
 
-        // Actualizar el estado con los datos recibidos
         setFormData({
           nombre: mascota.name || '',
           raza: mascota.breed || '',
@@ -57,12 +55,10 @@ export default function EditarMascota() {
           alergias: Array.isArray(mascota.allergies) ? mascota.allergies : [],
         });
 
-        // Establecer la imagen si existe
         if (mascota.image) {
           setFotoMascota(mascota.image);
         }
       } catch (error) {
-        console.error('Error al cargar la mascota:', error);
         setError(error.response?.data?.message || 'Error al cargar los datos de la mascota');
       } finally {
         setIsLoading(false);
@@ -132,7 +128,6 @@ export default function EditarMascota() {
       const token = localStorage.getItem('token');
       const form = new FormData();
 
-      // Agregar todos los campos al FormData
       form.append('name', formData.nombre);
       form.append('breed', formData.raza);
       form.append('birthdate', formData.fechaNacimiento);
@@ -141,7 +136,6 @@ export default function EditarMascota() {
       form.append('vaccines', JSON.stringify(formData.vacunas));
       form.append('allergies', JSON.stringify(formData.alergias));
 
-      // Solo agregar la imagen si es nueva (no es una URL)
       if (fotoMascota && !fotoMascota.startsWith('http')) {
         const blob = await (await fetch(fotoMascota)).blob();
         form.append('image', blob, 'mascota.jpg');
@@ -157,7 +151,6 @@ export default function EditarMascota() {
       toast.success('¡Mascota actualizada con éxito!');
       navigate('/inicio');
     } catch (error) {
-      console.error('Error al actualizar:', error);
       toast.error(error.response?.data?.message || 'Error al actualizar la mascota');
       setError(error.response?.data?.message || 'Error al actualizar la mascota');
     } finally {
@@ -183,7 +176,6 @@ export default function EditarMascota() {
       toast.success('Mascota eliminada con éxito');
       navigate('/inicio');
     } catch (error) {
-      console.error('Error al eliminar:', error);
       toast.error(error.response?.data?.message || 'Error al eliminar la mascota');
       setError(error.response?.data?.message || 'Error al eliminar la mascota');
     } finally {

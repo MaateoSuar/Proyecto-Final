@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/admin.css';
+import axios from 'axios';
 
 export default function PaginaAdmin() {
   const [usuarios, setUsuarios] = useState([]);
@@ -11,61 +12,36 @@ export default function PaginaAdmin() {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    console.log('Componente montado, API_URL:', API_URL);
-    cargarDatos();
-  }, []);
-
-  const cargarDatos = async () => {
-    try {
-      setLoading(true);
+    const obtenerDatos = async () => {
       const token = localStorage.getItem('token');
-      console.log('Token obtenido:', token ? 'Presente' : 'No encontrado');
       
-      // Cargar usuarios
-      console.log('URL de usuarios:', `${API_URL}/auth/usuarios`);
-      const respUsuarios = await fetch(`${API_URL}/auth/usuarios`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log('Status de respuesta usuarios:', respUsuarios.status);
-      
-      const dataUsuarios = await respUsuarios.json();
-      console.log('Datos usuarios completos:', dataUsuarios);
-      
-      if (!respUsuarios.ok) {
-        throw new Error(dataUsuarios.message || 'Error al cargar usuarios');
+      if (!token) {
+        navigate('/login');
+        return;
       }
-      
-      setUsuarios(dataUsuarios.data || []);
-      console.log('Usuarios establecidos en el estado:', dataUsuarios.data);
 
-      // Cargar prestadores
-      console.log('URL de prestadores:', `${API_URL}/prestadores`);
-      const respPrestadores = await fetch(`${API_URL}/prestadores`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
+      try {
+        const respUsuarios = await axios.get(`${API_URL}/auth/usuarios`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const dataUsuarios = respUsuarios.data;
+        setUsuarios(dataUsuarios.data);
+
+        const respPrestadores = await axios.get(`${API_URL}/prestadores`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const dataPrestadores = respPrestadores.data;
+        setPrestadores(dataPrestadores.data);
+      } catch (error) {
+        toast.error('Error al cargar los datos');
+        if (error.response?.status === 401) {
+          navigate('/login');
         }
-      });
-      console.log('Status de respuesta prestadores:', respPrestadores.status);
-      
-      const dataPrestadores = await respPrestadores.json();
-      console.log('Datos prestadores completos:', dataPrestadores);
-      
-      if (!respPrestadores.ok) {
-        throw new Error(dataPrestadores.message || 'Error al cargar prestadores');
       }
-      
-      setPrestadores(dataPrestadores.data || []);
-      console.log('Prestadores establecidos en el estado:', dataPrestadores.data);
+    };
 
-    } catch (error) {
-      console.error('Error detallado:', error);
-      toast.error(`Error al cargar los datos: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+    obtenerDatos();
+  }, [navigate]);
 
   const handleLogout = () => {
     navigate('/login');
