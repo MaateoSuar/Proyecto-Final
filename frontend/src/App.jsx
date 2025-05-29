@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UbicacionProvider } from './context/UbicacionContext';
@@ -15,12 +15,14 @@ import ProviderList from './componentes/ProviderList';
 import Reservar from './componentes/Reservar';
 import PaginaAdmin from './paginas/PaginaAdmin';
 import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
-import HistorialReservas from './componentes/HistorialReservas'; // ✅ Importamos el nuevo componente
+import RutaProtegida from './componentes/RutaProtegida';
+import RutaPublica from './componentes/RutaPublica';
+import HistorialReservas from './componentes/HistorialReservas';
 
 export default function App() {
   return (
-    <UbicacionProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <UbicacionProvider>
         <ToastContainer
           position="top-right"
           autoClose={3000}
@@ -40,17 +42,95 @@ export default function App() {
           }}
         />
         <Routes>
-          <Route path="/login" element={<PaginaLogin />} />
-          <Route path="/registro" element={<PaginaRegistro />} />
-          <Route path="/inicio" element={<PaginaHome />} />
-          <Route path="/profile" element={<PaginaUsuario />} />
-          <Route path="/detalle-cuidador" element={<DetalleCuidador />} />
-          <Route path="/registromascota" element={<PaginaRegistroMascotas />} />
-          <Route path="/editar-mascota/:id" element={<PaginaEditarMascota />} />
-          <Route path="/perfil-proveedor" element={<PaginaPerfilProveedor />} />
-          <Route path="/proveedores" element={<ProviderList />} />
-          <Route path="/proveedor/:id" element={<Reservar />} />
-          <Route path="/mis-reservas" element={<HistorialReservas />} /> {/* ✅ Nueva ruta agregada */}
+          <Route 
+            path="/login" 
+            element={
+              <RutaPublica>
+                <PaginaLogin />
+              </RutaPublica>
+            } 
+          />
+          <Route 
+            path="/registro" 
+            element={
+              <RutaPublica>
+                <PaginaRegistro />
+              </RutaPublica>
+            } 
+          />
+          <Route 
+            path="/inicio" 
+            element={
+              <RutaProtegida>
+                <PaginaHome />
+              </RutaProtegida>
+            } 
+          />
+          <Route path="/" element={<Navigate to="/inicio" replace />} />
+          <Route 
+            path="/profile" 
+            element={
+              <RutaProtegida>
+                <PaginaUsuario />
+              </RutaProtegida>
+            } 
+          />
+          <Route 
+            path="/detalle-cuidador" 
+            element={
+              <RutaProtegida>
+                <DetalleCuidador />
+              </RutaProtegida>
+            } 
+          />
+          <Route 
+            path="/registromascota" 
+            element={
+              <RutaProtegida>
+                <PaginaRegistroMascotas />
+              </RutaProtegida>
+            } 
+          />
+          <Route 
+            path="/editar-mascota/:id" 
+            element={
+              <RutaProtegida>
+                <PaginaEditarMascota />
+              </RutaProtegida>
+            } 
+          />
+          <Route 
+            path="/perfil-proveedor" 
+            element={
+              <RutaProtegida>
+                <PaginaPerfilProveedor />
+              </RutaProtegida>
+            } 
+          />
+          <Route 
+            path="/proveedores" 
+            element={
+              <RutaProtegida>
+                <ProviderList />
+              </RutaProtegida>
+            } 
+          />
+          <Route 
+            path="/proveedor/:id" 
+            element={
+              <RutaProtegida>
+                <Reservar />
+              </RutaProtegida>
+            } 
+          />
+          <Route 
+            path="/mis-reservas" 
+            element={
+              <RutaProtegida>
+                <HistorialReservas />
+              </RutaProtegida>
+            } 
+          />
           <Route 
             path="/admin" 
             element={
@@ -59,9 +139,9 @@ export default function App() {
               </RutaProtegidaAdmin>
             } 
           />
-          <Route path="*" element={<PaginaLogin />} />
+          <Route path="*" element={<Navigate to="/inicio" replace />} />
         </Routes>
-      </BrowserRouter>
-    </UbicacionProvider>
+      </UbicacionProvider>
+    </BrowserRouter>
   );
 }

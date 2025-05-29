@@ -268,4 +268,114 @@
   .tipos-ubicacion {
     flex-direction: column;
   }
+}
+
+.busqueda-mapa {
+  margin: 20px 0;
+}
+
+.busqueda-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.busqueda-container input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.buscar-btn {
+  padding: 0 15px;
+  background: #875e39;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.buscar-btn:hover {
+  background: #724c2f;
+}
+
+.mapa-container {
+  height: 300px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Estilos para el mapa de Leaflet */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  font-family: inherit;
+}
+
+/* Ocultar elementos innecesarios */
+.leaflet-control-attribution {
+  font-size: 10px !important;
+  background: rgba(255, 255, 255, 0.7) !important;
+  padding: 2px 5px !important;
+}
+
+/* Personalizar el marcador */
+.leaflet-marker-icon {
+  filter: hue-rotate(200deg); /* Cambiar el color del marcador */
+}
+
+/* Personalizar el popup */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 10px;
+  font-size: 14px;
+}
+
+.leaflet-popup-tip-container {
+  display: none; /* Ocultar la flecha del popup */
+}
+
+/* Personalizar los controles */
+.leaflet-control {
+  border: none !important;
+  border-radius: 8px !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1) !important;
+}
+
+.leaflet-bar a {
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  color: #875e39 !important;
+  border: none !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: #fdf5e6 !important;
+  color: #724c2f !important;
+}
+
+.leaflet-bar a:first-child {
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+}
+
+.leaflet-bar a:last-child {
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
+
+.modal-contenido {
+  max-width: 600px !important;
 } 

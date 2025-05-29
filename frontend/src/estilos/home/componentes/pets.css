@@ -49,8 +49,8 @@
 }
 
 .pet-img {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   background-color: #dce8c3;
   background-size: cover;
@@ -225,12 +225,7 @@
   .pet-add:hover, .pet-edit:hover,
   .pet-add-vertical:hover {
     background-color: #875e39;
-    transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  }
-  
-  .pet-vertical-item:hover {
-    transform: translateX(5px);
   }
 }
 
@@ -239,6 +234,10 @@
   /* Ocultar versión mobile en desktop */
   .pets-box, .pets-box2, .pets {
     display: none;
+  }
+
+  .pet-edit {
+    bottom: 0px;
   }
   
   /* Mostrar versión vertical en desktop */

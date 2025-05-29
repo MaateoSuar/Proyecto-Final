@@ -1,13 +1,19 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+
+// Crear un evento personalizado para cambios de token
+const TOKEN_CHANGE_EVENT = 'tokenChange';
 
 const UbicacionContext = createContext();
 
 export const UbicacionProvider = ({ children }) => {
-  const [ubicacionActual, setUbicacionActual] = useState(null);
+  const [ubicacionActual, setUbicacionActual] = useState(() => {
+    const savedLocation = localStorage.getItem('ubicacionSeleccionada');
+    return savedLocation ? JSON.parse(savedLocation) : null;
+  });
   const [ubicacionesGuardadas, setUbicacionesGuardadas] = useState([]);
-  const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(true);
 
   // Función para obtener el token actual
   const getToken = () => {
@@ -16,7 +22,7 @@ export const UbicacionProvider = ({ children }) => {
   };
 
   // Función para crear la instancia de axios con el token actual
-  const createApi = () => {
+  const createApi = useCallback(() => {
     const token = getToken();
     return axios.create({
       baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
@@ -25,32 +31,52 @@ export const UbicacionProvider = ({ children }) => {
         ...(token ? { 'Authorization': `Bearer ${token}` } : {})
       }
     });
-  };
+  }, []);
 
-  const obtenerUbicaciones = async () => {
+  const obtenerUbicaciones = useCallback(async () => {
     const token = getToken();
     
     if (!token) {
       setUbicacionesGuardadas([]);
       setUbicacionActual(null);
+      localStorage.removeItem('ubicacionSeleccionada');
+      setCargando(false);
       return;
     }
 
     try {
+      setCargando(true);
       const api = createApi();
       const response = await api.get('/ubicaciones');
-      setUbicacionesGuardadas(response.data);
-      const ubicacionPredeterminada = response.data.find(u => u.predeterminada);
-      setUbicacionActual(ubicacionPredeterminada || null);
+      const ubicaciones = response.data;
+      setUbicacionesGuardadas(ubicaciones);
+
+      // Buscar la ubicación predeterminada
+      const ubicacionPredeterminada = ubicaciones.find(u => u.predeterminada);
+      
       if (ubicacionPredeterminada) {
+        setUbicacionActual(ubicacionPredeterminada);
         localStorage.setItem('ubicacionSeleccionada', JSON.stringify(ubicacionPredeterminada));
+      } else {
+        // Si no hay ubicación predeterminada, intentar mantener la ubicación actual si existe en las ubicaciones guardadas
+        const ubicacionActualGuardada = ubicaciones.find(u => u._id === ubicacionActual?._id);
+        if (ubicacionActualGuardada) {
+          setUbicacionActual(ubicacionActualGuardada);
+          localStorage.setItem('ubicacionSeleccionada', JSON.stringify(ubicacionActualGuardada));
+        } else {
+          setUbicacionActual(null);
+          localStorage.removeItem('ubicacionSeleccionada');
+        }
       }
     } catch (error) {
       setUbicacionesGuardadas([]);
       setUbicacionActual(null);
       localStorage.removeItem('ubicacionSeleccionada');
+      toast.error('Error al cargar las ubicaciones');
+    } finally {
+      setCargando(false);
     }
-  };
+  }, [createApi]);
 
   const guardarUbicacion = async (nuevaUbicacion) => {
     const token = getToken();
@@ -62,11 +88,10 @@ export const UbicacionProvider = ({ children }) => {
     try {
       const api = createApi();
       const response = await api.post('/ubicaciones', nuevaUbicacion);
-      setUbicacionesGuardadas([...ubicacionesGuardadas, response.data]);
+      setUbicacionesGuardadas(prev => [...prev, response.data]);
       toast.success('Ubicación guardada correctamente');
       return response.data;
     } catch (error) {
-      console.error('Error al guardar ubicación:', error);
       toast.error(error.response?.data?.mensaje || 'Error al guardar la ubicación');
       throw error;
     }
@@ -82,9 +107,9 @@ export const UbicacionProvider = ({ children }) => {
     try {
       const api = createApi();
       const response = await api.put(`/ubicaciones/${id}`, datosUbicacion);
-      setUbicacionesGuardadas(ubicacionesGuardadas.map(ub => 
-        ub._id === id ? response.data : ub
-      ));
+      setUbicacionesGuardadas(prev => 
+        prev.map(ub => ub._id === id ? response.data : ub)
+      );
       
       if (ubicacionActual?._id === id) {
         setUbicacionActual(response.data);
@@ -94,7 +119,6 @@ export const UbicacionProvider = ({ children }) => {
       toast.success('Ubicación actualizada correctamente');
       return response.data;
     } catch (error) {
-      console.error('Error al actualizar ubicación:', error);
       toast.error('Error al actualizar la ubicación');
       throw error;
     }
@@ -110,7 +134,7 @@ export const UbicacionProvider = ({ children }) => {
     try {
       const api = createApi();
       await api.delete(`/ubicaciones/${id}`);
-      setUbicacionesGuardadas(ubicacionesGuardadas.filter(ub => ub._id !== id));
+      setUbicacionesGuardadas(prev => prev.filter(ub => ub._id !== id));
       
       if (ubicacionActual?._id === id) {
         setUbicacionActual(null);
@@ -119,7 +143,6 @@ export const UbicacionProvider = ({ children }) => {
       
       toast.success('Ubicación eliminada correctamente');
     } catch (error) {
-      console.error('Error al eliminar ubicación:', error);
       toast.error('Error al eliminar la ubicación');
       throw error;
     }
@@ -137,7 +160,7 @@ export const UbicacionProvider = ({ children }) => {
       await api.patch(`/ubicaciones/${ubicacion._id}/predeterminada`);
       
       setUbicacionActual(ubicacion);
-      setUbicacionesGuardadas(ubicacionesGuardadas.map(ub => ({
+      setUbicacionesGuardadas(prev => prev.map(ub => ({
         ...ub,
         predeterminada: ub._id === ubicacion._id
       })));
@@ -145,14 +168,13 @@ export const UbicacionProvider = ({ children }) => {
       localStorage.setItem('ubicacionSeleccionada', JSON.stringify(ubicacion));
       toast.success('Ubicación seleccionada correctamente');
     } catch (error) {
-      console.error('Error al seleccionar ubicación:', error);
       toast.error('Error al seleccionar la ubicación');
     }
   };
 
   // Efecto para cargar ubicaciones cuando cambia el token
   useEffect(() => {
-    const handleStorageChange = () => {
+    const handleTokenChange = () => {
       const token = getToken();
       if (token) {
         obtenerUbicaciones();
@@ -160,19 +182,27 @@ export const UbicacionProvider = ({ children }) => {
         setUbicacionesGuardadas([]);
         setUbicacionActual(null);
         localStorage.removeItem('ubicacionSeleccionada');
+        setCargando(false);
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    // Escuchar cambios de token tanto del storage como del evento personalizado
+    window.addEventListener('storage', handleTokenChange);
+    window.addEventListener(TOKEN_CHANGE_EVENT, handleTokenChange);
+
+    // Cargar ubicaciones iniciales si hay token
     const token = localStorage.getItem('token');
     if (token) {
       obtenerUbicaciones();
+    } else {
+      setCargando(false);
     }
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('storage', handleTokenChange);
+      window.removeEventListener(TOKEN_CHANGE_EVENT, handleTokenChange);
     };
-  }, []);
+  }, [obtenerUbicaciones]);
 
   return (
     <UbicacionContext.Provider 
@@ -198,4 +228,9 @@ export const useUbicacion = () => {
     throw new Error('useUbicacion debe ser usado dentro de un UbicacionProvider');
   }
   return context;
+};
+
+// Exportar la función emitTokenChange como una función separada
+export const emitTokenChange = () => {
+  window.dispatchEvent(new Event(TOKEN_CHANGE_EVENT));
 }; 

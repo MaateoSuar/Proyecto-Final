@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { emitTokenChange } from '../context/UbicacionContext';
 import '../estilos/login.css';
 
 export default function Login() {
@@ -10,6 +11,11 @@ export default function Login() {
   });
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
+
+  // Efecto para limpiar el historial cuando el componente se monta
+  useEffect(() => {
+    window.history.pushState(null, '', window.location.pathname);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,14 +39,29 @@ export default function Login() {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.usuario));
 
+      // Emitir evento de cambio de token y esperar un momento
+      emitTokenChange();
+      
+      // Esperar un momento para que el contexto procese el evento
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       toast.success('Inicio de sesión exitoso');
 
-      // Redirigir según el tipo de usuario
+      // Limpiar el historial antes de navegar
+      window.history.pushState(null, '', window.location.pathname);
+      
+      // Redirigir según el tipo de usuario y reemplazar la entrada en el historial
       if (data.usuario.isAdmin) {
-        navigate('/admin');
+        navigate('/admin', { replace: true });
       } else {
-        navigate('/');
+        navigate('/inicio', { replace: true });
       }
+
+      // Prevenir el uso del botón atrás
+      window.history.pushState(null, '', window.location.pathname);
+      window.addEventListener('popstate', () => {
+        window.history.pushState(null, '', window.location.pathname);
+      });
 
     } catch (error) {
       toast.error(error.message);
