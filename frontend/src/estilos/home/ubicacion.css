@@ -2,22 +2,25 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  margin-bottom: 20px;
 }
 
 .ubicacion-principal {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: white;
+  background: #fdf5e6;
   padding: 16px;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #875e39;
+  margin: 10px 0;
 }
 
 .ubicacion-principal:hover {
-  background: #f8f8f8;
+  background: #f8e5c9;
 }
 
 .icono-ubicacion {
