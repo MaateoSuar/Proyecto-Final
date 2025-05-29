@@ -16,6 +16,7 @@
 
 /* Versión Mobile (Horizontal) - Mostrar por defecto */
 .pets {
+  margin-top: 5px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -74,10 +75,10 @@
 
 .pet-edit {
   position: absolute;
-  bottom: -8px;
+  bottom: 20px;
   right: -8px;
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   background-color: #a57449;
   border-radius: 50%;
   display: flex;
@@ -270,14 +271,8 @@
   }
 
   .pet-img, .pet-add {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .pet-add {
     width: 60px;
     height: 60px;
-    font-size: 24px;
   }
   
   .pet-name {

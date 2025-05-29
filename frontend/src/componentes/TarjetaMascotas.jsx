@@ -44,9 +44,8 @@ export default function TarjetaMascotas() {
           {mascotas.map((mascota) => (
             <div
               key={mascota._id}
-              className={`pet-vertical-item ${
-                selectedPet?._id === mascota._id ? "selected" : ""
-              }`}
+              className={`pet-vertical-item ${selectedPet?._id === mascota._id ? "selected" : ""
+                }`}
               onClick={() => handlePetClick(mascota)}
             >
               <div
@@ -81,31 +80,32 @@ export default function TarjetaMascotas() {
       </div>
 
       {/* Versión Mobile - Horizontal */}
-      <div>
-        <div className="pets">
-          {mascotas.map((mascota) => (
-            <div key={mascota._id} className="pet-container">
+
+      <div className="pets">
+        {mascotas.map((mascota) => (
+          <div key={mascota._id} className="pet-container">
+            <div
+              className="pet-img"
+              style={{
+                backgroundImage: mascota.image
+                  ? `url(${mascota.image})`
+                  : "none",
+                backgroundColor: !mascota.image ? "#dce8c3" : "transparent",
+              }}
+              title={mascota.name}
+            >
               <div
-                className="pet-img"
-                style={{
-                  backgroundImage: mascota.image
-                    ? `url(${mascota.image})`
-                    : "none",
-                  backgroundColor: !mascota.image ? "#dce8c3" : "transparent",
-                }}
-                title={mascota.name}
+                className="pet-edit"
+                onClick={(e) => handleEditClick(e, mascota._id)}
+                title="Editar mascota"
               >
-                <div
-                  className="pet-edit"
-                  onClick={(e) => handleEditClick(e, mascota._id)}
-                  title="Editar mascota"
-                >
-                  ✏️
-                </div>
+                ✏️
               </div>
-              <span className="pet-name">{mascota.name}</span>
             </div>
-          ))}
+            <span className="pet-name">{mascota.name}</span>
+          </div>
+        ))}
+        <div className="pet-container">
           <div
             className="pet-add"
             onClick={() => navigate("/registromascota")}
@@ -113,6 +113,7 @@ export default function TarjetaMascotas() {
           >
             +
           </div>
+          <span className="pet-name">Agregar</span>
         </div>
       </div>
     </>
