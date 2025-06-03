@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { FaMapMarkerAlt, FaHome, FaBriefcase, FaMapPin, FaTimes } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaMapMarkerAlt, FaHome, FaBriefcase, FaMapPin, FaTimes, FaTrash } from 'react-icons/fa';
 import { useUbicacion } from '../context/UbicacionContext';
 import '../estilos/home/ubicacion.css';
 
 const SelectorUbicacion = () => {
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [ubicacionAEliminar, setUbicacionAEliminar] = useState(null);
   const { 
     ubicacionActual, 
     ubicacionesGuardadas, 
     seleccionarUbicacion, 
     guardarUbicacion,
+    eliminarUbicacion,
     cargando 
   } = useUbicacion();
 
@@ -47,7 +49,20 @@ const SelectorUbicacion = () => {
       });
     } catch (error) {
       console.error('Error al guardar la ubicación:', error);
-      // Aquí podrías mostrar un mensaje de error al usuario
+    }
+  };
+
+  const handleEliminarClick = (e, ubicacion) => {
+    e.stopPropagation(); // Evitar que se seleccione la ubicación
+    setUbicacionAEliminar(ubicacion);
+  };
+
+  const confirmarEliminacion = async () => {
+    try {
+      await eliminarUbicacion(ubicacionAEliminar._id);
+      setUbicacionAEliminar(null);
+    } catch (error) {
+      console.error('Error al eliminar la ubicación:', error);
     }
   };
 
@@ -108,6 +123,12 @@ const SelectorUbicacion = () => {
                       <span className="ubicacion-referencia">{ubicacion.referencia}</span>
                     )}
                   </div>
+                  <button 
+                    className="eliminar-ubicacion"
+                    onClick={(e) => handleEliminarClick(e, ubicacion)}
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               ))}
             </div>
@@ -191,6 +212,23 @@ const SelectorUbicacion = () => {
                 Guardar ubicación
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {ubicacionAEliminar && (
+        <div className="modal-overlay" onClick={() => setUbicacionAEliminar(null)}>
+          <div className="modal-confirmacion" onClick={e => e.stopPropagation()}>
+            <h3>¿Estás seguro?</h3>
+            <p>¿Deseas eliminar la ubicación "{ubicacionAEliminar.nombre}"?</p>
+            <div className="botones-confirmacion">
+              <button className="btn-cancelar" onClick={() => setUbicacionAEliminar(null)}>
+                Cancelar
+              </button>
+              <button className="btn-eliminar" onClick={confirmarEliminacion}>
+                Eliminar
+              </button>
+            </div>
           </div>
         </div>
       )}

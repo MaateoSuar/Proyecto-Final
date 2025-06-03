@@ -97,6 +97,31 @@ export const UbicacionProvider = ({ children }) => {
     }
   };
 
+  const eliminarUbicacion = async (ubicacionId) => {
+    const token = getToken();
+    if (!token) {
+      toast.error('Debes iniciar sesión para eliminar ubicaciones');
+      throw new Error('No autenticado');
+    }
+
+    try {
+      const api = createApi();
+      await api.delete(`/ubicaciones/${ubicacionId}`);
+      setUbicacionesGuardadas(prev => prev.filter(u => u._id !== ubicacionId));
+      
+      // Si la ubicación eliminada era la actual, la removemos
+      if (ubicacionActual?._id === ubicacionId) {
+        setUbicacionActual(null);
+        localStorage.removeItem('ubicacionSeleccionada');
+      }
+      
+      toast.success('Ubicación eliminada correctamente');
+    } catch (error) {
+      toast.error(error.response?.data?.mensaje || 'Error al eliminar la ubicación');
+      throw error;
+    }
+  };
+
   const actualizarUbicacion = async (id, datosUbicacion) => {
     const token = getToken();
     if (!token) {
@@ -120,30 +145,6 @@ export const UbicacionProvider = ({ children }) => {
       return response.data;
     } catch (error) {
       toast.error('Error al actualizar la ubicación');
-      throw error;
-    }
-  };
-
-  const eliminarUbicacion = async (id) => {
-    const token = getToken();
-    if (!token) {
-      toast.error('Debes iniciar sesión para eliminar ubicaciones');
-      throw new Error('No autenticado');
-    }
-
-    try {
-      const api = createApi();
-      await api.delete(`/ubicaciones/${id}`);
-      setUbicacionesGuardadas(prev => prev.filter(ub => ub._id !== id));
-      
-      if (ubicacionActual?._id === id) {
-        setUbicacionActual(null);
-        localStorage.removeItem('ubicacionSeleccionada');
-      }
-      
-      toast.success('Ubicación eliminada correctamente');
-    } catch (error) {
-      toast.error('Error al eliminar la ubicación');
       throw error;
     }
   };

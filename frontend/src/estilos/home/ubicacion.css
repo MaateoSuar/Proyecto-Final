@@ -127,6 +127,7 @@
   transition: background-color 0.2s;
   margin-bottom: 12px;
   border: 1px solid #eee;
+  position: relative;
 }
 
 .ubicacion-item:hover {
@@ -397,4 +398,84 @@
 
 .tipos-ubicacion button {
   background: #FEFAE0;
+}
+
+/* Botón de eliminar */
+.eliminar-ubicacion {
+  background: none;
+  border: none;
+  color: #875e39;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ubicacion-item:hover .eliminar-ubicacion {
+  opacity: 1;
+}
+
+.eliminar-ubicacion:hover {
+  color: #dc3545;
+}
+
+/* Modal de confirmación */
+.modal-confirmacion {
+  background: #FEFAE0;
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-confirmacion h3 {
+  color: #875e39;
+  margin: 0 0 16px;
+  font-size: 20px;
+}
+
+.modal-confirmacion p {
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.botones-confirmacion {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.btn-cancelar,
+.btn-eliminar {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancelar {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.btn-cancelar:hover {
+  background: #e9ecef;
+}
+
+.btn-eliminar {
+  background: #dc3545;
+  border: none;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background: #c82333;
 }
