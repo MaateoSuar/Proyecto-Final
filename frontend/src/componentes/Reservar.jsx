@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import { registerLocale } from 'react-datepicker';
+import es from 'date-fns/locale/es';
+import "react-datepicker/dist/react-datepicker.css";
 import '../estilos/Reservar.css';
 import { toast } from 'react-toastify';
+
+registerLocale('es', es);
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -11,7 +17,7 @@ const Reservar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [proveedor, setProveedor] = useState(null);
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [misMascotas, setMisMascotas] = useState([]);
   const [mascotaSeleccionada, setMascotaSeleccionada] = useState('');
@@ -76,15 +82,8 @@ const Reservar = () => {
       dataProveedor.availability = disponibilidadValidada;
       setProveedor(dataProveedor);
 
-      // Establecer el primer día disponible
-      if (disponibilidadValidada && disponibilidadValidada.length > 0) {
-        const diasOrdenados = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
-        const diasDisponibles = disponibilidadValidada.map(d => d.day.toLowerCase());
-        const primerDiaDisponible = diasOrdenados.find(dia => diasDisponibles.includes(dia));
-        if (primerDiaDisponible) {
-          setSelectedDay(primerDiaDisponible);
-        }
-      }
+      // Establecer la fecha actual como fecha inicial
+      setSelectedDate(new Date());
     } catch (err) {
       console.error('Error al cargar proveedor:', err);
       toast.error(err.response?.data?.message || 'Error al cargar la información del proveedor');
@@ -120,7 +119,7 @@ const Reservar = () => {
   }, [id, location.state, navigate]);
 
   const isHorarioDisponible = (dia, horario) => {
-    if (!proveedor?._id) return false;
+    if (!proveedor?._id || !dia || !horario) return false;
     return !reservas.some(reserva =>
       reserva?.provider?._id === proveedor._id &&
       reserva?.date?.toLowerCase() === dia.toLowerCase() &&
@@ -128,17 +127,27 @@ const Reservar = () => {
     );
   };
 
+  const getDiaSemana = (fecha) => {
+    if (!fecha || !(fecha instanceof Date) || isNaN(fecha)) return null;
+    const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+    return dias[fecha.getDay()];
+  };
+
   const getHorariosDisponibles = () => {
-    if (!selectedDay || !proveedor?.availability) return [];
+    if (!selectedDate || !proveedor?.availability) return [];
 
-    const diaSeleccionado = proveedor.availability.find(d =>
-      d.day.toLowerCase() === selectedDay.toLowerCase()
-    );
-
+    const diaSeleccionado = getDiaSemana(selectedDate);
     if (!diaSeleccionado) return [];
 
-    // Filtrar solo los horarios que no están reservados
-    return diaSeleccionado.slots.filter(slot => isHorarioDisponible(selectedDay, slot));
+    const diaDisponible = proveedor.availability.find(d =>
+      d.day.toLowerCase() === diaSeleccionado.toLowerCase()
+    );
+
+    if (!diaDisponible) return [];
+
+    return diaDisponible.slots.filter(slot => 
+      isHorarioDisponible(diaSeleccionado, slot)
+    );
   };
 
   const handleBook = async () => {
@@ -152,8 +161,8 @@ const Reservar = () => {
     // Validaciones individuales
     const validaciones = [];
 
-    if (!selectedDay) {
-      validaciones.push("día");
+    if (!selectedDate) {
+      validaciones.push("fecha");
     }
     if (!selectedTime) {
       validaciones.push("horario");
@@ -173,13 +182,15 @@ const Reservar = () => {
       return;
     }
 
+    const diaSeleccionado = getDiaSemana(selectedDate).toLowerCase();
+
     // Verificar nuevamente si el horario sigue disponible
-    if (!isHorarioDisponible(selectedDay, selectedTime)) {
+    if (!isHorarioDisponible(diaSeleccionado, selectedTime)) {
       toast.error("Este horario ya no está disponible. Por favor selecciona otro.");
       const nuevosHorarios = getHorariosDisponibles();
       if (nuevosHorarios.length === 0) {
         toast.info("No hay más horarios disponibles para este día");
-        setSelectedDay(null);
+        setSelectedDate(null);
       }
       setSelectedTime(null);
       return;
@@ -193,7 +204,7 @@ const Reservar = () => {
         {
           provider: proveedor._id,
           pet: mascotaSeleccionada,
-          date: selectedDay,
+          date: diaSeleccionado,
           time: selectedTime
         },
         {
@@ -208,7 +219,7 @@ const Reservar = () => {
           // Actualizar la disponibilidad en el backend
           await axios.put(
             `${API_URL}/prestadores/${proveedor._id}/availability`,
-            { day: selectedDay, slot: selectedTime },
+            { day: diaSeleccionado, slot: selectedTime },
             {
               headers: {
                 Authorization: `Bearer ${token}`
@@ -222,7 +233,7 @@ const Reservar = () => {
           // Actualizar la disponibilidad local
           const nuevaDisponibilidad = proveedor.availability
             .map(a => {
-              if (a.day.toLowerCase() === selectedDay.toLowerCase()) {
+              if (a.day.toLowerCase() === diaSeleccionado) {
                 const nuevosSlots = a.slots.filter(h => h !== selectedTime);
                 return nuevosSlots.length > 0 ? { ...a, slots: nuevosSlots } : null;
               }
@@ -238,22 +249,11 @@ const Reservar = () => {
           // Resetear selecciones
           setSelectedTime(null);
           setMascotaSeleccionada('');
+          setSelectedDate(null);
 
-          // Si el día actual ya no tiene horarios disponibles, seleccionar el siguiente día
-          const horariosRestantes = getHorariosDisponibles();
-          if (horariosRestantes.length === 0) {
-            const siguienteDia = nuevaDisponibilidad[0]?.day;
-            if (siguienteDia) {
-              setSelectedDay(siguienteDia);
-            } else {
-              setSelectedDay(null);
-            }
-          }
-
-          toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDay} a las ${selectedTime}`);
+          toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${diaSeleccionado} a las ${selectedTime}`);
         } catch (error) {
           console.error('Error al actualizar disponibilidad:', error);
-          // No mostramos toast aquí ya que la reserva fue exitosa
         }
       }
     } catch (err) {
@@ -339,20 +339,30 @@ const Reservar = () => {
         </div>
 
         <div className="availability">
-          <h4>Días disponibles</h4>
-          <div className="days">
-            {proveedor.availability?.map((a) => (
-              <button
-                key={a.day}
-                className={`day-button ${selectedDay?.toLowerCase() === a.day.toLowerCase() ? "selected" : ""}`}
-                onClick={() => {
-                  setSelectedDay(a.day);
+          <h4>Selecciona una fecha</h4>
+          <div className="calendar-container">
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => {
+                if (date instanceof Date && !isNaN(date)) {
+                  setSelectedDate(date);
                   setSelectedTime(null);
-                }}
-              >
-                {upper(a.day)}
-              </button>
-            ))}
+                }
+              }}
+              minDate={new Date()}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Selecciona una fecha"
+              className="date-picker-input"
+              locale="es"
+              showPopperArrow={false}
+              isClearable
+              onSelect={(date) => {
+                if (date instanceof Date && !isNaN(date)) {
+                  setSelectedDate(date);
+                  setSelectedTime(null);
+                }
+              }}
+            />
           </div>
 
           <h4>Horarios disponibles</h4>
@@ -363,14 +373,14 @@ const Reservar = () => {
                   key={time}
                   className={`time-button ${selectedTime === time ? "selected" : ""}`}
                   onClick={() => setSelectedTime(time)}
-                  disabled={!isHorarioDisponible(selectedDay, time)}
+                  disabled={!selectedDate || !isHorarioDisponible(getDiaSemana(selectedDate), time)}
                 >
                   {time}
                 </button>
               ))
             ) : (
               <p style={{ color: '#666', fontSize: '0.9rem', textAlign: 'center' }}>
-                No hay horarios disponibles para este día
+                {selectedDate ? 'No hay horarios disponibles para este día' : 'Selecciona una fecha para ver los horarios disponibles'}
               </p>
             )}
           </div>
