@@ -30,8 +30,16 @@ const reservationSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pendiente', 'confirmada', 'completada', 'cancelada'],
+    enum: ['pendiente', 'aceptada', 'completada', 'cancelada'],
     default: 'pendiente'
+  },
+  comment: {
+    type: String
+  },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5
   }
 }, { timestamps: true });
 
