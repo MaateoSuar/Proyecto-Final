@@ -9,6 +9,34 @@ const MisReservas = () => {
   const [reservas, setReservas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reservaAReportar, setReservaAReportar] = useState(null);
+  const [motivoReporte, setMotivoReporte] = useState("");
+
+  const abrirFormularioReporte = (reserva) => {
+    setReservaAReportar(reserva);
+    setMotivoReporte("");
+    setShowReportModal(true);
+  };
+
+  const cerrarFormularioReporte = () => {
+    setShowReportModal(false);
+    setReservaAReportar(null);
+    setMotivoReporte("");
+  };
+
+  const enviarReporte = (e) => {
+    e.preventDefault();
+    // Aquí podrías enviar el reporte al backend
+    toast.success("¡Reporte enviado! Gracias por tu colaboración.");
+    cerrarFormularioReporte();
+  };
+
+
+
+
+
   const cargarReservas = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -132,17 +160,64 @@ const MisReservas = () => {
               </div>
               <p className="reserva-pet">Mascota: {reserva.pet.name}</p>
             </div>
-            <button
-              className="cancel-button"
-              onClick={() => confirmarCancelacion(reserva)}
-            >
-              Cancelar Reserva
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                className="cancel-button"
+                onClick={() => confirmarCancelacion(reserva)}
+              >
+                Cancelar Reserva
+              </button>
+              <button
+                className="report-btn"
+                onClick={() => abrirFormularioReporte(reserva)}
+              >
+                Reportar Reserva
+              </button>
+            </div>
           </div>
         ))}
       </div>
+
+      {/* Modal de reporte */}
+      {showReportModal && reservaAReportar && (
+        <div className="modal-reporte">
+          <div className="modal-reporte-form">
+            <div className="modal-reporte-title">Reportar Reserva</div>
+            <p><b>Proveedor:</b> {reservaAReportar.provider.name}</p>
+            <p><b>Fecha:</b> {reservaAReportar.date} <b>Hora:</b> {reservaAReportar.time}</p>
+            <form onSubmit={enviarReporte}>
+              <div>
+                <label htmlFor="motivo-reporte" className="modal-reporte-label">Motivo del reporte:</label>
+                <textarea
+                  id="motivo-reporte"
+                  className="modal-reporte-textarea"
+                  value={motivoReporte}
+                  onChange={e => setMotivoReporte(e.target.value)}
+                  required
+                  rows={4}
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+                <button
+                  type="button"
+                  className="modal-reporte-cancel"
+                  onClick={cerrarFormularioReporte}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="modal-reporte-btn"
+                >
+                  Enviar Reporte
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default MisReservas; 
+export default MisReservas;
