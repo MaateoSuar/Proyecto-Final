@@ -16,6 +16,26 @@ export default function PaginaUsuario() {
 
   return (
     <div className="pagina-usuario">
+      <button
+        className="back-button"
+        style={{
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          background: 'var(--background)',
+          color: '#8B5C2A',
+          border: 'none',
+          borderRadius: '6px',
+          padding: '8px 16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: 'none',
+          zIndex: 10
+        }}
+        onClick={() => navigate('/inicio')}
+      >
+        ← Atrás
+      </button>
       <div className="tabs">
         <button 
           className={`tab-button ${activeTab === 'perfil' ? 'active' : ''}`}

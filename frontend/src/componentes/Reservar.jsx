@@ -254,6 +254,8 @@ const Reservar = () => {
           setSelectedDate(null);
 
           toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${diaSeleccionado} a las ${selectedTime}`);
+          navigate('/proveedores');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (error) {
           console.error('Error al actualizar disponibilidad:', error);
         }
