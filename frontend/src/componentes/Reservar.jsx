@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import formatRating from '../utils/formatRating';
+import ComentariosProveedor from './ComentariosProveedor';
 import { useLocation, useParams, useNavigate, useSearchParams } from "react-router-dom";
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
@@ -427,6 +428,8 @@ const Reservar = () => {
           </button>
         </div>
       </div>
+      {/* Comentarios y valoraciones */}
+      <ComentariosProveedor providerId={proveedor?._id} />
     </div>
   );
 };
