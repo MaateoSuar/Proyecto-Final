@@ -11,7 +11,8 @@ html, body {
 
 .pagina-home {
   width: 100%;
-  max-width: 430px;
+  max-width: 1200px;
+  min-width: 0;
   padding: 10px 20px;
   background-color: #fceecf;
   color: #333;
@@ -357,6 +358,34 @@ html, body {
   }
 }
 
+@media (max-width: 768px) {
+  .services {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .service-card {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 900px) {
+  .services {
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 16px;
+    justify-content: center;
+  }
+  .service-card {
+    flex: 1 1 45%;
+    min-width: 180px;
+    max-width: 48%;
+    margin: 0 auto 12px auto;
+  }
+}
+
 .pets-box2 {
   margin-top: 15px;
   overflow-x: auto;
@@ -422,4 +451,59 @@ html, body {
 .location-box {
   margin: 16px 0 24px;
   padding: 0;
+}
+
+@media (max-width: 600px) {
+  .pagina-home {
+    width: 100%;
+    max-width: 100vw;
+    padding: 8px 2vw;
+  }
+  .services {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+    padding: 0;
+  }
+  .service-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 12px 0;
+    border-radius: 12px;
+  }
+  .service-card img {
+    width: 48px;
+    height: 48px;
+    margin-right: 10px;
+    object-fit: contain;
+  }
+  .service-label {
+    font-size: 1em;
+    margin-left: 0;
+  }
+  .plans {
+    flex-direction: column;
+    width: 100%;
+    overflow-x: visible;
+    gap: 12px;
+    padding-bottom: 0;
+  }
+  .plan-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+}
+
+.service-label {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-left: 12px;
+  white-space: nowrap;
 }

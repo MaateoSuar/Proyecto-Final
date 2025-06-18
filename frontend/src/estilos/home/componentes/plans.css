@@ -193,3 +193,20 @@
     margin-right: 0;
   }
 }
+
+@media (max-width: 600px) {
+  .plans {
+    flex-direction: column;
+    width: 100%;
+    overflow-x: visible;
+    gap: 12px;
+    padding-bottom: 0;
+  }
+  .plan-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin-right: 0;
+    margin-bottom: 12px;
+  }
+}

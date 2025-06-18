@@ -47,9 +47,11 @@ export default function PaginaUsuario() {
         }}
         onClick={() => navigate('/inicio')}
       >
-        ← Atrás
+        <span className="back-arrow">←</span>
+        <span className="back-text"> Atrás</span>
       </button>
-      <div className="tabs">
+      <div className={`tabs${activeTab === 'perfil' ? ' tabs-perfil' : ''}`}
+        style={{ marginBottom: 0 }}>
         <button 
           className={`tab-button ${activeTab === 'perfil' ? 'active' : ''}`}
           onClick={() => {
@@ -78,7 +80,8 @@ export default function PaginaUsuario() {
         {activeTab === 'perfil' && (
         <button className="tab-button edit-button" 
               onClick={() => setIsEditMode(!isEditMode)}
-              title={isEditMode ? "Cerrar edición" : "Editar perfil"}>
+              title={isEditMode ? "Cerrar edición" : "Editar perfil"}
+              style={{ marginBottom: '0' }}>
           {isEditMode ? '❌' : '✏️'}
         </button>
         )}
@@ -88,8 +91,10 @@ export default function PaginaUsuario() {
       
       <div className="tab-content">
         {activeTab === 'perfil' && (
-          <div className="perfil-contenedor">
-            <UsuarioEdit isEditMode={isEditMode} />
+          <div className="perfil-contenedor perfil-espaciado-movil">
+            <div className="avatar-centro-movil">
+              <UsuarioEdit isEditMode={isEditMode} />
+            </div>
           </div>
         )}
 
