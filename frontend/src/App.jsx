@@ -67,7 +67,7 @@ export default function App() {
               </RutaProtegida>
             } 
           />
-          <Route path="/" element={<Navigate to="/inicio" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route 
             path="/profile" 
             element={
