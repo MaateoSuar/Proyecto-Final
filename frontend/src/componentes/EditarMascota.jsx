@@ -175,17 +175,17 @@ export default function EditarMascota() {
 
       toast.success('Mascota eliminada con éxito');
       navigate('/inicio');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Error al eliminar la mascota');
-      setError(error.response?.data?.message || 'Error al eliminar la mascota');
-    } finally {
-      setIsLoading(false);
-      setShowConfirmDelete(false);
-    }
-  };
+  } catch (error) {
+    toast.error(error.response?.data?.message || 'Error al eliminar la mascota');
+    setError(error.response?.data?.message || 'Error al eliminar la mascota');
+  } finally {
+    setIsLoading(false);
+    setShowConfirmDelete(false);
+  }
+};
 
   if (isLoading) {
-    return (
+return (
       <div style={styles.container}>
         <div style={styles.card}>
           <p style={styles.loadingText}>Cargando datos de la mascota...</p>
@@ -208,69 +208,90 @@ export default function EditarMascota() {
   }
 
   return (
-    <>
+      <>
+        <button
+        className="back-button"
+        style={{
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          background: 'var(--background)',
+          color: '#8B5C2A',
+          border: 'none',
+          borderRadius: '6px',
+          padding: '8px 16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: 'none',
+          zIndex: 10
+        }}
+        onClick={() => navigate('/inicio')}
+        aria-label="Volver al inicio"
+      >
+        ← Atrás
+      </button>
       <style>{`
-        input[type="date"]::-webkit-calendar-picker-indicator {
-          filter: invert(1);
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-          filter: invert(1);
-        }
-        input[type="number"] {
-          color-scheme: dark;
-        }
-        .delete-button {
-          margin-top: 10px;
-          width: 100%;
-          padding: 12px;
-          background-color: #dc3545;
-          color: white;
-          font-weight: bold;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-        }
-        .confirm-delete {
-          background-color: #dc3545;
-          color: white;
-          padding: 10px;
-          margin-top: 10px;
-          border-radius: 8px;
-          text-align: center;
-        }
-        .confirm-delete button {
-          margin: 5px;
-          padding: 5px 15px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        .confirm-delete button.confirm {
-          background-color: #fff;
-          color: #dc3545;
-        }
-        .confirm-delete button.cancel {
-          background-color: transparent;
-          color: #fff;
-          border: 1px solid #fff;
-        }
-      `}</style>
+          input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+          }
+          input[type="number"]::-webkit-inner-spin-button,
+          input[type="number"]::-webkit-outer-spin-button {
+            filter: invert(1);
+          }
+          input[type="number"] {
+            color-scheme: dark;
+          }
+          .delete-button {
+            margin-top: 10px;
+            width: 100%;
+            padding: 12px;
+            background-color: #dc3545;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+          }
+          .confirm-delete {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 8px;
+            text-align: center;
+          }
+          .confirm-delete button {
+            margin: 5px;
+            padding: 5px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+          .confirm-delete button.confirm {
+            background-color: #fff;
+            color: #dc3545;
+          }
+          .confirm-delete button.cancel {
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+          }
+        `}</style>
 
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <div style={styles.header}>
-            <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
-              {fotoMascota ? (
-                <img
-                  src={fotoMascota}
-                  alt="Mascota"
-                  style={styles.previewFoto}
-                />
-              ) : (
-                <div style={styles.icon}>+</div>
-              )}
-            </label>
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <div style={styles.header}>
+              <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
+                {fotoMascota ? (
+                  <img
+                    src={fotoMascota}
+                    alt="Mascota"
+                    style={styles.previewFoto}
+                  />
+                ) : (
+                  <div style={styles.icon}>+</div>
+                )}
+              </label>
             <input
               id="fotoInput"
               type="file"

@@ -57,7 +57,12 @@ const HistorialReservas = () => {
       ) : (
         <ul className="lista-reservas">
           {reservas.map((reserva) => (
-            <li key={reserva._id} className="reserva-item">
+            <li
+              key={reserva._id}
+              className="reserva-item"
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate('/profile?tab=reservas')}
+            >
               <div className="info-reserva">
                 <p><strong>Mascota:</strong> {reserva.pet?.name}</p>
                 <p><strong>Servicio:</strong> {reserva.provider?.name}</p>
