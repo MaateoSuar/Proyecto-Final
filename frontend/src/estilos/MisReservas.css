@@ -70,6 +70,22 @@
   background-color: #c82333;
 }
 
+.review-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.review-btn:hover {
+  background-color: #218838;
+}
+
 .reservas-loading {
   text-align: center;
   color: var(--gray);

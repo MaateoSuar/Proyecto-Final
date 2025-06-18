@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import ReviewForm from './ReviewForm';
 import '../estilos/MisReservas.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -9,6 +10,8 @@ const MisReservas = () => {
   const [reservas, setReservas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reservaAValorar, setReservaAValorar] = useState(null);
 
   const [showReportModal, setShowReportModal] = useState(false);
   const [reservaAReportar, setReservaAReportar] = useState(null);
@@ -32,10 +35,6 @@ const MisReservas = () => {
     toast.success("¡Reporte enviado! Gracias por tu colaboración.");
     cerrarFormularioReporte();
   };
-
-
-
-
 
   const cargarReservas = async () => {
     try {
@@ -161,18 +160,42 @@ const MisReservas = () => {
               <p className="reserva-pet">Mascota: {reserva.pet.name}</p>
             </div>
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                className="cancel-button"
-                onClick={() => confirmarCancelacion(reserva)}
-              >
-                Cancelar Reserva
-              </button>
-              <button
-                className="report-btn"
-                onClick={() => abrirFormularioReporte(reserva)}
-              >
-                Reportar Reserva
-              </button>
+              {/* Solo permitir cancelar si no está completada */}
+              {reserva.status !== 'completada' && (
+                <button
+                  className="cancel-button"
+                  onClick={() => confirmarCancelacion(reserva)}
+                >
+                  Cancelar Reserva
+                </button>
+              )}
+              {/* Solo permitir reportar si está completada */}
+              {reserva.status === 'completada' && (
+                <button
+                  className="report-btn"
+                  onClick={() => abrirFormularioReporte(reserva)}
+                >
+                  Reportar Reserva
+                </button>
+              )}
+              {/* Botón para dejar review solo si está completada y no tiene review */}
+              {reserva.status === 'completada' && !(reserva.comment && reserva.rating) && (
+                <button
+                  className="review-btn"
+                  onClick={() => {
+                    setReservaAValorar(reserva);
+                    setShowReviewModal(true);
+                  }}
+                >
+                  Dejar valoración
+                </button>
+              )}
+              {/* Mostrar mensaje si ya fue valorada */}
+              {reserva.status === 'completada' && reserva.comment && reserva.rating && (
+                <span className="reserva-valorada" style={{ color: '#28a745', fontWeight: 'bold' }}>
+                  ¡Ya valoraste esta reserva!
+                </span>
+              )}
             </div>
           </div>
         ))}
@@ -215,6 +238,29 @@ const MisReservas = () => {
             </form>
           </div>
         </div>
+      )}
+      {/* Modal de review */}
+      {showReviewModal && reservaAValorar && (
+        <ReviewForm
+          reservaId={reservaAValorar._id}
+          onClose={() => {
+            setShowReviewModal(false);
+            setReservaAValorar(null);
+          }}
+          onSubmit={async ({ comment, rating }) => {
+            const token = localStorage.getItem('token');
+            await axios.post(
+              `${API_URL}/reservas/${reservaAValorar._id}/review`,
+              { comment, rating },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast.success('¡Valoración enviada!');
+            // Actualizar reservas para reflejar la nueva review
+            setReservas(prev => prev.map(r =>
+              r._id === reservaAValorar._id ? { ...r, comment, rating } : r
+            ));
+          }}
+        />
       )}
     </div>
   );
