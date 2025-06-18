@@ -1,13 +1,26 @@
 import UsuarioEdit from '../componentes/UsuarioEdit';
 import MisReservas from '../componentes/MisReservas';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../estilos/PaginaUsuario.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function PaginaUsuario() {
-  const [activeTab, setActiveTab] = useState('perfil');
+  const location = useLocation();
+  function getTabFromQuery() {
+    const params = new URLSearchParams(location.search);
+    return params.get('tab') === 'reservas' ? 'reservas' : 'perfil';
+  }
+  const [activeTab, setActiveTab] = useState(getTabFromQuery());
   const [isEditMode, setIsEditMode] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setActiveTab(getTabFromQuery());
+  }, [location.search]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [activeTab, location.search]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -39,13 +52,19 @@ export default function PaginaUsuario() {
       <div className="tabs">
         <button 
           className={`tab-button ${activeTab === 'perfil' ? 'active' : ''}`}
-          onClick={() => setActiveTab('perfil')}
+          onClick={() => {
+            setActiveTab('perfil');
+            navigate('/profile?tab=perfil');
+          }}
         >
           Perfil
         </button>
         <button 
           className={`tab-button ${activeTab === 'reservas' ? 'active' : ''}`}
-          onClick={() => setActiveTab('reservas')}
+          onClick={() => {
+            setActiveTab('reservas');
+            navigate('/profile?tab=reservas');
+          }}
         >
         Reservas
         </button>

@@ -94,7 +94,28 @@ const PerfilMascotas = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ position: 'relative' }}>
+      <button
+        className="back-button"
+        style={{
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          background: 'var(--background)',
+          color: '#8B5C2A',
+          border: 'none',
+          borderRadius: '6px',
+          padding: '8px 16px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: 'none',
+          zIndex: 10
+        }}
+        onClick={() => navigate('/inicio')}
+        aria-label="Volver al inicio"
+      >
+        ← Atrás
+      </button>
       <div className="card">
         <div className="header">
           <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
