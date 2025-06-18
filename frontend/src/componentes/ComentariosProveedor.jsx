@@ -44,10 +44,8 @@ export default function ComentariosProveedor({ providerId }) {
               <span style={{fontWeight:'bold'}}>{c.user?.fullName || c.user?.email || 'Usuario'}</span>
               {c.rating && <span style={{color:'#f5b50a'}}>⭐ {formatRating(c.rating)}</span>}
             </div>
-            {c.comment && <div style={{marginTop:4}}>{c.comment}</div>}
-            <div style={{fontSize:'0.85em', color:'#999', marginTop:2}}>
-              {c.date ? new Date(c.date).toLocaleDateString() : ''}
-            </div>
+            {c.comment && <div style={{marginTop:7}}>{c.comment}</div>}
+
           </li>
         ))}
       </ul>
