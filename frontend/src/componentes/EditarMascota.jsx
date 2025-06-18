@@ -184,11 +184,38 @@ export default function EditarMascota() {
     }
   };
 
+  // Botón atrás fijo arriba a la izquierda
+  const backButton = (
+    <button
+      className="back-button"
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        background: 'var(--background)',
+        color: '#8B5C2A',
+        border: 'none',
+        borderRadius: '6px',
+        padding: '8px 16px',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        boxShadow: 'none',
+        zIndex: 10
+      }}
+      onClick={() => navigate('/inicio')}
+    >
+      ←
+    </button>
+  );
+
   if (isLoading) {
     return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <p style={styles.loadingText}>Cargando datos de la mascota...</p>
+      <div style={{ position: 'relative', minHeight: '100vh' }}>
+        {backButton}
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <p style={styles.loadingText}>Cargando datos de la mascota...</p>
+          </div>
         </div>
       </div>
     );
@@ -196,19 +223,23 @@ export default function EditarMascota() {
 
   if (error) {
     return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <p style={styles.errorText}>{error}</p>
-          <button style={styles.button} onClick={() => navigate('/inicio')}>
-            Volver al inicio
-          </button>
+      <div style={{ position: 'relative', minHeight: '100vh' }}>
+        {backButton}
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <p style={styles.errorText}>{error}</p>
+            <button style={styles.button} onClick={() => navigate('/inicio')}>
+              Volver al inicio
+            </button>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <>
+    <div style={{ position: 'relative', minHeight: '100vh' }}>
+      {backButton}
       <style>{`
         input[type="date"]::-webkit-calendar-picker-indicator {
           filter: invert(1);
@@ -411,7 +442,7 @@ export default function EditarMascota() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
