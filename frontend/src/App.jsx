@@ -18,6 +18,7 @@ import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
 import RutaProtegida from './componentes/RutaProtegida';
 import RutaPublica from './componentes/RutaPublica';
 import HistorialReservas from './componentes/HistorialReservas';
+import Footer from './componentes/Footer';
 
 export default function App() {
   return (
@@ -141,6 +142,7 @@ export default function App() {
           />
           <Route path="*" element={<Navigate to="/inicio" replace />} />
         </Routes>
+        <Footer />
       </UbicacionProvider>
     </BrowserRouter>
   );
