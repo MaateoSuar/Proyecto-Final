@@ -130,7 +130,7 @@ export default function Planes() {
           </div>
           <div className="plan-card" onClick={() => handleProviderClick(providers.peluqueria)}>
             <div className="card-header">
-              <div className="date">15 Mayo • San Miguel de Tucumán</div>
+              <div className="date">San Miguel de Tucumán</div>
             </div>
             <div className="card-content">
               <strong>{getServiceType(providers.peluqueria)}</strong>
@@ -151,7 +151,7 @@ export default function Planes() {
           </div>
           <div className="plan-card" onClick={() => handleProviderClick(providers.cuidado)}>
             <div className="card-header">
-              <div className="date">20 Mayo • Yerba Buena</div>
+              <div className="date">Yerba Buena</div>
             </div>
             <div className="card-content">
               <strong>{getServiceType(providers.cuidado)}</strong>
@@ -172,7 +172,7 @@ export default function Planes() {
           </div>
           <div className="plan-card" onClick={() => handleProviderClick(providers.paseo)}>
             <div className="card-header">
-              <div className="date">25 Mayo • San Miguel de Tucumán</div>
+              <div className="date">San Miguel de Tucumán</div>
             </div>
             <div className="card-content">
               <strong>{getServiceType(providers.paseo)}</strong>
