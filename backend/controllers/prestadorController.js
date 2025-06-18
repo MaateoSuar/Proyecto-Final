@@ -174,10 +174,34 @@ const deletePrestador = async (req, res) => {
     }
 };
 
+// Obtener un prestador por su ID
+const getPrestadorById = async (req, res) => {
+    try {
+        const prestador = await Prestador.findById(req.params.id);
+        if (!prestador) {
+            return res.status(404).json({
+                success: false,
+                message: 'Prestador no encontrado'
+            });
+        }
+        res.json({
+            success: true,
+            data: prestador
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener el prestador',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAllPrestadores,
     createManyPrestadores,
     updateAvailability,
     togglePrestadorStatus,
-    deletePrestador
+    deletePrestador,
+    getPrestadorById
 }; 

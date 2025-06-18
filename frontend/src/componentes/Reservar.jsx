@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate, useSearchParams } from "react-router-dom";
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
 import { registerLocale } from 'react-datepicker';
@@ -16,6 +16,8 @@ const Reservar = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const from = searchParams.get('from');
   const [proveedor, setProveedor] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -283,7 +285,7 @@ const Reservar = () => {
         <button
           className="back-button"
           onClick={() => {
-            if (location.state?.from) {
+            if (location.state?.from && location.state.from.startsWith('/proveedores')) {
               navigate(location.state.from, {
                 replace: true,
                 state: {
@@ -291,8 +293,10 @@ const Reservar = () => {
                   orderPrice: location.state.orderPrice
                 }
               });
+            } else if (from === 'inicio') {
+              navigate('/inicio');
             } else {
-              navigate(-1);
+              navigate('/proveedores');
             }
           }}
         >

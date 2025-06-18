@@ -23,8 +23,6 @@ const ProviderList = () => {
   const [providers, setProviders] = useState([]);
   const [filteredProviders, setFilteredProviders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(location.state?.selectedCategory || null);
-  const [orderPrice, setOrderPrice] = useState(location.state?.orderPrice || null);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const filterRef = useRef();
 
@@ -61,17 +59,13 @@ const ProviderList = () => {
     }
   };
 
+  // Cargar proveedores cuando cambian los parámetros de la URL
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const categoria = params.get('categoria');
     const precio = params.get('precio');
-    if (categoria) setSelectedCategory(categoria);
-    if (precio) setOrderPrice(precio);
+    fetchProviders(categoria, precio);
   }, [location.search]);
-
-  useEffect(() => {
-    fetchProviders(selectedCategory, orderPrice);
-  }, [selectedCategory, orderPrice]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -103,24 +97,28 @@ const ProviderList = () => {
       {
         state: {
           provider,
-          from: `${location.pathname}${location.search}`,
-          selectedCategory,
-          orderPrice
+          from: `${location.pathname}${location.search}`
         }
       }
     );
   };
 
   const handleCategoryClick = (value) => {
-    const newCategory = value === selectedCategory ? null : value;
-    setSelectedCategory(newCategory);
-
     const params = new URLSearchParams(location.search);
-    if (newCategory) {
-      params.set('categoria', newCategory);
-    } else {
+    const currentCategory = params.get('categoria');
+    
+    if (currentCategory === value) {
       params.delete('categoria');
+    } else {
+      params.set('categoria', value);
     }
+    
+    navigate({ search: params.toString() }, { replace: true });
+  };
+
+  const handlePriceFilter = (order) => {
+    const params = new URLSearchParams(location.search);
+    params.set('precio', order);
     navigate({ search: params.toString() }, { replace: true });
   };
 
@@ -131,11 +129,25 @@ const ProviderList = () => {
 
   const randomDistance = () => (Math.random() * 3 + 0.5).toFixed(1);
 
+  const getSelectedCategory = () => {
+    const params = new URLSearchParams(location.search);
+    return params.get('categoria');
+  };
+
   return (
     <div className="provider-list-container">
-      <div className="headerList">
-        <h2 className="title">Nuestros Servicios</h2>
-        <div className="filter-container" ref={filterRef}>
+      <div className="headerList" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
+        <button
+          className="back-button"
+          style={{ position: 'relative', left: 0 }}
+          onClick={() => navigate('/inicio')}
+        >
+          &larr;
+        </button>
+        <h2 className="title" style={{ margin: 0, position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+          Nuestros Servicios
+        </h2>
+        <div className="filter-container" ref={filterRef} style={{ position: 'relative', right: 0 }}>
           <button className="filter-button" onClick={() => setShowFilterMenu(!showFilterMenu)}>
             <FaFilter />
           </button>
@@ -144,10 +156,7 @@ const ProviderList = () => {
               <div
                 className="filter-option"
                 onClick={() => {
-                  const params = new URLSearchParams(location.search);
-                  params.set('precio', 'asc');
-                  navigate({ search: params.toString() }, { replace: true });
-                  setOrderPrice('asc');
+                  handlePriceFilter('asc');
                   setShowFilterMenu(false);
                 }}
               >
@@ -156,10 +165,7 @@ const ProviderList = () => {
               <div
                 className="filter-option"
                 onClick={() => {
-                  const params = new URLSearchParams(location.search);
-                  params.set('precio', 'desc');
-                  navigate({ search: params.toString() }, { replace: true });
-                  setOrderPrice('desc');
+                  handlePriceFilter('desc');
                   setShowFilterMenu(false);
                 }}
               >
@@ -188,7 +194,7 @@ const ProviderList = () => {
           <button
             key={cat.value}
             onClick={() => handleCategoryClick(cat.value)}
-            className={`category-button ${selectedCategory === cat.value ? 'active' : ''}`}
+            className={`category-button ${getSelectedCategory() === cat.value ? 'active' : ''}`}
           >
             {cat.label}
           </button>
