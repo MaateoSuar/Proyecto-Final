@@ -86,7 +86,7 @@ const MisReservas = () => {
     toast.warn(
       <div>
         <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
-        <p>Proveedor: {reserva.provider.name}</p>
+        <p>Proveedor: {reserva.provider.name}{reserva.provider.rating ? ` (⭐ ${formatRating(reserva.provider.rating)})` : ''}</p>
         <p>Fecha: {reserva.date}</p>
         <p>Hora: {reserva.time}</p>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
@@ -152,7 +152,7 @@ const MisReservas = () => {
           <div key={reserva._id} className="reserva-card">
             <div className="reserva-info">
               <div className="reserva-header">
-                <h3>{reserva.provider.name}</h3>
+                <h3>{reserva.provider.name}{reserva.provider.rating ? ` (⭐ ${formatRating(reserva.provider.rating)})` : ''}</h3>
                 <span className="reserva-date">
                   {reserva.date} - {reserva.time}
                 </span>

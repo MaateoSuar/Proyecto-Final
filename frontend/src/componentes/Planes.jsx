@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import formatRating from '../utils/formatRating';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -123,53 +124,67 @@ export default function Planes() {
   return (
     <div className="plans">
       {providers.peluqueria && (
-        <div className="plan-card" onClick={() => handleProviderClick(providers.peluqueria)}>
-          <div className="card-header">
-            <div className="date">15 Mayo • San Miguel de Tucumán</div>
+        <div>
+          <div style={{ fontSize: '1.1em', color: '#f5b50a', marginBottom: 4 }}>
+            ⭐ {formatRating(providers.peluqueria.rating?.average)}
           </div>
-          <div className="card-content">
-            <strong>{getServiceType(providers.peluqueria)}</strong>
-            <div>{providers.peluqueria.name}</div>
-            <div><a href="#" className="view-btn">{getButtonText(providers.peluqueria)}</a></div>
-          </div>
-          <div className="service-icon">
-            <img src={getServiceIcon(providers.peluqueria)} alt={getServiceType(providers.peluqueria)} />
+          <div className="plan-card" onClick={() => handleProviderClick(providers.peluqueria)}>
+            <div className="card-header">
+              <div className="date">15 Mayo • San Miguel de Tucumán</div>
+            </div>
+            <div className="card-content">
+              <strong>{getServiceType(providers.peluqueria)}</strong>
+              <div>{providers.peluqueria.name}</div>
+              <div><a href="#" className="view-btn">{getButtonText(providers.peluqueria)}</a></div>
+            </div>
+            <div className="service-icon">
+              <img src={getServiceIcon(providers.peluqueria)} alt={getServiceType(providers.peluqueria)} />
+            </div>
           </div>
         </div>
       )}
 
       {providers.cuidado && (
-        <div className="plan-card" onClick={() => handleProviderClick(providers.cuidado)}>
-          <div className="card-header">
-            <div className="date">20 Mayo • Yerba Buena</div>
+        <div>
+          <div style={{ fontSize: '1.1em', color: '#f5b50a', marginBottom: 4 }}>
+            ⭐ {formatRating(providers.cuidado.rating?.average)}
           </div>
-          <div className="card-content">
-            <strong>{getServiceType(providers.cuidado)}</strong>
-            <div>{providers.cuidado.name}</div>
-            <div><a href="#" className="view-btn">{getButtonText(providers.cuidado)}</a></div>
-          </div>
-          <div className="service-icon">
-            <img src={getServiceIcon(providers.cuidado)} alt={getServiceType(providers.cuidado)} />
+          <div className="plan-card" onClick={() => handleProviderClick(providers.cuidado)}>
+            <div className="card-header">
+              <div className="date">20 Mayo • Yerba Buena</div>
+            </div>
+            <div className="card-content">
+              <strong>{getServiceType(providers.cuidado)}</strong>
+              <div>{providers.cuidado.name}</div>
+              <div><a href="#" className="view-btn">{getButtonText(providers.cuidado)}</a></div>
+            </div>
+            <div className="service-icon">
+              <img src={getServiceIcon(providers.cuidado)} alt={getServiceType(providers.cuidado)} />
+            </div>
           </div>
         </div>
       )}
 
       {providers.paseo && (
-        <div className="plan-card" onClick={() => handleProviderClick(providers.paseo)}>
-          <div className="card-header">
-            <div className="date">25 Mayo • San Miguel de Tucumán</div>
+        <div>
+          <div style={{ fontSize: '1.1em', color: '#f5b50a', marginBottom: 4 }}>
+            ⭐ {formatRating(providers.paseo.rating?.average)}
           </div>
-          <div className="card-content">
-            <strong>{getServiceType(providers.paseo)}</strong>
-            <div>{providers.paseo.name}</div>
-            <div><a href="#" className="view-btn">{getButtonText(providers.paseo)}</a></div>
-          </div>
-          <div className="service-icon">
-            <img src={getServiceIcon(providers.paseo)} alt={getServiceType(providers.paseo)} />
+          <div className="plan-card" onClick={() => handleProviderClick(providers.paseo)}>
+            <div className="card-header">
+              <div className="date">25 Mayo • San Miguel de Tucumán</div>
+            </div>
+            <div className="card-content">
+              <strong>{getServiceType(providers.paseo)}</strong>
+              <div>{providers.paseo.name}</div>
+              <div><a href="#" className="view-btn">{getButtonText(providers.paseo)}</a></div>
+            </div>
+            <div className="service-icon">
+              <img src={getServiceIcon(providers.paseo)} alt={getServiceType(providers.paseo)} />
+            </div>
           </div>
         </div>
       )}
     </div>
   );
 }
-  

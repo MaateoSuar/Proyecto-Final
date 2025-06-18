@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import formatRating from '../utils/formatRating';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaFilter, FaSearch } from 'react-icons/fa';
@@ -221,7 +222,7 @@ const ProviderList = () => {
               <div className="provider-info">
                 <h3>{provider.name}</h3>
                 <p>{upper(renderServices(provider.services))}</p>
-                <p>⭐ {provider.rating?.average ?? 'N/A'} · 📍 {randomDistance()} km</p>
+                <p>⭐ {formatRating(provider.rating?.average)} · 📍 {randomDistance()} km</p>
               </div>
             </div>
           ))}

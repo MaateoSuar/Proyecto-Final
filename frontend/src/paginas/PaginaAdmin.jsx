@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import formatRating from '../utils/formatRating';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Switch from 'react-switch';
@@ -294,7 +295,7 @@ export default function PaginaAdmin() {
                       <td>{prestador.name}</td>
                       <td>{prestador.email}</td>
                       <td>{prestador.services?.map(s => s.type).join(', ') || 'N/A'}</td>
-                      <td>{prestador.rating?.average || 'N/A'}</td>
+                      <td>{formatRating(prestador.rating?.average)}</td>
                       <td>{prestador.isActive ? 'Activo' : 'Inactivo'}</td>
                       <td>
                         <div className="action-buttons">

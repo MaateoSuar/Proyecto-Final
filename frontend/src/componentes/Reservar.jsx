@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import formatRating from '../utils/formatRating';
 import { useLocation, useParams, useNavigate, useSearchParams } from "react-router-dom";
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
@@ -319,7 +320,7 @@ const Reservar = () => {
 
         <div className="info-cards">
           <div className="info-card">
-            <p className="info-main">{proveedor.rating?.average ?? 'N/A'}</p>
+            <p className="info-main">{formatRating(proveedor.rating?.average)}</p>
             <p className="info-label">Rating</p>
           </div>
           <div className="info-card">
