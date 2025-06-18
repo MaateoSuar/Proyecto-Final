@@ -1,49 +1,67 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../estilos/historialreservashome.css';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 const HistorialReservas = () => {
   const [reservas, setReservas] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const cargarReservas = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
-    const reservasEjemplo = [
-      {
-        nombreMascota: 'Firulais',
-        servicio: 'Paseo',
-        fecha: '2025-05-30',
-        estado: 'pendiente'
-      },
-      {
-        nombreMascota: 'Luna',
-        servicio: 'Peluquería',
-        fecha: '2025-06-01',
-        estado: 'confirmada'
-      },
-      {
-        nombreMascota: 'Toby',
-        servicio: 'Cuidado',
-        fecha: '2025-06-05',
-        estado: 'pendiente'
+        const response = await axios.get(`${API_URL}/reservas`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        // Filtrar reservas pendientes y ordenar por fecha
+        const reservasPendientes = response.data
+          .filter(reserva => reserva.status === 'pendiente')
+          .sort((a, b) => {
+            const fechaA = new Date(`${a.date} ${a.time}`);
+            const fechaB = new Date(`${b.date} ${b.time}`);
+            return fechaA - fechaB;
+          })
+          .slice(0, 3);
+
+        setReservas(reservasPendientes);
+      } catch (error) {
+        console.error('Error al cargar reservas:', error);
       }
-    ];
+    };
 
-    setReservas(reservasEjemplo);
+    cargarReservas();
   }, []);
 
-  const pendientes = reservas.filter(reserva => reserva.estado === 'pendiente');
+  const handleReservarClick = () => {
+    navigate('/proveedores');
+  };
 
   return (
     <div className="reservas-pendientes-container">
-      {pendientes.length === 0 ? (
-        <p className="sin-reservas">No tienes reservas pendientes.</p>
+      {reservas.length === 0 ? (
+        <div>
+          <p className="sin-reservas">No hay reservas pendientes</p>
+          <button 
+            className="btn-reservar" 
+            onClick={handleReservarClick}
+          >
+            Realizar una reserva
+          </button>
+        </div>
       ) : (
         <ul className="lista-reservas">
-          {pendientes.map((reserva, index) => (
-            <li key={index} className="reserva-item">
+          {reservas.map((reserva) => (
+            <li key={reserva._id} className="reserva-item">
               <div className="info-reserva">
-                <p><strong>Mascota:</strong> {reserva.nombreMascota}</p>
-                <p><strong>Servicio:</strong> {reserva.servicio}</p>
-                <p><strong>Fecha:</strong> {reserva.fecha}</p>
+                <p><strong>Mascota:</strong> {reserva.pet?.name}</p>
+                <p><strong>Servicio:</strong> {reserva.provider?.name}</p>
+                <p><strong>Fecha:</strong> {reserva.date} a las {reserva.time}</p>
               </div>
               <span className="estado estado-pendiente">Pendiente</span>
             </li>
