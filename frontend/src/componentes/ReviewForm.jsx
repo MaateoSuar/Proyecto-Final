@@ -22,7 +22,7 @@ function StarRating({ rating, setRating }) {
 
 export default function ReviewForm({ reservaId, onClose, onSubmit }) {
   const [comment, setComment] = useState('');
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -64,7 +64,7 @@ export default function ReviewForm({ reservaId, onClose, onSubmit }) {
           {error && <div className="error">{error}</div>}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginTop: '10px' }}>
             <button type="button" className="cancel-modal-btn" onClick={onClose} disabled={loading}>Cancelar</button>
-            <button type="submit" disabled={loading || rating === 0}>{loading ? 'Enviando...' : 'Enviar'}</button>
+            <button type="submit" disabled={loading}>{loading ? 'Enviando...' : 'Enviar'}</button>
           </div>
         </form>
       </div>
