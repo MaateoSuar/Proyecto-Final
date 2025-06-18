@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+
 export default function Servicios() {
   const navigate = useNavigate();
   const irFiltrado = (filtro) => {
-    navigate('/proveedores', { state: { filtro } });
+    navigate(`/proveedores?categoria=${filtro}`);
   };
+
   return (
     <div className="services">
       <div className="service-card" onClick={() => irFiltrado('peluqueria')}>
