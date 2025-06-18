@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaSearch } from 'react-icons/fa';
 import '../estilos/ProviderList.css';
 
 const categories = [
@@ -171,13 +171,16 @@ const ProviderList = () => {
       </div>
 
       <div className="search-container">
-        <input
-          type="text"
-          placeholder="Buscar por nombre..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
+        <div className="search-wrapper">
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Buscar por nombre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
       </div>
 
       <div className="filtros">
@@ -197,24 +200,26 @@ const ProviderList = () => {
       {filteredProviders.length === 0 ? (
         <p className="no-providers">No se encontraron proveedores para esta búsqueda.</p>
       ) : (
-        filteredProviders.map(provider => (
-          <div
-            className="provider-card"
-            key={provider._id}
-            onClick={() => handleProviderClick(provider)}
-          >
-            <img
-              src={provider.profileImage?.replace(/\u200E|\u202A|\u202C/g, '')}
-              alt={provider.name}
-              className="provider-image"
-            />
-            <div className="provider-info">
-              <h3>{provider.name}</h3>
-              <p>{upper(renderServices(provider.services))}</p>
-              <p>⭐ {provider.rating?.average ?? 'N/A'} · 📍 {randomDistance()} km</p>
+        <div className="providers-grid">
+          {filteredProviders.map(provider => (
+            <div
+              className="provider-card"
+              key={provider._id}
+              onClick={() => handleProviderClick(provider)}
+            >
+              <img
+                src={provider.profileImage?.replace(/\u200E|\u202A|\u202C/g, '')}
+                alt={provider.name}
+                className="provider-image"
+              />
+              <div className="provider-info">
+                <h3>{provider.name}</h3>
+                <p>{upper(renderServices(provider.services))}</p>
+                <p>⭐ {provider.rating?.average ?? 'N/A'} · 📍 {randomDistance()} km</p>
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   );

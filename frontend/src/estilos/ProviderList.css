@@ -8,12 +8,15 @@ h3, h2 {
   background-color: #fceecf;
   min-height: 100vh;
   padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .headerList {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
 .title {
@@ -32,6 +35,12 @@ h3, h2 {
   padding: 0.5rem;
   cursor: pointer;
   color: #000;
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover {
+  background-color: #d4a373;
+  color: white;
 }
 
 .filter-menu {
@@ -51,6 +60,12 @@ h3, h2 {
 .filter-option {
   padding: 0.5rem 1rem;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.filter-option:hover {
+  background-color: #d4a373;
+  color: white;
 }
 
 .filtros {
@@ -58,6 +73,7 @@ h3, h2 {
   gap: 1rem;
   margin-bottom: 1.5rem;
   overflow-x: auto;
+  padding: 0.5rem 0;
 }
 
 .category-button {
@@ -71,11 +87,19 @@ h3, h2 {
   white-space: nowrap;
   margin: 2px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.category-button:hover {
+  background-color: #d4a373;
+  color: white;
+  transform: translateY(-2px);
 }
 
 .category-button.active {
   background-color: #d4a373;
   font-weight: bold;
+  color: white;
 }
 
 .subtitle {
@@ -87,6 +111,10 @@ h3, h2 {
 .no-providers {
   text-align: center;
   color: #333;
+  padding: 2rem;
+  background-color: #FEFAE0;
+  border-radius: 12px;
+  margin-top: 2rem;
 }
 
 .provider-card {
@@ -99,6 +127,12 @@ h3, h2 {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   color: #000;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.provider-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .provider-image {
@@ -124,6 +158,26 @@ h3, h2 {
   width: 100%;
 }
 
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #FEFAE0;
+  border-radius: 6px;
+  padding: 4px;
+  color: #caa878;
+  font-size: 1.1rem;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+
 .search-input {
   width: 100%;
   padding: 0.8rem;
@@ -134,8 +188,136 @@ h3, h2 {
   color: #333;
   outline: none;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+  padding-left: 2.5rem;
+}
+
+.search-input:focus {
+  border-color: #d4a373;
+  box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.2);
 }
 
 .search-input::placeholder {
   color: #999;
+}
+
+.providers-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+/* Desktop Styles */
+@media (min-width: 768px) {
+  .provider-list-container {
+    padding: 2rem;
+  }
+
+  .headerList {
+    margin-bottom: 3rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .filter-button {
+    padding: 0.8rem;
+    font-size: 1.2rem;
+  }
+
+  .filtros {
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .category-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .provider-card {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .provider-image {
+    width: 100px;
+    height: 100px;
+    margin-right: 1.5rem;
+  }
+
+  .provider-info h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .provider-info p {
+    font-size: 1.1rem;
+    margin: 0.3rem 0;
+  }
+
+  .search-container {
+    margin: 1.5rem 0;
+  }
+
+  .search-input {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  .providers-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .search-icon {
+    font-size: 1.2rem;
+    width: 24px;
+    height: 24px;
+    left: 0.7rem;
+    padding: 5px;
+  }
+
+  .search-input {
+    padding-left: 3rem;
+  }
+}
+
+/* Large Desktop Styles */
+@media (min-width: 1200px) {
+  .provider-list-container {
+    padding: 3rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .provider-card {
+    padding: 2rem;
+  }
+
+  .provider-image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .provider-info h3 {
+    font-size: 1.6rem;
+  }
+
+  .provider-info p {
+    font-size: 1.2rem;
+  }
+
+  .providers-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
 }

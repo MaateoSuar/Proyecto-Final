@@ -173,7 +173,7 @@ const PerfilMascotas = () => {
                   className="knob"
                   style={{
                     transform: formData.esterilizado
-                      ? 'translateX(18px)'
+                      ? 'translateX(22px)'
                       : 'translateX(0px)',
                   }}
                 />
@@ -181,10 +181,10 @@ const PerfilMascotas = () => {
             </label>
           </div>
 
-          <div className="item">
+          <div className="item full-width">
             <span className="label">Vacunas</span>
           </div>
-          <div className="item">
+          <div className="item full-width">
             <input
               type="text"
               placeholder="Añadir vacuna"
@@ -196,13 +196,13 @@ const PerfilMascotas = () => {
             <button onClick={handleAddVacuna} className="addBtn">+</button>
           </div>
           {formData.vacunas.map((vacuna, i) => (
-            <div className="item" key={i}>{vacuna}</div>
+            <div className="item full-width" key={i}>{vacuna}</div>
           ))}
 
-          <div className="item">
+          <div className="item full-width">
             <span className="label">Alergias</span>
           </div>
-          <div className="item">
+          <div className="item full-width">
             <input
               type="text"
               placeholder="Añadir alergia"
@@ -214,7 +214,7 @@ const PerfilMascotas = () => {
             <button onClick={handleAddAlergia} className="addBtn">+</button>
           </div>
           {formData.alergias.map((alergia, i) => (
-            <div className="item" key={i}>{alergia}</div>
+            <div className="item full-width" key={i}>{alergia}</div>
           ))}
         </div>
 
