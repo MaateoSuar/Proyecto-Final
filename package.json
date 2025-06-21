@@ -15,14 +15,18 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --config mocha.config.js",
     "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
     "install:frontend": "npm install --prefix frontend",
     "install:backend": "npm install --prefix backend",
     "setup": "npm i && npm run install:frontend && npm run install:backend && npm run dev"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
+    "concurrently": "^9.1.2",
+    "jsdom": "^24.0.0",
+    "mocha": "^10.3.0"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
