@@ -7,11 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:unit": "mocha \"test/unitarios/**/*.test.js\"",
+    "test:int": "vitest run test/integracion"
   },
   "dependencies": {
     "axios": "^1.8.4",
     "express": "^5.1.0",
+    "jest": "^30.0.2",
     "leaflet": "^1.9.4",
     "proyecto-final": "file:..",
     "react": "^19.0.0",
@@ -24,14 +27,25 @@
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
     "@eslint/js": "^9.22.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
+    "assert": "^2.1.0",
+    "babel-jest": "^30.0.2",
     "eslint": "^9.22.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
-    "vite": "^6.3.1"
+    "jsdom": "^26.1.0",
+    "mocha": "^11.7.1",
+    "sinon": "^21.0.0",
+    "vite": "^6.3.1",
+    "vitest": "^3.2.4"
   }
 }

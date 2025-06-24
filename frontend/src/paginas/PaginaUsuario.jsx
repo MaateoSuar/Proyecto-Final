@@ -3,6 +3,7 @@ import MisReservas from '../componentes/MisReservas';
 import { useState, useEffect } from 'react';
 import '../estilos/PaginaUsuario.css';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { handleLogout } from '../utils/logout';
 
 export default function PaginaUsuario() {
   const location = useLocation();
@@ -21,11 +22,6 @@ export default function PaginaUsuario() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab, location.search]);
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/login');
-  };
 
   return (
     <div className="pagina-usuario">
@@ -72,7 +68,7 @@ export default function PaginaUsuario() {
         </button>
         <button 
           className="tab-button cerrar-sesion"
-          onClick={handleLogout}
+          onClick={() => handleLogout(navigate)}
         >
           Cerrar Sesión
         </button>

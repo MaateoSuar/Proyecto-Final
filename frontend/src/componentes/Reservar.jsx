@@ -9,6 +9,7 @@ import es from 'date-fns/locale/es';
 import "react-datepicker/dist/react-datepicker.css";
 import '../estilos/Reservar.css';
 import { toast } from 'react-toastify';
+import { guardarReserva } from '../utils/reservar';
 
 registerLocale('es', es);
 
@@ -131,6 +132,35 @@ const Reservar = () => {
     );
   };
 
+  const handleBook = () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.');
+      navigate('/login');
+      return;
+    }
+
+    const diaSeleccionado = getDiaSemana(selectedDate).toLowerCase();
+
+    guardarReserva({
+      proveedorId: proveedor._id,
+      mascotaId: mascotaSeleccionada,
+      dia: diaSeleccionado,
+      hora: selectedTime,
+      token,
+      cargarReservas,
+      setIsLoading,
+      setSelectedTime,
+      setMascotaSeleccionada,
+      setSelectedDate,
+      proveedor,
+      setProveedor,
+      toast,
+      navigate
+    });
+  };
+
+
   const getDiaSemana = (fecha) => {
     if (!fecha || !(fecha instanceof Date) || isNaN(fecha)) return null;
     const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
@@ -149,133 +179,11 @@ const Reservar = () => {
 
     if (!diaDisponible) return [];
 
-    return diaDisponible.slots.filter(slot => 
+    return diaDisponible.slots.filter(slot =>
       isHorarioDisponible(diaSeleccionado, slot)
     );
   };
 
-  const handleBook = async () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      toast.error('Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.');
-      navigate('/login');
-      return;
-    }
-
-    // Validaciones individuales
-    const validaciones = [];
-
-    if (!selectedDate) {
-      validaciones.push("fecha");
-    }
-    if (!selectedTime) {
-      validaciones.push("horario");
-    }
-    if (!mascotaSeleccionada) {
-      validaciones.push("mascota");
-    }
-
-    if (validaciones.length > 0) {
-      toast.warning(`Por favor selecciona ${validaciones.join(", ")} para continuar`);
-      return;
-    }
-
-    if (misMascotas.length === 0) {
-      toast.warning('Necesitas registrar una mascota antes de poder hacer una reserva');
-      navigate('/registromascota');
-      return;
-    }
-
-    const diaSeleccionado = getDiaSemana(selectedDate).toLowerCase();
-
-    // Verificar nuevamente si el horario sigue disponible
-    if (!isHorarioDisponible(diaSeleccionado, selectedTime)) {
-      toast.error("Este horario ya no está disponible. Por favor selecciona otro.");
-      const nuevosHorarios = getHorariosDisponibles();
-      if (nuevosHorarios.length === 0) {
-        toast.info("No hay más horarios disponibles para este día");
-        setSelectedDate(null);
-      }
-      setSelectedTime(null);
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const resReserva = await axios.post(
-        `${API_URL}/reservas`,
-        {
-          provider: proveedor._id,
-          pet: mascotaSeleccionada,
-          date: diaSeleccionado,
-          time: selectedTime
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      if (resReserva.status === 201) {
-        try {
-          // Actualizar la disponibilidad en el backend
-          await axios.put(
-            `${API_URL}/prestadores/${proveedor._id}/availability`,
-            { day: diaSeleccionado, slot: selectedTime },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            }
-          );
-
-          // Actualizar las reservas locales
-          await cargarReservas();
-
-          // Actualizar la disponibilidad local
-          const nuevaDisponibilidad = proveedor.availability
-            .map(a => {
-              if (a.day.toLowerCase() === diaSeleccionado) {
-                const nuevosSlots = a.slots.filter(h => h !== selectedTime);
-                return nuevosSlots.length > 0 ? { ...a, slots: nuevosSlots } : null;
-              }
-              return a;
-            })
-            .filter(Boolean);
-
-          setProveedor(prevState => ({
-            ...prevState,
-            availability: nuevaDisponibilidad
-          }));
-
-          // Resetear selecciones
-          setSelectedTime(null);
-          setMascotaSeleccionada('');
-          setSelectedDate(null);
-
-          toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${diaSeleccionado} a las ${selectedTime}`);
-        } catch (error) {
-          console.error('Error al actualizar disponibilidad:', error);
-        }
-      }
-    } catch (err) {
-      console.error('Error al reservar:', err);
-      if (err.response?.status === 401) {
-        toast.error('Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.');
-        navigate('/login');
-      } else if (err.response?.status === 404) {
-        toast.error('El proveedor o la mascota seleccionada no fueron encontrados');
-      } else if (err.response?.status === 400) {
-        toast.error(err.response.data.message || 'Datos de reserva inválidos');
-      } else {
-        toast.error('Ocurrió un error al realizar la reserva. Por favor, intenta nuevamente.');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   if (!proveedor) return <p style={{ padding: "1rem" }}>Cargando proveedor...</p>;
 
