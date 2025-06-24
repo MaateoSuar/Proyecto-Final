@@ -1,22 +1,36 @@
-describe('Pruebas de Gestión de Mascotas', () => {
-  beforeEach(() => {
-    cy.login('usuario@test.com', 'password123')
-    cy.visit('/mascotas')
-  })
+describe('Registro de mascotas', () => {
 
-  it('Debería permitir registrar una nueva mascota', () => {
-    cy.get('[data-cy=nueva-mascota]').click()
-    cy.get('[data-cy=nombre-mascota]').type('Max')
-    cy.get('[data-cy=tipo-mascota]').select('Perro')
-    cy.get('[data-cy=edad-mascota]').type('3')
-    cy.get('[data-cy=guardar-mascota]').click()
-    cy.get('[data-cy=mascota-lista]').should('contain', 'Max')
-  })
 
-  it('Debería permitir editar una mascota existente', () => {
-    cy.get('[data-cy=editar-mascota]').first().click()
-    cy.get('[data-cy=nombre-mascota]').clear().type('Max Actualizado')
-    cy.get('[data-cy=guardar-mascota]').click()
-    cy.get('[data-cy=mascota-lista]').should('contain', 'Max Actualizado')
-  })
+  it('RegistroMascota', function() {
+
+    cy.visit('http://localhost:5173/login');
+    cy.get('#correo').type('francoalejandrolemos@gmail.com');
+    cy.get('#contrasena').type('Eleven4224');
+    cy.get('.boton-login').click()
+    cy.url().should('include', '/inicio')
+    cy.visit('http://localhost:5173/registromascota');
+    cy.get('.nameInput').type('Max');
+    cy.get(':nth-child(1) > .input').type('Pomeranian');
+    cy.get(':nth-child(3) > .input').type('8');
+    cy.get(':nth-child(8) > .input').type('Todas');
+    cy.get(':nth-child(8) > .addBtn').click();
+    cy.get(':nth-child(6) > .input').type('Ninguna');
+    cy.get(':nth-child(6) > .addBtn').click();
+    cy.get('.button').click();
+    cy.url().should('include', '/inicio')
+  });
+
+
+  it('EliminarMascota', function() {
+    cy.visit('http://localhost:5173/inicio');
+    cy.get('#correo').clear('francoalejandrolemos@gmail.com');
+    cy.get('#correo').type('francoalejandrolemos@gmail.com');
+    cy.get('#contrasena').clear('E');
+    cy.get('#contrasena').type('Eleven4224');
+    cy.get('.boton-login').click();
+    cy.get('.pets-box > .pets > :nth-child(2) > .pet-img > .pet-edit').click();
+    cy.get('.delete-button').click();
+    cy.get('.confirm').click();
+
+  });
 })
