@@ -19,6 +19,8 @@ import RutaProtegida from './componentes/RutaProtegida';
 import RutaPublica from './componentes/RutaPublica';
 import HistorialReservas from './componentes/HistorialReservas';
 import Footer from './componentes/Footer';
+import PaginaSobreNosotros from './paginas/PaginaSobreNosotros';
+import PaginaContacto from './paginas/PaginaContacto';
 
 export default function App() {
   return (
@@ -139,6 +141,14 @@ export default function App() {
                 <PaginaAdmin />
               </RutaProtegidaAdmin>
             } 
+          />
+          <Route 
+            path="/sobre-nosotros" 
+            element={<PaginaSobreNosotros />} 
+          />
+          <Route 
+            path="/contacto" 
+            element={<PaginaContacto />} 
           />
           <Route path="*" element={<Navigate to="/inicio" replace />} />
         </Routes>

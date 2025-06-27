@@ -1,119 +1,109 @@
 .footer.petcare-footer {
   margin-top: 30px;
-  font-size: 20px;
+  font-size: 14px;
   color: #875e39;
   background: transparent;
   width: 100%;
-  max-width: 1280px;
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  max-width: none;
+  left: 0;
+  transform: none;
   z-index: 10;
   box-shadow: none;
-  padding-bottom: 24px;
+  padding-bottom: 16px;
+  position: relative;
+  display: flex;
+  justify-content: center;
 }
 
-.footer-content {
+.centered-footer {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  max-width: 1280px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 2rem;
-  position: relative;
-  min-height: 90px;
+  padding: 0 1rem;
+  min-height: 60px;
   box-sizing: border-box;
+  gap: 0;
 }
 
-.footer-section {
-  flex: 1 1 0;
-  max-width: 50%;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.footer-section.right {
-  text-align: right;
-  align-items: flex-end;
-}
-
-.footer-title {
-  width: auto;
-  text-align: left;
-  outline: none;
-  transition: color 0.2s;
-  background: none;
-  border: none;
-  color: #875e39;
-  font-size: 1.1em;
-  font-weight: bold;
-  cursor: pointer;
-  padding: 0;
-  margin: 0 0 8px 0;
-}
-
-.footer-title h4 {
-  margin: 0;
-  color: inherit;
-  font-size: inherit;
-  font-weight: inherit;
-}
-
-.footer-title:focus,
-.footer-title:hover {
-  color: #a57449;
-}
-
-.footer-dropdown {
-  background: rgba(255,255,255,0.95);
+.footer-logo {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 0;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(135,94,57,0.07);
-  padding: 10px 16px;
-  margin-top: 4px;
-  animation: dropdownFade 0.2s;
-  color: #875e39;
-  font-size: 1em;
-  font-weight: 400;
-  text-align: left;
-  max-width: 350px;
+  box-shadow: 0 2px 8px #a5744922;
+  margin-right: 18px;
 }
 
-.footer-section.right .footer-dropdown {
-  text-align: right;
-}
-
-.footer-dropdown p {
-  margin: 0 0 8px 0;
-}
-
-.footer-dropdown p:last-child {
+.footer-links {
+  display: flex;
+  gap: 16px;
   margin-bottom: 0;
 }
 
-.footer-copyright {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  text-align: center;
-  font-size: 1.2em;
-  font-weight: bold;
+.footer-link-btn,
+.footer-link-btn:focus,
+.footer-link-btn:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none;
+}
+
+.footer-link-btn {
+  background: none;
   color: #875e39;
-  background: transparent;
-  pointer-events: none;
+  font-size: 0.98em;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0 6px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s, border-bottom 0.2s;
+  line-height: 1;
+}
+.footer-link-btn:hover {
+  background: none;
+  color: #a57449;
+  border-bottom: 2px solid #875e39;
 }
 
-@keyframes dropdownFade {
-  from { opacity: 0; transform: translateY(-8px); }
-  to { opacity: 1; transform: translateY(0); }
+.footer-petcare {
+  font-size: 1em;
+  font-weight: 700;
+  color: #875e39;
+  margin-right: 4px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.footer span {
-  color: #e15757;
+.footer-c {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #fdefce;
+  border-radius: 50%;
+  font-size: 1em;
+  font-weight: 700;
+  color: #a57449;
+  box-shadow: 0 2px 8px #a5744922;
+  margin-left: 2px;
+}
+
+.footer-copyright {
+  display: none;
+}
+
+.back-button {
+  z-index: 1000 !important;
+  color: #875e39 !important;
+  font-size: 32px !important;
+  display: block !important;
 }
 
 @media (max-width: 900px) {
@@ -137,5 +127,26 @@
     transform: none;
     margin: 16px 0 0 0;
     pointer-events: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .centered-footer {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 80px;
+    padding: 0.5rem 0;
+  }
+  .footer-petcare {
+    margin-right: 0;
+    margin-bottom: 2px;
+  }
+  .footer-logo {
+    margin-bottom: 2px;
+  }
+  .footer-links {
+    gap: 10px;
   }
 }

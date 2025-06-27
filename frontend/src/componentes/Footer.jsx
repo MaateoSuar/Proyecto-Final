@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../estilos/home/componentes/footer.css';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const EMAIL = 'soporte@petcare.com';
 const PHONE = '+54 381 123-4567';
@@ -15,6 +16,7 @@ const CopyIcon = () => (
 const Footer = () => {
   const [openAbout, setOpenAbout] = useState(false);
   const [openSupport, setOpenSupport] = useState(false);
+  const navigate = useNavigate();
 
   const handleCopy = (text, label) => {
     navigator.clipboard.writeText(text);
@@ -23,62 +25,12 @@ const Footer = () => {
 
   return (
     <footer className="footer petcare-footer">
-      <div className="footer-content">
-        <div className="footer-section">
-          <button
-            className="footer-title"
-            onClick={() => setOpenAbout((prev) => !prev)}
-            aria-expanded={openAbout}
-            aria-controls="about-content"
-          >
-            <h4>Sobre nosotros</h4>
-          </button>
-          {openAbout && (
-            <div id="about-content" className="footer-dropdown">
-              <p>
-                PetCare es una plataforma dedicada a conectar dueños de mascotas con cuidadores y proveedores de servicios confiables. Nuestro objetivo es brindar tranquilidad y bienestar a tu mascota, con atención personalizada y soporte en todo momento.
-              </p>
-            </div>
-          )}
-        </div>
-        <div className="footer-section right">
-          <button
-            className="footer-title"
-            onClick={() => setOpenSupport((prev) => !prev)}
-            aria-expanded={openSupport}
-            aria-controls="support-content"
-          >
-            <h4>Soporte</h4>
-          </button>
-          {openSupport && (
-            <div id="support-content" className="footer-dropdown">
-              <p style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                Email: {EMAIL}
-                <button
-                  className="copy-btn"
-                  aria-label="Copiar email"
-                  onClick={() => handleCopy(EMAIL, 'Email')}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginLeft: 4 }}
-                >
-                  <CopyIcon />
-                </button>
-              </p>
-              <p style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                Teléfono: {PHONE}
-                <button
-                  className="copy-btn"
-                  aria-label="Copiar teléfono"
-                  onClick={() => handleCopy(PHONE, 'Teléfono')}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, marginLeft: 4 }}
-                >
-                  <CopyIcon />
-                </button>
-              </p>
-            </div>
-          )}
-        </div>
-        <div className="footer-copyright">
-          PetCare &copy; {new Date().getFullYear()} Derechos reservados
+      <div className="footer-content centered-footer">
+        <span className="footer-petcare">PetCare <span className="footer-c">©</span></span>
+        <img src="/vite.png" alt="PetCare Logo" className="footer-logo" />
+        <div className="footer-links">
+          <button className="footer-link-btn" onClick={() => navigate('/sobre-nosotros')}>Sobre nosotros</button>
+          <button className="footer-link-btn" onClick={() => navigate('/contacto')}>Contacto</button>
         </div>
       </div>
     </footer>
