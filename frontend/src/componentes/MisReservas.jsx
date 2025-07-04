@@ -29,12 +29,37 @@ const MisReservas = () => {
     setMotivoReporte("");
   };
 
-  const enviarReporte = (e) => {
-    e.preventDefault();
-    // Aquí podrías enviar el reporte al backend
-    toast.success("¡Reporte enviado! Gracias por tu colaboración.");
+  const enviarReporte = async (e) => {
+  e.preventDefault();
+
+  if (!motivoReporte.trim()) {
+    toast.error('Debes escribir un motivo para el reporte');
+    return;
+  }
+
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Debes iniciar sesión para enviar un reporte');
+      return;
+    }
+
+    // Ajusta los nombres de las propiedades según tu backend:
+    await axios.post(`${API_URL}/reports`, {
+      user: reservaAReportar.user._id,       // O el ID del usuario logueado si no viene en reserva
+      provider: reservaAReportar.provider._id,
+      reason: motivoReporte
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    toast.success('¡Reporte enviado! Gracias por tu colaboración.');
     cerrarFormularioReporte();
-  };
+  } catch (error) {
+    console.error('Error al enviar reporte:', error);
+    toast.error('No se pudo enviar el reporte. Intenta nuevamente.');
+  }
+};
 
   const cargarReservas = async () => {
     try {
