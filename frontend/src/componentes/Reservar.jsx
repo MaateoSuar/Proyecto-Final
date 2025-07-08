@@ -62,12 +62,20 @@ const Reservar = () => {
 
       if (location.state?.provider) {
         dataProveedor = location.state.provider;
+        if (dataProveedor.services && !Array.isArray(dataProveedor.services)) {
+          dataProveedor.services = [dataProveedor.services];
+        }
       } else {
         const res = await axios.get(`${API_URL}/prestadores/${id}`);
         if (!res.data.success) {
           throw new Error('No se pudo obtener la información del proveedor');
         }
         dataProveedor = res.data.data;
+        // Si lo trae del backend directo, debería venir bien,
+        // pero igual por seguridad:
+        if (dataProveedor.services && !Array.isArray(dataProveedor.services)) {
+          dataProveedor.services = [dataProveedor.services];
+        }
       }
 
       if (!dataProveedor) {
@@ -153,7 +161,7 @@ const Reservar = () => {
 
     if (!diaDisponible) return [];
 
-    return diaDisponible.slots.filter(slot => 
+    return diaDisponible.slots.filter(slot =>
       isHorarioDisponible(diaSeleccionado, slot)
     );
   };

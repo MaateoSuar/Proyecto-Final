@@ -21,32 +21,27 @@ const API_URL = import.meta.env.VITE_API_URL;
 const ProviderList = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [userCoords, setUserCoords] = useState({ lat: null, lng: null });
   const [providers, setProviders] = useState([]);
   const [filteredProviders, setFilteredProviders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const filterRef = useRef();
 
-  const fetchProviders = async (tipoServicio = null, ordenPrecio = null) => {
+  const fetchProviders = async (tipoServicio = null, ordenPrecio = null, orden = null, lat = null, lng = null) => {
     try {
       const res = await axios.get(`${API_URL}/prestadores`, {
         params: {
           ...(tipoServicio ? { tipoServicio } : {}),
-          ...(ordenPrecio ? { ordenPrecio } : {})
+          ...(ordenPrecio ? { ordenPrecio } : {}),
+          ...(orden ? { orden } : {}),
+          ...(lat ? { lat } : {}),
+          ...(lng ? { lng } : {})
         },
       });
 
       if (res.data.success) {
         let activos = res.data.data.filter(p => p.isActive);
-
-        if (ordenPrecio) {
-          activos.sort((a, b) => {
-            const precioA = a.services?.[0]?.price ?? Infinity;
-            const precioB = b.services?.[0]?.price ?? Infinity;
-            return ordenPrecio === 'asc' ? precioA - precioB : precioB - precioA;
-          });
-        }
-
         setProviders(activos);
         setFilteredProviders(activos);
       } else {
@@ -65,8 +60,29 @@ const ProviderList = () => {
     const params = new URLSearchParams(location.search);
     const categoria = params.get('categoria');
     const precio = params.get('precio');
-    fetchProviders(categoria, precio);
-  }, [location.search]);
+    const orden = params.get('orden');
+
+    if (userCoords.lat && userCoords.lng) {
+      fetchProviders(categoria, precio, orden, userCoords.lat, userCoords.lng);
+    } else {
+      fetchProviders(categoria, precio, orden);
+    }
+  }, [location.search, userCoords]);
+
+  useEffect(() => {
+    const ubicacionGuardada = localStorage.getItem('ubicacionSeleccionada');
+    if (ubicacionGuardada) {
+      try {
+        const ubicacion = JSON.parse(ubicacionGuardada);
+        setUserCoords({
+          lat: ubicacion.coordenadas.lat,
+          lng: ubicacion.coordenadas.lng
+        });
+      } catch (error) {
+        console.error('Error al parsear ubicacionSeleccionada:', error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -107,13 +123,23 @@ const ProviderList = () => {
   const handleCategoryClick = (value) => {
     const params = new URLSearchParams(location.search);
     const currentCategory = params.get('categoria');
-    
+
     if (currentCategory === value) {
       params.delete('categoria');
     } else {
       params.set('categoria', value);
     }
-    
+
+    navigate({ search: params.toString() }, { replace: true });
+  };
+
+  const handleNearFilter = () => {
+    if (!userCoords.lat || !userCoords.lng) {
+      alert('Primero selecciona una ubicación.');
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    params.set('orden', 'cercania');
     navigate({ search: params.toString() }, { replace: true });
   };
 
@@ -124,11 +150,15 @@ const ProviderList = () => {
   };
 
   const renderServices = (services) => {
-    if (!services || services.length === 0) return 'Sin servicios';
-    return services.map(s => s.type).join(', ');
+    if (Array.isArray(services)) {
+      if (services.length === 0) return 'Sin servicios';
+      return services.map(s => s.type).join(', ');
+    }
+    if (typeof services === 'object' && services !== null) {
+      return services.type || 'Sin servicios';
+    }
+    return 'Sin servicios';
   };
-
-  const randomDistance = () => (Math.random() * 3 + 0.5).toFixed(1);
 
   const getSelectedCategory = () => {
     const params = new URLSearchParams(location.search);
@@ -171,6 +201,15 @@ const ProviderList = () => {
                 }}
               >
                 Precio: Mayor - Menor
+              </div>
+              <div
+                className="filter-option"
+                onClick={() => {
+                  handleNearFilter();
+                  setShowFilterMenu(false);
+                }}
+              >
+                Más cercanos
               </div>
             </div>
           )}
@@ -222,7 +261,9 @@ const ProviderList = () => {
               <div className="provider-info">
                 <h3>{provider.name}</h3>
                 <p>{upper(renderServices(provider.services))}</p>
-                <p>⭐ {formatRating(provider.rating?.average)} · 📍 {randomDistance()} km</p>
+                <p>⭐ {formatRating(provider.rating?.average)} · 📍
+                  {provider.distancia ? `${(provider.distancia / 1000).toFixed(1)} km` : `No disponible`}
+                </p>
               </div>
             </div>
           ))}

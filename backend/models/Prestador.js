@@ -25,15 +25,18 @@ const prestadorSchema = new mongoose.Schema({
       coordinates: [Number]
     }
   },
-  services: [{
-    type: {
-      type: String,
-      enum: ['paseo', 'cuidado', 'peluqueria', 'dentista'],
-      required: true
-    },
-    description: String,
-    price: Number
-  }],
+  services: {
+    type: [{
+      type: {
+        type: String,
+        enum: ['paseo', 'cuidado', 'peluqueria', 'dentista'],
+        required: true
+      },
+      description: String,
+      price: Number
+    }],
+    default: [] // 👈 siempre array
+  },
   availability: [{
     day: String,
     slots: [String]

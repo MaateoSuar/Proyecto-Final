@@ -3,26 +3,52 @@ const Prestador = require('../models/Prestador');
 // Obtener todos los prestadores con opción de filtrado
 const getAllPrestadores = async (req, res) => {
     try {
-        const { tipoServicio } = req.query;
-        let query = {};
+        const { tipoServicio, ordenPrecio, orden, lat, lng } = req.query;
 
-        // Si se proporciona un tipo de servicio, filtrar prestadores que tengan ese servicio
-        if (tipoServicio) {
-            query['services'] = {
-                $elemMatch: {
-                    type: tipoServicio.toLowerCase()
+        let pipeline = [];
+
+        if (lat && lng) {
+            pipeline.push({
+                $geoNear: {
+                    near: {
+                        type: "Point",
+                        coordinates: [parseFloat(lng), parseFloat(lat)]
+                    },
+                    distanceField: "distancia",
+                    spherical: true
                 }
-            };
+            });
+        } else {
+            pipeline.push({ $match: {} });
         }
 
-        const prestadores = await Prestador.find(query);
+        if (tipoServicio) {
+            pipeline.push({
+                $match: {
+                    services: {
+                        $elemMatch: {
+                            type: tipoServicio.toLowerCase()
+                        }
+                    }
+                }
+            });
+        }
+
+        if (orden === 'cercania') {
+            pipeline.push({ $sort: { distancia: 1 } });
+        }
+
+        if (ordenPrecio) {
+            pipeline.push({ $unwind: "$services" });
+            pipeline.push({ $sort: { "services.price": ordenPrecio === 'asc' ? 1 : -1 } });
+        }
+
+        const prestadores = await Prestador.aggregate(pipeline);
 
         if (!prestadores.length) {
             return res.status(404).json({
                 success: false,
-                message: tipoServicio
-                    ? `No se encontraron prestadores que ofrezcan el servicio de ${tipoServicio}`
-                    : 'No se encontraron prestadores'
+                message: 'No se encontraron prestadores'
             });
         }
 
@@ -33,6 +59,7 @@ const getAllPrestadores = async (req, res) => {
         });
 
     } catch (error) {
+        console.error('Error:', error);
         res.status(500).json({
             success: false,
             message: 'Error al obtener los prestadores',
