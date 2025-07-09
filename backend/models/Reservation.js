@@ -2,28 +2,28 @@
 const mongoose = require('mongoose');
 
 const reservationSchema = new mongoose.Schema({
-  user: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Usuario', 
-    required: true 
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Usuario',
+    required: true
   },
-  provider: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'Prestador', 
-    required: true 
+  provider: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Prestador',
+    required: true
   },
   pet: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Pet',
     required: true
   },
-  date: { 
-    type: String, 
-    required: true 
+  date: {
+    type: Date,
+    required: true
   },
-  time: { 
-    type: String, 
-    required: true 
+  time: {
+    type: String,
+    required: true
   },
   notes: {
     type: String

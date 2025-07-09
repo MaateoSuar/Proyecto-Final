@@ -1,7 +1,7 @@
 // routes/prestador.js
 const express = require('express');
 const router = express.Router();
-const { getAllPrestadores, createManyPrestadores, updateAvailability, togglePrestadorStatus, deletePrestador, getPrestadorById } = require('../controllers/prestadorController');
+const { getAllPrestadores, createManyPrestadores, updateAvailability, togglePrestadorStatus, deletePrestador, getPrestadorById, getHorariosDisponibles } = require('../controllers/prestadorController');
 
 // Ruta para obtener todos los prestadores con filtro opcional
 router.get('/', getAllPrestadores);
@@ -14,6 +14,8 @@ router.put('/:proveedorId/availability', updateAvailability);
 
 // Ruta para activar/desactivar un prestador
 router.put('/:prestadorId/toggle-status', togglePrestadorStatus);
+
+router.get('/:prestadorId/horarios-disponibles', getHorariosDisponibles);
 
 // Ruta para eliminar un prestador
 router.delete('/:prestadorId', deletePrestador);

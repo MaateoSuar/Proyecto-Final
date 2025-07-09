@@ -20,6 +20,7 @@ const Reservar = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const [horariosDelBackend, setHorariosDelBackend] = useState([]);
   const [searchParams] = useSearchParams();
   const from = searchParams.get('from');
   const [proveedor, setProveedor] = useState(null);
@@ -124,6 +125,28 @@ const Reservar = () => {
   };
 
   useEffect(() => {
+    const obtenerHorarios = async () => {
+      if (!selectedDate || !proveedor?._id) return;
+
+      const fechaISO = selectedDate.toISOString().split('T')[0];
+      try {
+        const res = await axios.get(`${API_URL}/prestadores/${proveedor._id}/horarios-disponibles`, {
+          params: { fecha: fechaISO }
+        });
+        const { data } = res.data;
+        setHorariosDelBackend(data || []);
+      } catch (error) {
+        console.error('Error al obtener horarios disponibles:', error);
+        toast.error('No se pudieron cargar los horarios disponibles para esta fecha.');
+        setHorariosDelBackend([]);
+      }
+    };
+
+    obtenerHorarios();
+  }, [selectedDate, proveedor]);
+
+
+  useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       toast.error('Debes iniciar sesión para ver los detalles del proveedor');
@@ -150,36 +173,11 @@ const Reservar = () => {
       });
   }, [id, location.state, navigate]);
 
-  const isHorarioDisponible = (dia, horario) => {
-    if (!proveedor?._id || !dia || !horario) return false;
-    return !reservas.some(reserva =>
-      reserva?.provider?._id === proveedor._id &&
-      reserva?.date?.toLowerCase() === dia.toLowerCase() &&
-      reserva?.time === horario
-    );
-  };
 
   const getDiaSemana = (fecha) => {
     if (!fecha || !(fecha instanceof Date) || isNaN(fecha)) return null;
     const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
     return dias[fecha.getDay()];
-  };
-
-  const getHorariosDisponibles = () => {
-    if (!selectedDate || !proveedor?.availability) return [];
-
-    const diaSeleccionado = getDiaSemana(selectedDate);
-    if (!diaSeleccionado) return [];
-
-    const diaDisponible = proveedor.availability.find(d =>
-      d.day.toLowerCase() === diaSeleccionado.toLowerCase()
-    );
-
-    if (!diaDisponible) return [];
-
-    return diaDisponible.slots.filter(slot =>
-      isHorarioDisponible(diaSeleccionado, slot)
-    );
   };
 
   const confirmarReserva = async () => {
@@ -214,16 +212,11 @@ const Reservar = () => {
       return;
     }
 
-    const diaSeleccionado = getDiaSemana(selectedDate).toLowerCase();
+    const fechaISO = selectedDate.toISOString().split('T')[0];
 
     // Verificar nuevamente si el horario sigue disponible
-    if (!isHorarioDisponible(diaSeleccionado, selectedTime)) {
-      toast.error("Este horario ya no está disponible. Por favor selecciona otro.");
-      const nuevosHorarios = getHorariosDisponibles();
-      if (nuevosHorarios.length === 0) {
-        toast.info("No hay más horarios disponibles para este día");
-        setSelectedDate(null);
-      }
+    if (!horariosDelBackend.includes(selectedTime)) {
+      toast.error("Este horario ya no está disponible.");
       setSelectedTime(null);
       return;
     }
@@ -236,7 +229,7 @@ const Reservar = () => {
         {
           provider: proveedor._id,
           pet: mascotaSeleccionada,
-          date: diaSeleccionado,
+          date: fechaISO,
           time: selectedTime
         },
         {
@@ -248,44 +241,16 @@ const Reservar = () => {
 
       if (resReserva.status === 201) {
         try {
-          // Actualizar la disponibilidad en el backend
-          await axios.put(
-            `${API_URL}/prestadores/${proveedor._id}/availability`,
-            { day: diaSeleccionado, slot: selectedTime },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            }
-          );
-
-          // Actualizar las reservas locales
           await cargarReservas();
-
-          // Actualizar la disponibilidad local
-          const nuevaDisponibilidad = proveedor.availability
-            .map(a => {
-              if (a.day.toLowerCase() === diaSeleccionado) {
-                const nuevosSlots = a.slots.filter(h => h !== selectedTime);
-                return nuevosSlots.length > 0 ? { ...a, slots: nuevosSlots } : null;
-              }
-              return a;
-            })
-            .filter(Boolean);
-
-          setProveedor(prevState => ({
-            ...prevState,
-            availability: nuevaDisponibilidad
-          }));
 
           // Resetear selecciones
           setSelectedTime(null);
           setMascotaSeleccionada('');
-          setSelectedDate(null);
+          setSelectedDate(new Date());
 
-          toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${diaSeleccionado} a las ${selectedTime}`);
+          toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDate.toLocaleDateString('es-AR')} a las ${selectedTime}`);
         } catch (error) {
-          console.error('Error al actualizar disponibilidad:', error);
+          console.error('Error al actualizar reservas:', error);
         }
       }
     } catch (err) {
@@ -323,8 +288,6 @@ const Reservar = () => {
   }
 
   if (!proveedor) return <p style={{ padding: "1rem" }}>Cargando proveedor...</p>;
-
-  const horariosDisponibles = getHorariosDisponibles();
 
   return (
     <div className="fb-proveedor-main" style={{ color: '#875e39', background: '#fdefce', minHeight: '100vh', position: 'relative' }}>
@@ -424,25 +387,23 @@ const Reservar = () => {
               <label style={{ color: '#a57449', fontWeight: 600, fontSize: '1.1em' }}>Hora:</label>
             </div>
             {/* Horarios (rojo) */}
-            <div className="times" style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              {horariosDisponibles.length > 0 ? (
-                horariosDisponibles.map((time) => (
-                  <button
-                    key={time}
-                    className={`time-button ${selectedTime === time ? "selected" : ""}`}
-                    onClick={() => setSelectedTime(time)}
-                    disabled={!selectedDate || !isHorarioDisponible(getDiaSemana(selectedDate), time)}
-                    style={{ width: '100%' }}
-                  >
-                    {time}
-                  </button>
-                ))
-              ) : (
-                <p style={{ color: '#666', fontSize: '0.9rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                  {selectedDate ? 'No hay horarios disponibles para este día' : 'Selecciona una fecha para ver los horarios disponibles'}
-                </p>
-              )}
-            </div>
+            {horariosDelBackend.length > 0 ? (
+              horariosDelBackend.map((time) => (
+                <button
+                  key={time}
+                  className={`time-button ${selectedTime === time ? "selected" : ""}`}
+                  onClick={() => setSelectedTime(time)}
+                  style={{ width: '100%' }}
+                >
+                  {time}
+                </button>
+              ))
+            ) : (
+              <p style={{ color: '#666', fontSize: '0.9rem', textAlign: 'center', gridColumn: '1 / -1' }}>
+                {selectedDate ? 'No hay horarios disponibles para este día' : 'Selecciona una fecha para ver los horarios disponibles'}
+              </p>
+            )}
+
             {/* Mascota y acciones igual */}
             <div style={{ width: '100%', marginTop: 18 }}>
               <label style={{ color: '#a57449' }}>Mascota:</label>

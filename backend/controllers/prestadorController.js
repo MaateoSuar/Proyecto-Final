@@ -1,4 +1,6 @@
+// prestadorController.js
 const Prestador = require('../models/Prestador');
+const Reserva = require('../models/Reservation');
 
 // Obtener todos los prestadores con opción de filtrado
 const getAllPrestadores = async (req, res) => {
@@ -17,6 +19,49 @@ const getAllPrestadores = async (req, res) => {
             message: 'Error al obtener los prestadores',
             error: error.message
         });
+    }
+};
+
+const getHorariosDisponibles = async (req, res) => {
+    const { prestadorId } = req.params;
+    const { fecha } = req.query;
+
+    if (!prestadorId || !fecha) {
+        return res.status(400).json({ success: false, message: 'Faltan parámetros: prestadorId o fecha' });
+    }
+
+    try {
+        const prestador = await Prestador.findById(prestadorId);
+        if (!prestador) {
+            return res.status(404).json({ success: false, message: 'Prestador no encontrado' });
+        }
+
+        // Determinar el día de la semana
+        const diasSemana = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        const diaSemana = diasSemana[new Date(fecha).getDay()]; // ej: "martes"
+
+        // Buscar disponibilidad para ese día
+        const disponibilidad = prestador.availability.find(d => d.day.toLowerCase() === diaSemana);
+        if (!disponibilidad) {
+            return res.json({ success: true, data: [] }); // No trabaja ese día
+        }
+
+        // Buscar reservas ya tomadas para ese prestador en esa fecha
+        const reservas = await Reserva.find({ provider: prestadorId, date: fecha });
+
+        const horariosReservados = reservas.map(r => r.time);
+
+        // Filtrar horarios disponibles
+        const horariosDisponibles = disponibilidad.slots.filter(h => !horariosReservados.includes(h));
+        
+        res.json({
+            success: true,
+            data: horariosDisponibles
+        });
+
+    } catch (error) {
+        console.error('Error al obtener horarios disponibles:', error);
+        res.status(500).json({ success: false, message: 'Error interno del servidor', error: error.message });
     }
 };
 
@@ -182,5 +227,6 @@ module.exports = {
     updateAvailability,
     togglePrestadorStatus,
     deletePrestador,
-    getPrestadorById
+    getPrestadorById,
+    getHorariosDisponibles
 }; 

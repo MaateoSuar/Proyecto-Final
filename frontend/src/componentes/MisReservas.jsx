@@ -72,7 +72,7 @@ const MisReservas = () => {
       <div>
         <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
         <p><b>Proveedor:</b> {reserva.provider.name}</p>
-        <p><b>Fecha:</b> {reserva.date} <b>Hora:</b> {reserva.time}</p>
+        <p><b>Fecha:</b> {formatearFechaCorta(reserva.date)} <b>Hora:</b> {reserva.time}</p>
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
           <button onClick={() => toast.dismiss()}>Cancelar</button>
           <button onClick={() => { cancelarReserva(reserva._id); toast.dismiss(); }}>
@@ -94,6 +94,16 @@ const MisReservas = () => {
     setShowReportModal(false);
     setReservaAReportar(null);
     setMotivoReporte("");
+  };
+
+  const formatearFechaCorta = (isoDate) => {
+    const fecha = new Date(isoDate);
+    if (isNaN(fecha.getTime())) return ''; // Si la fecha no es válida, devolvemos string vacío
+    return new Intl.DateTimeFormat('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    }).format(fecha);
   };
 
   const enviarReporte = async (e) => {
@@ -138,11 +148,11 @@ const MisReservas = () => {
               <div className="reserva-header">
                 <h3>{reserva.provider.name}</h3>
               </div>
-              <span className="reserva-date">{reserva.date} - {reserva.time}</span>
+              <span className="reserva-date"> {formatearFechaCorta(reserva.date)} - {reserva.time}</span>
               <p className="reserva-pet">Mascota: <b>{reserva.pet.name}</b></p>
               <b className="reserva-status">{reserva.status}</b>
             </div>
- 
+
             {/* Acciones condicionales */}
             {reserva.status !== 'cancelada' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -179,7 +189,7 @@ const MisReservas = () => {
           <div className="modal-reporte-form">
             <h3>Reportar Reserva</h3>
             <p><b>Proveedor:</b> {reservaAReportar.provider.name}</p>
-            <p><b>Fecha:</b> {reservaAReportar.date} <b>Hora:</b> {reservaAReportar.time}</p>
+            <p><b>Fecha:</b> {formatearFechaCorta(reservaAReportar.date)} <b>Hora:</b> {reservaAReportar.time}</p>
             <form onSubmit={enviarReporte}>
               <textarea
                 value={motivoReporte}

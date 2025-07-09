@@ -4,7 +4,6 @@ const Pet = require('../models/Pet');
 const Provider = require('../models/Prestador');
 const sendEmail = require('../utils/sendEmail');
 
-
 const createReservation = async (req, res) => {
   try {
     const { provider, pet, date, time } = req.body;
@@ -18,13 +17,15 @@ const createReservation = async (req, res) => {
       return res.status(404).json({ message: 'No se encontró la mascota o el proveedor' });
     }
 
+    const fechaReserva = new Date(date); // date es string tipo '2025-07-09'
+
     const reservation = new Reservation({
       user: userId,
       provider,
       pet,
-      date,
+      date: fechaReserva,
       time,
-      status: 'pendiente', // Estado inicial de la reserva
+      status: 'pendiente'
     });
 
     const saved = await reservation.save();
@@ -68,7 +69,8 @@ const cancelReservation = async (req, res) => {
     }
 
     // Restaurar la disponibilidad del proveedor
-    const dayAvailability = provider.availability.find(a => a.day.toLowerCase() === reservation.date.toLowerCase());
+    const diaSemana = new Date(reservation.date).toLocaleDateString('es-AR', { weekday: 'long' }).toLowerCase();
+    const dayAvailability = provider.availability.find(a => a.day.toLowerCase() === diaSemana);
 
     if (dayAvailability) {
       // Si el día ya existe, agregar el horario

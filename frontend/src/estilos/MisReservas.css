@@ -5,6 +5,10 @@
   padding: 0 1rem;
 }
 
+.report-btn{
+  border-radius: var(--radius);
+}
+
 .reservas-container h2 {
   color: var(--primary);
   margin-bottom: 1.5rem;
