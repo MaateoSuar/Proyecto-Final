@@ -29,6 +29,7 @@ const Reservar = () => {
   const [mascotaSeleccionada, setMascotaSeleccionada] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [reservas, setReservas] = useState([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
   const isDesktop = useMediaQuery({ minWidth: 900 });
 
@@ -54,6 +55,21 @@ const Reservar = () => {
       console.error('Error al cargar reservas:', error);
       toast.error('No se pudieron cargar las reservas existentes');
     }
+  };
+
+  const abrirResumenReserva = () => {
+    const validaciones = [];
+
+    if (!selectedDate) validaciones.push("fecha");
+    if (!selectedTime) validaciones.push("horario");
+    if (!mascotaSeleccionada) validaciones.push("mascota");
+
+    if (validaciones.length > 0) {
+      toast.warning(`Por favor selecciona ${validaciones.join(", ")} para continuar`);
+      return;
+    }
+
+    setShowConfirmModal(true);
   };
 
   const fetchProveedor = async () => {
@@ -166,7 +182,7 @@ const Reservar = () => {
     );
   };
 
-  const handleBook = async () => {
+  const confirmarReserva = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       toast.error('Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.');
@@ -455,7 +471,7 @@ const Reservar = () => {
               </button>
               <button
                 className="book-button"
-                onClick={handleBook}
+                onClick={abrirResumenReserva}
                 disabled={isLoading}
               >
                 {isLoading ? 'Reservando...' : 'Reservar ahora'}
@@ -470,6 +486,47 @@ const Reservar = () => {
           <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: 400, width: '90vw', maxHeight: '80vh', overflowY: 'auto' }}>
             <button className="close-btn" onClick={() => setShowReviewsModal(false)}>&times;</button>
             <ComentariosProveedor providerId={proveedor?._id} />
+          </div>
+        </div>
+      )}
+      {showConfirmModal && (
+        <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: 400,
+              width: '90vw',
+              padding: 24,
+              backgroundColor: 'white',
+              borderRadius: 12,
+              boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+              textAlign: 'center'
+            }}
+          >
+            <h3 style={{ color: '#875e39' }}>Confirmar reserva</h3>
+            <p><strong>Proveedor:</strong> {proveedor.name}</p>
+            <p><strong>Fecha:</strong> {selectedDate?.toLocaleDateString('es-AR')}</p>
+            <p><strong>Hora:</strong> {selectedTime}</p>
+            <p><strong>Mascota:</strong> {misMascotas.find(p => p._id === mascotaSeleccionada)?.name}</p>
+            <div style={{ marginTop: 20, display: 'flex', gap: 12, justifyContent: 'center' }}>
+              <button
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  confirmarReserva();
+                }}
+                className="book-button"
+                style={{ backgroundColor: '#875e39', color: 'white' }}
+              >
+                Confirmar
+              </button>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="location-button"
+              >
+                Cancelar
+              </button>
+            </div>
           </div>
         </div>
       )}
