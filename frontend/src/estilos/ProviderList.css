@@ -4,6 +4,21 @@ h3, h2 {
 .filtros button {
     margin: 5px;
 }
+
+.order-select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: black;
+  background-color: #FEFAE0;
+  border: 1px solid #ccc;
+}
+
+.filter-option.active-filter {
+  background-color: #fceecf;
+  font-weight: bold;
+}
+
 .provider-list-container {
   background-color: #fceecf;
   min-height: 100vh;
@@ -93,7 +108,6 @@ h3, h2 {
 .category-button:hover {
   background-color: #d4a373;
   color: white;
-  transform: translateY(-2px);
 }
 
 .category-button.active {
@@ -131,7 +145,6 @@ h3, h2 {
 }
 
 .provider-card:hover {
-  transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
@@ -159,15 +172,14 @@ h3, h2 {
 }
 
 .search-wrapper {
-  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
 }
 
 .search-icon {
-  position: absolute;
-  left: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  left: 35px!important;
   background: #FEFAE0;
   border-radius: 6px;
   padding: 4px;
