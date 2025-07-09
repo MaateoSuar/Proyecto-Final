@@ -17,7 +17,6 @@ import PaginaAdmin from './paginas/PaginaAdmin';
 import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
 import RutaProtegida from './componentes/RutaProtegida';
 import RutaPublica from './componentes/RutaPublica';
-import HistorialReservas from './componentes/HistorialReservas';
 import Footer from './componentes/Footer';
 import PaginaSobreNosotros from './paginas/PaginaSobreNosotros';
 import PaginaContacto from './paginas/PaginaContacto';
@@ -126,14 +125,6 @@ export default function App() {
               element={
                 <RutaProtegida>
                   <Reservar />
-                </RutaProtegida>
-              }
-            />
-            <Route
-              path="/mis-reservas"
-              element={
-                <RutaProtegida>
-                  <HistorialReservas />
                 </RutaProtegida>
               }
             />
