@@ -4,6 +4,17 @@
   margin: 0 auto;
 }
 
+.clear-input, .lista-sugerencias {
+  cursor: pointer;
+}
+.item-sugerencia{
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.item-sugerencia:hover{
+  background-color: #fceecf;
+}
+
 .ubicacion-principal {
   display: flex;
   align-items: center;

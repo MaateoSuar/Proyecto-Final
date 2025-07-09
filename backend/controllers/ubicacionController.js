@@ -1,32 +1,6 @@
 const Ubicacion = require('../models/ubicacion');
 const axios = require('axios');
 
-// Función auxiliar para obtener coordenadas desde una dirección usando Nominatim (OpenStreetMap)
-async function obtenerCoordenadas(direccion) {
-  try {
-    const response = await axios.get(`https://nominatim.openstreetmap.org/search`, {
-      params: {
-        q: direccion,
-        format: 'json',
-        limit: 1
-      },
-      headers: {
-        'User-Agent': 'TuApp/1.0'
-      }
-    });
-
-    if (response.data && response.data[0]) {
-      return {
-        lat: parseFloat(response.data[0].lat),
-        lng: parseFloat(response.data[0].lon)
-      };
-    }
-    throw new Error('No se encontraron coordenadas para la dirección proporcionada');
-  } catch (error) {
-    throw error;
-  }
-}
-
 // Exportar todas las funciones del controlador
 module.exports = {
   // Obtener todas las ubicaciones del usuario
@@ -45,11 +19,12 @@ module.exports = {
   // Crear una nueva ubicación
   crearUbicacion: async (req, res) => {
     try {
-      const { nombre, tipo, calle, numero, referencia, predeterminada } = req.body;
-      
-      const direccionCompleta = `${calle} ${numero}`;
-      const coordenadas = await obtenerCoordenadas(direccionCompleta);
-      
+      const { nombre, tipo, calle, numero, referencia, predeterminada, coordenadas } = req.body;
+
+      if (!coordenadas || !coordenadas.lat || !coordenadas.lng) {
+        return res.status(400).json({ error: 'Coordenadas no proporcionadas o inválidas' });
+      }
+
       if (predeterminada) {
         await Ubicacion.updateMany(
           { usuario: req.user.id },
@@ -71,14 +46,16 @@ module.exports = {
       await ubicacion.save();
       res.status(201).json(ubicacion);
     } catch (error) {
+      console.error('Error al crear ubicación:', error);
       res.status(500).json({ error: 'Error al crear ubicación' });
     }
   },
 
+
   // Actualizar una ubicación existente
   actualizarUbicacion: async (req, res) => {
     try {
-      const { nombre, tipo, calle, numero, referencia, predeterminada } = req.body;
+      const { nombre, tipo, calle, numero, referencia, coordenadas, predeterminada } = req.body;
       const ubicacionId = req.params.id;
 
       const ubicacionExistente = await Ubicacion.findOne({
@@ -90,9 +67,8 @@ module.exports = {
         return res.status(404).json({ mensaje: 'Ubicación no encontrada' });
       }
 
-      let coordenadas = ubicacionExistente.coordenadas;
-      if (calle !== ubicacionExistente.calle || numero !== ubicacionExistente.numero) {
-        coordenadas = await obtenerCoordenadas(calle + ' ' + numero);
+      if (!coordenadas || !coordenadas.lat || !coordenadas.lng) {
+        return res.status(400).json({ error: 'Coordenadas no proporcionadas o inválidas' });
       }
 
       const ubicacionActualizada = await Ubicacion.findByIdAndUpdate(

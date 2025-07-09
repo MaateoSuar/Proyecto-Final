@@ -10,6 +10,7 @@ const path = require('path');
 const chatRoutes = require('./routes/chat');
 const reportRoutes = require('./routes/report');
 const reservationRoutes = require('./routes/reservations')
+const sugerenciasRoutes = require('./routes/sugerencias');
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use('/api/prestadores', prestadorRoutes);
 app.use('/api/ubicaciones', ubicacionRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/sugerencias', sugerenciasRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 mongoose.connect(process.env.MONGO_URI)
