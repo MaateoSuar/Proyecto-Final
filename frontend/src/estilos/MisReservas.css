@@ -5,6 +5,11 @@
   padding: 0 1rem;
 }
 
+.reserva-cancelled {
+  color: black;
+  margin: auto;
+}
+
 .report-btn{
   border-radius: var(--radius);
 }

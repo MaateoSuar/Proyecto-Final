@@ -1,3 +1,4 @@
+// models/Mensaje.js
 const mongoose = require('mongoose');
 const mensajeSchema = new mongoose.Schema({
   reservaId: {
@@ -14,6 +15,10 @@ const mensajeSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['Usuario', 'Prestador']
+  },
+  nombreEmisor: {
+    type: String,
+    required: true
   },
   mensaje: {
     type: String,

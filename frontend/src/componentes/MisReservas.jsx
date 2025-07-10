@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import ReviewForm from './ReviewForm';
+import ChatReserva from './ChatReserva';
 import '../estilos/MisReservas.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -12,6 +13,8 @@ const MisReservas = () => {
 
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reservaAValorar, setReservaAValorar] = useState(null);
+
+  const [reservaEnChat, setReservaEnChat] = useState(null);
 
   const [showReportModal, setShowReportModal] = useState(false);
   const [reservaAReportar, setReservaAReportar] = useState(null);
@@ -154,12 +157,18 @@ const MisReservas = () => {
             </div>
 
             {/* Acciones condicionales */}
+            {reserva.status === 'cancelada' && (
+              <span className="reserva-cancelled">Sin acciones</span>
+            )}
             {reserva.status !== 'cancelada' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 {reserva.status === 'pendiente' && (
-                  <button className="cancel-button" onClick={() => confirmarCancelacion(reserva)}>
-                    Cancelar Reserva
-                  </button>
+                  <>
+                    <button className='chat-button' onClick={() => setReservaEnChat(reserva)}>Chatear</button>
+                    <button className="cancel-button" onClick={() => confirmarCancelacion(reserva)}>
+                      Cancelar Reserva
+                    </button>
+                  </>
                 )}
                 {reserva.status === 'completada' && !reserva.comment && !reserva.rating && (
                   <button className="review-btn" onClick={() => {
@@ -229,6 +238,12 @@ const MisReservas = () => {
               )
             );
           }}
+        />
+      )}
+      {reservaEnChat && (
+        <ChatReserva
+          reservaId={reservaEnChat._id}
+          onClose={() => setReservaEnChat(null)}
         />
       )}
     </div>

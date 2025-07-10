@@ -1,6 +1,7 @@
 // controllers/chatController.js
 const Mensaje = require('../models/Mensaje.js');
 const Reservation = require('../models/Reservation.js');
+const User = require('../models/Usuario.js');
 
 const enviarMensaje = async (req, res) => {
   const { reservaId, mensaje } = req.body;
@@ -12,14 +13,30 @@ const enviarMensaje = async (req, res) => {
       return res.status(403).json({ mensaje: 'No se puede enviar mensaje sin reserva' });
     }
 
-    // Verificamos que el emisor sea parte de la reserva
-    if (reserva.user.toString() !== emisorId && reserva.provider.toString() !== emisorId) {
+    let emisorTipo = '';
+    let nombreEmisor = '';
+
+    if (reserva.user.toString() === emisorId) {
+      emisorTipo = 'Usuario';
+      const user = await User.findById(emisorId);
+      nombreEmisor = user?.fullName || 'Usuario';
+    } else if (reserva.provider.toString() === emisorId) {
+      emisorTipo = 'Prestador';
+      const prestador = await Prestador.findById(emisorId);
+      nombreEmisor = prestador?.name || 'Prestador';
+    } else {
       return res.status(403).json({ mensaje: 'No autorizado para enviar mensajes en esta reserva' });
     }
 
-    const nuevoMensaje = new Mensaje({ reservaId, emisorId, emisorTipo: 'Usuario', mensaje });
-    await nuevoMensaje.save();
+    const nuevoMensaje = new Mensaje({
+      reservaId,
+      emisorId,
+      emisorTipo,
+      mensaje,
+      nombreEmisor
+    });
 
+    await nuevoMensaje.save();
     res.status(201).json(nuevoMensaje);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al enviar mensaje' });
