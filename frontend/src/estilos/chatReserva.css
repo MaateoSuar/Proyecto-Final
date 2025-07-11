@@ -41,6 +41,7 @@
 }
 
 .chat-mensajes {
+    scrollbar-color: var(--primary) transparent;
     background-color: var(--secondary);
     flex: 1;
     padding: 0.5rem;
@@ -66,6 +67,7 @@
 }
 
 .mensaje-contenido {
+    text-align: start;
     max-width: 70%;
     background-color: var(--light);
     border-radius: 10px;

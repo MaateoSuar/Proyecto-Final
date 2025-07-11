@@ -63,7 +63,7 @@ const loginUsuario = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.json({ token, usuario: { fullName: usuario.fullName, email: usuario.email } });
+    res.json({ token, usuario: { fullName: usuario.fullName, email: usuario.email, id: usuario._id } });
   } catch (error) {
     res.status(500).json({ msg: 'Error del servidor' });
   }

@@ -1,38 +1,76 @@
-import HeaderUsuario from '../componentes/HeaderUsuario'; 
+// src/paginas/PaginaHome.jsx
+import React, { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import HeaderUsuario from '../componentes/HeaderUsuario';
 import TarjetaMascotas from '../componentes/TarjetaMascotas';
 import Servicios from '../componentes/Servicios';
 import Planes from '../componentes/Planes';
 import Cuidadores from '../componentes/Cuidadores';
 import HistorialReservasHome from '../componentes/HistorialReservasHome';
 import SelectorUbicacion from '../componentes/SelectorUbicacion';
+import Notificaciones from '../componentes/Notificaciones';
 import '../estilos/home/index.css';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function PaginaHome() {
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userId = JSON.parse(localStorage.getItem('usuario')).id; // Asegurate de guardar el userId en el login
+    console.log(userId);
+
+    if (!userId || !token) return;
+
+    // 1. Conectamos al socket con el token como query
+    const newSocket = io('http://localhost:5000', {
+      auth: { token },
+    });
+
+    // 2. Unirse a la sala del usuario (backend escucha esto)
+    newSocket.emit('joinSala', userId);
+
+    // 3. Escuchamos el evento de nuevo mensaje
+    newSocket.on('mensajeRecibido', (mensaje) => {
+      setNotificaciones(prev => [...prev, mensaje]);
+      console.log(notificaciones);
+    });
+
+    setSocket(newSocket);
+
+    // Cleanup al desmontar
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
+
   return (
     <div className="pagina-home">
       <div className="header-container">
         <HeaderUsuario />
-        <div className="location-box">
-          <SelectorUbicacion />
+        <div className="right-box">
+          <div className="location-box">
+            <SelectorUbicacion />
+          </div>
+            <Notificaciones notificaciones={notificaciones} />
         </div>
       </div>
 
       <div className="content-container">
-        {/* Columna izquierda - Sidebar en desktop */}
         <div className="left-column">
           <TarjetaMascotas />
         </div>
 
-        {/* Columna derecha - Contenido principal */}
         <div className="right-column">
-          {/* Versión mobile de mascotas (oculta en desktop) */}
           <div className="pets-box">
             <h2 className="section-title">Tus mascotas</h2>
             <TarjetaMascotas />
           </div>
 
           <div className="services-box">
-            <h2 className="section-title" style={{marginBottom: '5px'}}>Servicios</h2>
+            <h2 className="section-title" style={{ marginBottom: '5px' }}>Servicios</h2>
             <Servicios />
           </div>
 
@@ -43,7 +81,7 @@ export default function PaginaHome() {
 
           <div className="plans-box">
             <h2 className="section-title">Reservas pendientes</h2>
-            <HistorialReservasHome/>
+            <HistorialReservasHome />
           </div>
 
           <div className="care-box">

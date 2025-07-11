@@ -4,10 +4,13 @@ import axios from 'axios';
 import ReviewForm from './ReviewForm';
 import ChatReserva from './ChatReserva';
 import '../estilos/MisReservas.css';
+import { useSearchParams } from 'react-router-dom';
+
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const MisReservas = () => {
+  const [searchParams] = useSearchParams();
   const [reservas, setReservas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,6 +22,19 @@ const MisReservas = () => {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reservaAReportar, setReservaAReportar] = useState(null);
   const [motivoReporte, setMotivoReporte] = useState("");
+
+  useEffect(() => {
+    const chatReservaId = searchParams.get('chat');
+    if (chatReservaId && reservas.length > 0) {
+      const encontrada = reservas.find(r => r._id === chatReservaId);
+      if (encontrada) {
+        setReservaEnChat(encontrada);
+      }
+    }
+  }, [searchParams, reservas]);
+  useEffect(() => {
+    cargarReservas();
+  }, []);
 
   const statusOrder = {
     aceptada: 1,
@@ -52,9 +68,6 @@ const MisReservas = () => {
     }
   };
 
-  useEffect(() => {
-    cargarReservas();
-  }, []);
 
   const cancelarReserva = async (reservaId) => {
     try {
