@@ -26,7 +26,6 @@ export default function HeaderUsuario() {
             name: data.fullName || data.name || "Usuario",
             image: data.profileImage || null,
           });
-          
         })
         .catch((err) => console.error("Error al obtener perfil:", err));
   }, []);
@@ -41,7 +40,7 @@ export default function HeaderUsuario() {
         )}
       </div>
       <div className="greeting">
-        <div className="name">Hola{user.name ? `, ${user.name}` : ""}</div>
+        <div className="name">Hola{user.nickname ? `, ${user.nickname}` : user.name ? `, ${user.name}` : ""}</div>
         <div className="subtext">¡Buenos días!</div>
       </div>
     </div>

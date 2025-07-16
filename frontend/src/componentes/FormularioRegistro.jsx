@@ -3,15 +3,18 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/registro.css';
+import countries from '../utils/countries';
 
 export default function FormularioRegistro() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
   const [formulario, setFormulario] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
+    country: '',
   });
 
   const [mostrarPassword, setMostrarPassword] = useState(false);
@@ -37,9 +40,11 @@ export default function FormularioRegistro() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: formulario.fullName,
+          firstName: formulario.firstName,
+          lastName: formulario.lastName,
           email: formulario.email,
           password: formulario.password,
+          country: formulario.country,
         }),
       });
 
@@ -52,7 +57,7 @@ export default function FormularioRegistro() {
       // GUARDAR EN LOCALSTORAGE
       localStorage.setItem(
         'usuario',
-        JSON.stringify({ fullName: formulario.fullName })
+        JSON.stringify({ firstName: formulario.firstName, lastName: formulario.lastName })
       );
 
       toast.success('¡Cuenta creada con éxito! 🎉', {

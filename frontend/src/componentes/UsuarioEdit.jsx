@@ -2,11 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import "../estilos/profile.css";
+import { useUbicacion } from '../context/UbicacionContext';
+import countries from '../utils/countries';
 
 export default function UsuarioEdit({ isEditMode }) {
   const API_URL = import.meta.env.VITE_API_URL;
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
+    nickname: "",
     phone: "",
     address: "",
     email: ""
@@ -28,6 +32,10 @@ export default function UsuarioEdit({ isEditMode }) {
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
+  const { ubicacionActual } = useUbicacion();
+  const [country, setCountry] = useState('');
+  const [countryChanged, setCountryChanged] = useState(false);
+  const [showCountryWarning, setShowCountryWarning] = useState(false);
 
   // ✅ Cargar datos desde localStorage y backend
   useEffect(() => {
@@ -42,11 +50,15 @@ export default function UsuarioEdit({ isEditMode }) {
       .then((res) => res.json())
       .then((data) => {
         setForm({
-          name: data.fullName || "",
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
+          nickname: data.nickname || "",
           phone: data.phone || "",
           address: data.address || "",
           email: data.email || ""
         });
+        setCountry(data.country || '');
+        setCountryChanged(!!data.countryChanged);
         // Establecer la imagen de perfil actual
         if (data.profileImage) {
           setAvatar(data.profileImage);
@@ -109,17 +121,24 @@ export default function UsuarioEdit({ isEditMode }) {
     }
   };
 
+  const handleCountryChange = (e) => {
+    setCountry(e.target.value);
+    setShowCountryWarning(true);
+  };
+
   const handleSave = async () => {
     const token = localStorage.getItem("token");
     const formData = new FormData();
 
-    formData.append("fullName", form.name);
+    formData.append("firstName", form.firstName);
+    formData.append("lastName", form.lastName);
+    formData.append("nickname", form.nickname);
     formData.append("address", form.address);
     formData.append("phone", form.phone);
     if (fileInputRef.current.files[0]) {
       formData.append("profileImage", fileInputRef.current.files[0]);
     }
-
+    formData.append("country", country);
     try {
       const response = await fetch(`${API_URL}/auth/perfil`, {
         method: "PUT",
@@ -132,19 +151,26 @@ export default function UsuarioEdit({ isEditMode }) {
       const data = await response.json();
 
       if (!response.ok) {
+        if (data.msg && data.msg.includes('Solo puedes cambiar el país una vez')) {
+          toast.warn('Solo puedes cambiar el país hasta una vez. Si necesitas cambiarlo de nuevo, contacta soporte.');
+        }
         throw new Error(data.msg || "Error al actualizar los datos.");
       }
 
       const storedUser = JSON.parse(localStorage.getItem("usuario")) || {};
-      storedUser.fullName = data.fullName || form.name;
+      storedUser.firstName = data.firstName || form.firstName;
+      storedUser.lastName = data.lastName || form.lastName;
+      storedUser.nickname = data.nickname || form.nickname;
       storedUser.profileImage = data.profileImage || avatar;
+      storedUser.country = data.country || country;
+      storedUser.countryChanged = data.countryChanged;
       localStorage.setItem("usuario", JSON.stringify(storedUser));
 
       toast.success("¡Datos guardados correctamente!");
       navigate("/inicio");
     } catch (error) {
       console.error("Error al guardar:", error);
-      toast.error("Ocurrió un error al guardar los datos.");
+      toast.error(error.message || "Ocurrió un error al guardar los datos.");
     }
   };
 
@@ -191,27 +217,38 @@ export default function UsuarioEdit({ isEditMode }) {
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
         <label>
-          <span>Nombre</span>
+          <span>Nombre(s)*</span>
           <input
-            name="name"
+            name="firstName"
             type="text"
-            value={form.name}
+            value={form.firstName}
             onChange={handleChange}
             disabled={!isEditMode}
+            required
           />
         </label>
-
         <label>
-          <span>Email</span>
+          <span>Apellido(s)*</span>
           <input
-            name="email"
-            type="email"
-            value={form.email}
-            disabled
-            className="input-disabled"
+            name="lastName"
+            type="text"
+            value={form.lastName}
+            onChange={handleChange}
+            disabled={!isEditMode}
+            required
           />
         </label>
-
+        <label>
+          <span>Apodo (opcional)</span>
+          <input
+            name="nickname"
+            type="text"
+            value={form.nickname}
+            onChange={handleChange}
+            disabled={!isEditMode}
+            placeholder="Apodo (opcional)"
+          />
+        </label>
         <label>
           <span>Teléfono</span>
           <input
@@ -225,13 +262,81 @@ export default function UsuarioEdit({ isEditMode }) {
 
         <label>
           <span>Dirección</span>
-          <input
-            name="address"
-            type="text"
-            value={form.address}
-            onChange={handleChange}
-            disabled={!isEditMode}
-          />
+          {ubicacionActual ? (
+            <input
+              name="address"
+              type="text"
+              value={`${ubicacionActual.calle || ''}${ubicacionActual.numero ? ' ' + ubicacionActual.numero : ''}`}
+              disabled
+              className="input-disabled"
+            />
+          ) : (
+            isEditMode ? (
+              <input
+                name="address"
+                type="text"
+                value={''}
+                placeholder="Seleccionar una ubicación..."
+                className="input-disabled"
+                readOnly
+                style={{ cursor: 'pointer', background: '#f8f8f8' }}
+                onClick={() => window.dispatchEvent(new CustomEvent('abrirSelectorUbicacion'))}
+              />
+            ) : (
+              <input
+                name="address"
+                type="text"
+                value={''}
+                disabled
+                className="input-disabled"
+              />
+            )
+          )}
+        </label>
+
+        <label>
+          <span>País</span>
+          {isEditMode ? (
+            countryChanged ? (
+              <>
+                <input
+                  name="country"
+                  type="text"
+                  value={country}
+                  disabled
+                  className="input-contrasena input-disabled"
+                />
+              </>
+            ) : (
+              <>
+                <select
+                  name="country"
+                  value={country}
+                  onChange={handleCountryChange}
+                  required
+                  className="input-contrasena"
+                >
+                  <option value="" disabled>Selecciona tu país</option>
+                  {countries.map((c) => (
+                    <option key={c.code} value={c.name}>{c.name}</option>
+                  ))}
+                </select>
+                {showCountryWarning && (
+                  <span style={{ color: '#b85c2a', fontSize: 13, marginTop: 4, display: 'block' }}>
+                    Recuerda: solo puedes cambiar el país una vez.
+                  </span>
+                )}
+              </>
+            )
+          ) : (
+            <input
+              name="country"
+              type="text"
+              value={country}
+              disabled
+              className="input-contrasena input-disabled"
+            />
+          )}
         </label>
 
           {isEditMode && (
