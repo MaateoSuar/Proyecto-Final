@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/login.css';
+import { emitTokenChange } from '../context/UbicacionContext';
 
 export default function FormularioLogin() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -43,6 +44,9 @@ export default function FormularioLogin() {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
+      
+      // Emitir evento de cambio de token para que UbicacionContext cargue ubicaciones
+      emitTokenChange();
 
       toast.success('¡Inicio de sesión exitoso!');
       
