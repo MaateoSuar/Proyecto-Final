@@ -10,6 +10,7 @@ export default function UsuarioEdit({ isEditMode }) {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
+    nickname: "",
     phone: "",
     address: "",
     email: ""
@@ -51,6 +52,7 @@ export default function UsuarioEdit({ isEditMode }) {
         setForm({
           firstName: data.firstName || "",
           lastName: data.lastName || "",
+          nickname: data.nickname || "",
           phone: data.phone || "",
           address: data.address || "",
           email: data.email || ""
@@ -130,6 +132,7 @@ export default function UsuarioEdit({ isEditMode }) {
 
     formData.append("firstName", form.firstName);
     formData.append("lastName", form.lastName);
+    formData.append("nickname", form.nickname);
     formData.append("address", form.address);
     formData.append("phone", form.phone);
     if (fileInputRef.current.files[0]) {
@@ -157,6 +160,7 @@ export default function UsuarioEdit({ isEditMode }) {
       const storedUser = JSON.parse(localStorage.getItem("usuario")) || {};
       storedUser.firstName = data.firstName || form.firstName;
       storedUser.lastName = data.lastName || form.lastName;
+      storedUser.nickname = data.nickname || form.nickname;
       storedUser.profileImage = data.profileImage || avatar;
       storedUser.country = data.country || country;
       storedUser.countryChanged = data.countryChanged;
@@ -234,18 +238,17 @@ export default function UsuarioEdit({ isEditMode }) {
             required
           />
         </label>
-
         <label>
-          <span>Email</span>
+          <span>Apodo (opcional)</span>
           <input
-            name="email"
-            type="email"
-            value={form.email}
-            disabled
-            className="input-disabled"
+            name="nickname"
+            type="text"
+            value={form.nickname}
+            onChange={handleChange}
+            disabled={!isEditMode}
+            placeholder="Apodo (opcional)"
           />
         </label>
-
         <label>
           <span>Teléfono</span>
           <input

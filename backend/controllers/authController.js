@@ -76,8 +76,9 @@ const loginUsuario = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const userId = req.user.id;
-  const { firstName, lastName, address, phone, country } = req.body;
+  const { firstName, lastName, nickname, address, phone, country } = req.body;
   const updateFields = { firstName, lastName, address, phone };
+  if (nickname !== undefined) updateFields.nickname = nickname;
 
   try {
     const usuario = await Usuario.findById(userId);

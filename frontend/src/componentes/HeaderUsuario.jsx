@@ -24,6 +24,7 @@ export default function HeaderUsuario() {
         .then((data) => {
           setUser({
             name: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+            nickname: data.nickname || '',
             image: data.profileImage || null,
           });
         })
@@ -40,7 +41,7 @@ export default function HeaderUsuario() {
         )}
       </div>
       <div className="greeting">
-        <div className="name">Hola{user.name ? `, ${user.name}` : ""}</div>
+        <div className="name">Hola{user.nickname ? `, ${user.nickname}` : user.name ? `, ${user.name}` : ""}</div>
         <div className="subtext">¡Buenos días!</div>
       </div>
     </div>
