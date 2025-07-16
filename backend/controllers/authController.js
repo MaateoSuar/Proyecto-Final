@@ -82,7 +82,7 @@ const loginPrestador = async (req, res) => {
 };
 
 const registrarUsuario = async (req, res) => {
-  const { firstName, lastName, email, password, country } = req.body;
+  const { fullName, email, password } = req.body;
 
   try {
     const usuarioExistente = await Usuario.findOne({ email });
@@ -91,14 +91,11 @@ const registrarUsuario = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const nuevoUsuario = new Usuario({
-      firstName,
-      lastName,
+      fullName,
       email,
       password: hashedPassword,
       address: "",
-      phone: "",
-      country,
-      countryChanged: false
+      phone: ""
     });
 
     await nuevoUsuario.save();
@@ -106,10 +103,8 @@ const registrarUsuario = async (req, res) => {
     res.status(201).json({
       msg: 'Usuario registrado correctamente',
       usuario: {
-        firstName: nuevoUsuario.firstName,
-        lastName: nuevoUsuario.lastName,
-        email: nuevoUsuario.email,
-        country: nuevoUsuario.country
+        fullName: nuevoUsuario.fullName,
+        email: nuevoUsuario.email
       }
     });
   } catch (error) {
@@ -150,7 +145,7 @@ const loginUsuario = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.json({ token, usuario: { firstName: usuario.firstName, lastName: usuario.lastName, email: usuario.email, id: usuario._id } });
+    res.json({ token, usuario: { fullName: usuario.fullName, email: usuario.email, id: usuario._id } });
   } catch (error) {
     res.status(500).json({ msg: 'Error del servidor' });
   }
@@ -158,23 +153,10 @@ const loginUsuario = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const userId = req.user.id;
-  const { firstName, lastName, nickname, address, phone, country } = req.body;
-  const updateFields = { firstName, lastName, address, phone };
-  if (nickname !== undefined) updateFields.nickname = nickname;
+  const { fullName, address, phone } = req.body;
+  const updateFields = { fullName, address, phone };
 
   try {
-    const usuario = await Usuario.findById(userId);
-    if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" });
-
-    // Lógica para cambio de país solo una vez
-    if (country && country !== usuario.country) {
-      if (usuario.countryChanged) {
-        return res.status(400).json({ msg: "Solo puedes cambiar el país una vez por cuenta. Si necesitas cambiarlo de nuevo, contacta soporte." });
-      }
-      updateFields.country = country;
-      updateFields.countryChanged = true;
-    }
-
     if (req.file) {
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -206,7 +188,7 @@ const getAllUsers = async (req, res) => {
   try {
     const usuarios = await Usuario.find()
       .select('-password')
-      .sort({ firstName: 1, lastName: 1 }); // Ordenar por nombre y apellido
+      .sort({ fullName: 1 }); // Ordenar por nombre
 
     if (!usuarios || usuarios.length === 0) {
       return res.status(404).json({
