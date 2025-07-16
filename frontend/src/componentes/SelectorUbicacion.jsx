@@ -25,7 +25,15 @@ const SelectorUbicacion = () => {
       if (e.key === 'Escape') setMostrarModal(false);
     };
     window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+
+    // Escuchar evento global para abrir el modal desde cualquier parte
+    const abrirModal = () => setMostrarModal(true);
+    window.addEventListener('abrirSelectorUbicacion', abrirModal);
+
+    return () => {
+      window.removeEventListener('keydown', handler);
+      window.removeEventListener('abrirSelectorUbicacion', abrirModal);
+    };
   }, []);
 
   const buscarSugerencias = async (input) => {
