@@ -3,6 +3,7 @@ import MisReservas from '../componentes/MisReservas';
 import { useState, useEffect } from 'react';
 import '../estilos/PaginaUsuario.css';
 import { useNavigate, useLocation } from 'react-router-dom';
+import SelectorUbicacion from '../componentes/SelectorUbicacion';
 
 export default function PaginaUsuario() {
   const location = useLocation();
@@ -102,6 +103,8 @@ export default function PaginaUsuario() {
           <MisReservas />
         )}
       </div>
+      {/* Montamos SelectorUbicacion oculto para que el modal funcione pero sin mostrar el recuadro */}
+      <SelectorUbicacion oculto={true} />
     </div>
   );
 }

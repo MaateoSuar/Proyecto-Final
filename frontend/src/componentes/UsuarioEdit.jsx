@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import "../estilos/profile.css";
+import { useUbicacion } from '../context/UbicacionContext';
 
 export default function UsuarioEdit({ isEditMode }) {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -28,6 +29,7 @@ export default function UsuarioEdit({ isEditMode }) {
   const navigate = useNavigate();
   const [avatar, setAvatar] = useState(null);
   const fileInputRef = useRef(null);
+  const { ubicacionActual } = useUbicacion();
 
   // ✅ Cargar datos desde localStorage y backend
   useEffect(() => {
@@ -225,13 +227,36 @@ export default function UsuarioEdit({ isEditMode }) {
 
         <label>
           <span>Dirección</span>
-          <input
-            name="address"
-            type="text"
-            value={form.address}
-            onChange={handleChange}
-            disabled={!isEditMode}
-          />
+          {ubicacionActual ? (
+            <input
+              name="address"
+              type="text"
+              value={`${ubicacionActual.calle || ''}${ubicacionActual.numero ? ' ' + ubicacionActual.numero : ''}`}
+              disabled
+              className="input-disabled"
+            />
+          ) : (
+            isEditMode ? (
+              <input
+                name="address"
+                type="text"
+                value={''}
+                placeholder="Seleccionar una ubicación..."
+                className="input-disabled"
+                readOnly
+                style={{ cursor: 'pointer', background: '#f8f8f8' }}
+                onClick={() => window.dispatchEvent(new CustomEvent('abrirSelectorUbicacion'))}
+              />
+            ) : (
+              <input
+                name="address"
+                type="text"
+                value={''}
+                disabled
+                className="input-disabled"
+              />
+            )
+          )}
         </label>
 
           {isEditMode && (

@@ -10,9 +10,14 @@
 .item-sugerencia{
   border-radius: 8px;
   margin-top: 10px;
+  color: #333 !important;
+  background: #fff !important;
+  font-size: 15px;
+  padding: 8px 12px;
 }
 .item-sugerencia:hover{
-  background-color: #fceecf;
+  background-color: #fceecf !important;
+  color: #875e39 !important;
 }
 
 .ubicacion-principal {
