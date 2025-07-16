@@ -109,6 +109,8 @@ const obtenerMensajes = async (req, res) => {
 
   try {
     const reserva = await Reservation.findById(reservaId);
+
+
     if (!reserva) {
       return res.status(403).json({ mensaje: 'Reserva no válida' });
     }
@@ -120,6 +122,7 @@ const obtenerMensajes = async (req, res) => {
     const mensajes = await Mensaje.find({ reservaId }).sort({ fecha: 1 });
     res.json(mensajes);
   } catch (error) {
+    console.error('Error al obtener mensajes:', error);
     res.status(500).json({ mensaje: 'Error al obtener mensajes' });
   }
 };

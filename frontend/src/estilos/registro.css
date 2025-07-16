@@ -1,108 +1,164 @@
-  .contenedor-login {
-    background-color: #fceecf;
-    width: 100%;
-    max-width: 360px;
-    padding: 40px 30px;
-    border-radius: 12px;
-    text-align: center;
-  }
-  
-  .contenedor-login h1 {
-    font-size: 40px;
-    color: #a8b88d;
-    margin-bottom: 10px;
-  }
-  
-  .contenedor-login h2 {
-    font-size: 20px;
-    color: #875e39;
-    margin-bottom: 30px;
-  }
-  
-  .grupo-formulario {
+/* Página centrada */
+.registro-pagina {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+/* Contenedor principal */
+.registro-contenedor {
+  background-color: #fceecf;
+  width: 100%;
+  max-width: 800px;
+  padding: 40px 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.registro-contenedor h1 {
+  font-size: 40px;
+  color: #a8b88d;
+  margin-bottom: 10px;
+}
+
+.registro-contenedor h2 {
+  font-size: 20px;
+  color: #875e39;
+  margin-bottom: 30px;
+}
+
+/* Formulario general */
+.registro-formulario {
+  width: 100%;
+}
+
+/* Estructura de columnas */
+.registro-columnas {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.registro-columna-izquierda,
+.registro-columna-derecha {
+  width: 100%;
+}
+
+/* Columnas en escritorio */
+@media (min-width: 768px) {
+  .registro-columnas {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 40px;
     text-align: left;
-    margin-bottom: 20px;
   }
-  
-  label {
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 5px;
-    display: block;
+
+  .registro-boton {
+    width: 60% !important;
   }
-  
-  .envoltura-input {
-    display: flex;
-    align-items: center;
-    width: 100%;
+
+  .registro-contenedor {
+    max-width: 1000px;
+    /* era 800px */
   }
-  
-  .envoltura-input input {
-    flex: 1;
-    height: 44px;
-    padding: 10px 12px;
-    border: 2px solid #caa878;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #fff;
-    color: #333;
-    outline: none;
-    box-sizing: border-box;
+
+  .registro-columna-izquierda,
+  .registro-columna-derecha {
+    width: 50%;
   }
-  
-  .toggle-password,
-  .espaciador {
-    width: 28px;
-    text-align: center;
-    margin-left: 8px;
-    font-size: 22px;
-    user-select: none;
-    line-height: 1;
+}
+
+/* Grupo de inputs */
+.registro-grupo {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* Input con iconos */
+.registro-input-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.registro-input-wrap input {
+  flex: 1;
+  height: 44px;
+  padding: 10px 12px;
+  border: 2px solid #caa878;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #fff;
+  color: #333;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* Íconos de contraseña */
+.registro-monito,
+.registro-espaciador {
+  width: 28px;
+  text-align: center;
+  margin-left: 8px;
+  font-size: 22px;
+  user-select: none;
+  line-height: 1;
+}
+
+.registro-monito {
+  cursor: pointer;
+}
+
+/* Botón de registro */
+.registro-boton {
+  width: 100%;
+  padding: 12px;
+  background-color: #a06d44;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.registro-boton:hover {
+  background-color: #945c30;
+  transform: scale(1.02);
+}
+
+.registro-boton:active {
+  transform: scale(0.98);
+}
+
+/* Link de login */
+.registro-login-link {
+  font-size: 14px;
+  color: #333;
+  margin-top: 20px;
+}
+
+.registro-login-link a {
+  color: #5b3e2b;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 5px;
+}
+
+/* Responsive: padding más chico */
+@media (max-width: 400px) {
+  .registro-contenedor {
+    padding: 30px 20px;
   }
-  
-  .toggle-password {
-    cursor: pointer;
-  }
-  
-  .boton-login {
-    width: 100%;
-    padding: 12px;
-    background-color: #a06d44;
-    color: white;
-    font-weight: bold;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .boton-login:hover {
-    background-color: #945c30;
-    transform: scale(1.02);
-  }
-  
-  .boton-login:active {
-    transform: scale(0.98);
-  }
-  
-  .login-link {
-    font-size: 14px;
-    color: #333;
-    margin-top: 20px;
-  }
-  
-  .login-link a {
-    color: #5b3e2b;
-    font-weight: bold;
-    text-decoration: none;
-    margin-left: 5px;
-  }
-  
-  @media (max-width: 400px) {
-    .contenedor-login {
-      padding: 30px 20px;
-    }
-  }
-  
+}

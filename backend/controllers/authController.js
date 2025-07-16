@@ -3,6 +3,83 @@ const Usuario = require('../models/Usuario.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { cloudinary } = require('../config/cloudinary.js');
+const Prestador = require('../models/Prestador');
+
+const registrarPrestador = async (req, res) => {
+  const { name, email, password, phone } = req.body;
+
+  try {
+    const prestadorExistente = await Prestador.findOne({ email });
+    if (prestadorExistente) {
+      return res.status(400).json({ msg: 'El prestador ya existe' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const nuevoPrestador = new Prestador({
+      name,
+      email,
+      password: hashedPassword,
+      phone,
+      location: {
+        address: '',
+        coordinates: {
+          type: 'Point',
+          coordinates: [0, 0] // Valor por defecto válido
+        }
+      },
+      isActive: true
+    });
+
+    await nuevoPrestador.save();
+
+    res.status(201).json({
+      msg: 'Prestador registrado correctamente',
+      prestador: {
+        name: nuevoPrestador.name,
+        email: nuevoPrestador.email,
+        id: nuevoPrestador._id
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error del servidor' });
+  }
+};
+
+const loginPrestador = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const prestador = await Prestador.findOne({ email });
+    if (!prestador) {
+      return res.status(400).json({ msg: 'Credenciales inválidas' });
+    }
+
+    const passwordValido = await bcrypt.compare(password, prestador.password);
+    if (!passwordValido) {
+      return res.status(400).json({ msg: 'Credenciales inválidas' });
+    }
+
+    const token = jwt.sign(
+      { prestadorId: prestador._id },
+      process.env.JWT_SECRET
+    );
+
+    res.json({
+      token,
+      prestador: {
+        name: prestador.name,
+        email: prestador.email,
+        id: prestador._id,
+        img: prestador.profileImage || '',
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error del servidor' });
+  }
+};
 
 const registrarUsuario = async (req, res) => {
   const { fullName, email, password } = req.body;
@@ -23,7 +100,7 @@ const registrarUsuario = async (req, res) => {
 
     await nuevoUsuario.save();
 
-    res.status(201).json({ 
+    res.status(201).json({
       msg: 'Usuario registrado correctamente',
       usuario: {
         fullName: nuevoUsuario.fullName,
@@ -40,11 +117,16 @@ const obtenerPerfil = async (req, res) => {
 
   try {
     const usuario = await Usuario.findById(userId).select('-password'); // excluye password
-    if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" });
-
+    if (!usuario) {
+      const usuario = await Prestador.findById(userId).select('-password');
+      if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" });
+      res.json(usuario)
+      return;
+    }
     res.json(usuario);
   } catch (error) {
     res.status(500).json({ msg: "Error al obtener el perfil" });
+    console.error(error);
   }
 };
 
@@ -122,10 +204,10 @@ const getAllUsers = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al obtener usuarios:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: 'Error al obtener usuarios',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -135,7 +217,7 @@ const deleteUser = async (req, res) => {
   try {
     const { userId } = req.params;
     const usuario = await Usuario.findByIdAndDelete(userId);
-    
+
     if (!usuario) {
       return res.status(404).json({
         success: false,
@@ -149,10 +231,10 @@ const deleteUser = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al eliminar usuario:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
       message: 'Error al eliminar usuario',
-      error: error.message 
+      error: error.message
     });
   }
 };
@@ -188,12 +270,30 @@ const cambiarPassword = async (req, res) => {
   }
 };
 
-module.exports = {	
-  loginUsuario, 
-  registrarUsuario, 
-  updateProfile, 
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await Usuario.findById(id).select('-password');
+    if (!user) {
+      return res.status(404).json({ msg: "Usuario no encontrado" });
+    }
+    res.json({ data: user });
+  } catch (error) {
+    console.error('Error al obtener usuario por ID:', error);
+    res.status(500).json({ msg: 'Error del servidor' });
+  }
+};
+
+
+module.exports = {
+  loginUsuario,
+  registrarUsuario,
+  updateProfile,
   obtenerPerfil,
   getAllUsers,
   deleteUser,
-  cambiarPassword
+  cambiarPassword,
+  registrarPrestador,
+  loginPrestador,
+  getUserById
 };

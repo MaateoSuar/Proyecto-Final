@@ -40,19 +40,20 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // 🔌 Socket.io listeners
 io.on('connection', socket => {
-  console.log('🔌 Cliente conectado:', socket.id);
+  console.log('✅ Nuevo socket conectado:', socket.id);
 
   socket.on('joinSala', userId => {
+    console.log(`🧩 Usuario ${userId} unido a sala`);
     socket.join(userId);
-    console.log(`🧍 Cliente ${socket.id} se unió a la sala ${userId}`);
   });
 
-  socket.on('mensajeEnviado', data => {
-    io.to(data.receptorId).emit('mensajeRecibido', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('❌ Cliente desconectado:', socket.id);
+  socket.on('reservaRealizada', data => {
+    console.log('📥 Evento reservaRealizada recibido:', data);
+    io.to(data.proveedorId).emit('notificacionReserva', {
+      titulo: 'Nueva reserva',
+      mensaje: `Tenés una nueva reserva para el ${data.fecha} a las ${data.hora}`,
+      ...data
+    });
   });
 });
 

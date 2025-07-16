@@ -2,9 +2,11 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UbicacionProvider } from './context/UbicacionContext';
-
+import RutaInicio from './componentes/RutaInicio';
 import PaginaLogin from './paginas/PaginaLogin';
+import FormularioLoginCuidador from './componentes/FormularioLoginPrestador';
 import PaginaRegistro from './paginas/PaginaRegistro';
+import FormularioRegistroCuidador from './componentes/FormularioRegistroPrestador';
 import PaginaHome from './paginas/PaginaHome';
 import PaginaUsuario from './paginas/PaginaUsuario';
 import DetalleCuidador from './paginas/DetalleCuidador';
@@ -17,6 +19,7 @@ import PaginaAdmin from './paginas/PaginaAdmin';
 import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
 import RutaProtegida from './componentes/RutaProtegida';
 import RutaPublica from './componentes/RutaPublica';
+import PaginaHomePrestador from './paginas/PaginaHomePrestador';
 import Footer from './componentes/Footer';
 import PaginaSobreNosotros from './paginas/PaginaSobreNosotros';
 import PaginaContacto from './paginas/PaginaContacto';
@@ -64,6 +67,22 @@ export default function App() {
               }
             />
             <Route
+              path="/login-cuidador"
+              element={
+                <RutaPublica>
+                  <FormularioLoginCuidador />
+                </RutaPublica>
+              }
+            />
+            <Route
+              path="/registro-cuidador"
+              element={
+                <RutaPublica>
+                  <FormularioRegistroCuidador />
+                </RutaPublica>
+              }
+            />
+            <Route
               path="/inicio"
               element={
                 <RutaProtegida>
@@ -71,7 +90,13 @@ export default function App() {
                 </RutaProtegida>
               }
             />
-            <Route path="/" element={<Navigate to="/inicio" replace />} />
+            <Route path="/" element={<RutaInicio />} />
+            <Route
+              path="/cuidador/inicio"
+              element={
+                <PaginaHomePrestador />
+              }
+            />
             <Route
               path="/profile"
               element={

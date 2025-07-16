@@ -1,17 +1,17 @@
-// src/componentes/FormularioRegistro.jsx
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/registro.css';
 
-export default function FormularioRegistro() {
+export default function FormularioRegistroCuidador() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
   const [formulario, setFormulario] = useState({
-    fullName: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
+    phone: '',
   });
 
   const [mostrarPassword, setMostrarPassword] = useState(false);
@@ -31,14 +31,15 @@ export default function FormularioRegistro() {
     }
 
     try {
-      const respuesta = await fetch(`${API_URL}/auth/register`, {
+      const respuesta = await fetch(`${API_URL}/auth/registro-cuidador`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: formulario.fullName,
+          name: formulario.name,
           email: formulario.email,
+          phone: formulario.phone,
           password: formulario.password,
         }),
       });
@@ -49,34 +50,23 @@ export default function FormularioRegistro() {
         throw new Error(data.message || 'Error al registrarse');
       }
 
-      // GUARDAR EN LOCALSTORAGE
       localStorage.setItem(
-        'usuario',
-        JSON.stringify({ fullName: formulario.fullName })
+        'prestador',
+        JSON.stringify({ name: formulario.name })
       );
 
-      toast.success('¡Cuenta creada con éxito! 🎉', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
-      navigate('/login');
+      toast.success('¡Cuenta de prestador creada con éxito! 🎉');
+      navigate('/login-cuidador');
     } catch (error) {
       toast.error('Error en el registro: ' + error.message);
     }
   };
 
-
   return (
     <div className="registro-pagina">
       <div className="registro-contenedor">
-        <h1>PetCare</h1>
-        <h2>Registro de usuarios</h2>
+        <h1>PetCare<span className="r">r</span></h1>
+        <h2>Registro de prestador</h2>
         <form onSubmit={handleSubmit} className="registro-formulario">
           <div className="registro-columnas">
             <div className="registro-columna-izquierda">
@@ -85,10 +75,10 @@ export default function FormularioRegistro() {
                 <div className="registro-input-wrap">
                   <input
                     type="text"
-                    id="fullName"
-                    name="fullName"
+                    id="name"
+                    name="name"
                     placeholder="Nombre completo"
-                    value={formulario.fullName}
+                    value={formulario.name}
                     onChange={handleChange}
                     required
                   />
@@ -103,7 +93,7 @@ export default function FormularioRegistro() {
                     type="email"
                     id="email"
                     name="email"
-                    placeholder="usuario@petcare.com"
+                    placeholder="cuidador@petcare.com"
                     value={formulario.email}
                     onChange={handleChange}
                     required
@@ -164,7 +154,7 @@ export default function FormularioRegistro() {
         </form>
 
         <div className="registro-login-link">
-          ¿Ya tenés una cuenta? <Link to="/login">Iniciar sesión</Link>
+          ¿Ya sos PetCarer? <Link to="/login-cuidador">Iniciar sesión</Link>
         </div>
       </div>
     </div>

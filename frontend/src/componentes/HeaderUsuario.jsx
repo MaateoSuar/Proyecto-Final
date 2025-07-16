@@ -23,7 +23,7 @@ export default function HeaderUsuario() {
         .then((res) => res.json())
         .then((data) => {
           setUser({
-            name: data.fullName || "",
+            name: data.fullName || data.name || "Usuario",
             image: data.profileImage || null,
           });
           

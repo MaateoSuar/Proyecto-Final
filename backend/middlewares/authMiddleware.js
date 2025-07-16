@@ -1,4 +1,3 @@
-// middlewares/authMiddleware.js
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
@@ -12,7 +11,15 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { id: decoded.userId };
+
+    if (decoded.userId) {
+      req.user = { id: decoded.userId, tipo: 'usuario' };
+    } else if (decoded.prestadorId) {
+      req.user = { id: decoded.prestadorId, tipo: 'prestador' };
+    } else {
+      return res.status(401).json({ error: 'No autorizado - Token sin tipo válido' });
+    }
+
     next();
   } catch (error) {
     res.status(401).json({ error: 'No autorizado - Token inválido' });

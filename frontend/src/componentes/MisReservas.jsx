@@ -32,9 +32,28 @@ const MisReservas = () => {
       }
     }
   }, [searchParams, reservas]);
+
   useEffect(() => {
     cargarReservas();
   }, []);
+
+  useEffect(() => {
+    const socket = window.socket;
+    if (!socket) return;
+
+    const handleNotificacionReserva = (data) => {
+      console.log('🔔 Notificación recibida:', data); // Agregá este log
+      toast.info(data.mensaje || 'Nueva reserva recibida');
+      cargarReservas();
+    };
+
+    socket.on('notificacionReserva', handleNotificacionReserva);
+
+    return () => {
+      socket.off('notificacionReserva', handleNotificacionReserva);
+    };
+  }, []);
+
 
   const statusOrder = {
     aceptada: 1,
@@ -43,23 +62,57 @@ const MisReservas = () => {
     cancelada: 4
   };
 
-  const cargarReservas = async () => {
+  const updateReserva = async (reservaId, status) => {
+    const token = localStorage.getItem('token');
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error('Debes iniciar sesión para ver tus reservas');
-        return;
-      }
-
-      const response = await axios.get(`${API_URL}/reservas`, {
+      await axios.patch(`${API_URL}/reservas/${reservaId}/status`, { status }, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      cargarReservas();
+    } catch (error) {
+      console.error('Error al actualizar reserva:', error);
+      toast.error('No se pudo actualizar la reserva');
+    }
+  };
 
-      const ordenadas = response.data.sort((a, b) => {
-        return statusOrder[a.status] - statusOrder[b.status];
-      });
+  const cargarReservas = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      toast.error('Debes iniciar sesión para ver tus reservas');
+      return;
+    }
 
-      setReservas(ordenadas);
+    try {
+      let reservasData = [];
+
+      if (localStorage.getItem('usuario')) {
+        const response = await axios.get(`${API_URL}/reservas`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        reservasData = response.data.sort((a, b) => {
+          return statusOrder[a.status] - statusOrder[b.status];
+        });
+
+      } else if (localStorage.getItem('prestador')) {
+        const prestadorData = JSON.parse(localStorage.getItem('prestador'));
+        if (!prestadorData || !prestadorData.id) {
+          toast.error('Error cargando el perfil del prestador');
+          return;
+        }
+
+        const res = await axios.get(`${API_URL}/reservas/provider/${prestadorData.id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        reservasData = res.data;
+      }
+
+      setReservas(reservasData);
+      console.log(reservasData);
+
     } catch (error) {
       console.error('Error al cargar reservas:', error);
       toast.error('No se pudieron cargar tus reservas');
@@ -165,6 +218,7 @@ const MisReservas = () => {
                 <h3>{reserva.provider.name}</h3>
               </div>
               <span className="reserva-date"> {formatearFechaCorta(reserva.date)} - {reserva.time}</span>
+              {localStorage.getItem('prestador') && (<p className="reserva-pet">Usuario: <b>{reserva.user.fullName}</b></p>)}
               <p className="reserva-pet">Mascota: <b>{reserva.pet.name}</b></p>
               <b className="reserva-status">{reserva.status}</b>
             </div>
@@ -179,11 +233,14 @@ const MisReservas = () => {
                   <>
                     <button className='chat-button' onClick={() => setReservaEnChat(reserva)}>Chatear</button>
                     <button className="cancel-button" onClick={() => confirmarCancelacion(reserva)}>
-                      Cancelar Reserva
+                      Cancelar
                     </button>
+                    {localStorage.getItem('prestador') && (<button className="complete-button" onClick={() => updateReserva(reserva._id, 'completada')}>
+                      Completar
+                    </button>)}
                   </>
                 )}
-                {reserva.status === 'completada' && !reserva.comment && !reserva.rating && (
+                {reserva.status === 'completada' && !reserva.comment && !reserva.rating && localStorage.getItem('usuario') && (
                   <button className="review-btn" onClick={() => {
                     setReservaAValorar(reserva);
                     setShowReviewModal(true);
@@ -191,13 +248,16 @@ const MisReservas = () => {
                     Dejar valoración
                   </button>
                 )}
-                {reserva.status === 'completada' && reserva.comment && reserva.rating && (
+                {reserva.status === 'completada' && reserva.comment && reserva.rating && localStorage.getItem('usuario') && (
                   <span style={{ fontWeight: 600, color: '#28a745' }}>Valoración enviada</span>
                 )}
-                {reserva.status === 'completada' && (
+                {reserva.status === 'completada' && localStorage.getItem('usuario') && (
                   <button className="report-btn" onClick={() => abrirFormularioReporte(reserva)}>
                     Reportar
                   </button>
+                )}
+                {reserva.status === 'completada' && localStorage.getItem('prestador') && (
+                  <span className="reserva-cancelled">Sin acciones</span>
                 )}
               </div>
             )}

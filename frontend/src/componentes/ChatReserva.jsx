@@ -9,16 +9,20 @@ const ChatReserva = ({ reservaId, onClose }) => {
   const [mensajes, setMensajes] = useState([]);
   const [nuevoMensaje, setNuevoMensaje] = useState('');
   const [nombrePrestador, setNombrePrestador] = useState('');
+  const [nombreUsuario, setNombreUsuario] = useState('');
 
   const mensajesEndRef = useRef(null);
   const socketRef = useRef(null);
+
+  const usuario = localStorage.getItem('usuario');
 
   const scrollToBottom = () => {
     mensajesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const obtenerNombrePrestador = async () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
+    const payload = JSON.parse(atob(token.split('.')[1]));
     try {
       const resReserva = await axios.get(`${API_URL}/reservas/${reservaId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -34,6 +38,26 @@ const ChatReserva = ({ reservaId, onClose }) => {
 
     } catch (error) {
       console.error('Error al obtener el nombre del prestador:', error);
+    }
+  };
+
+  const obtenerNombreUsuario = async () => {
+    const token = localStorage.getItem('token');
+    try {
+      const resReserva = await axios.get(`${API_URL}/reservas/${reservaId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const usuarioId = resReserva.data.user;
+
+      const resUsuario = await axios.get(`${API_URL}/auth/usuarios/${usuarioId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const nombre = resUsuario.data.data?.fullName;
+      setNombreUsuario(nombre || 'el usuario');
+
+    } catch (error) {
+      console.error('Error al obtener el nombre del usuario:', error);
     }
   };
 
@@ -62,7 +86,7 @@ const ChatReserva = ({ reservaId, onClose }) => {
       });
 
       setNuevoMensaje('');
-      // NO volver a cargar todos: el socket lo agrega
+      cargarMensajes();
     } catch (error) {
       console.error('Error al enviar mensaje', error);
     }
@@ -70,6 +94,7 @@ const ChatReserva = ({ reservaId, onClose }) => {
 
   useEffect(() => {
     cargarMensajes();
+    obtenerNombreUsuario();
     obtenerNombrePrestador();
   }, [reservaId]);
 
@@ -106,14 +131,14 @@ const ChatReserva = ({ reservaId, onClose }) => {
   return (
     <div className="chat-reserva">
       <div className="chat-header">
-        <h4>{nombrePrestador}</h4>
+        <h4>{usuario ? nombrePrestador : nombreUsuario}</h4>
         <p className="cerrar-chat" onClick={onClose}>x</p>
       </div>
       <div className="chat-mensajes">
         {mensajes.map((msg, i) => (
           <div
             key={i}
-            className={`mensaje ${msg.emisorTipo === 'Usuario' ? 'mensaje-usuario' : 'mensaje-prestador'}`}
+            className={`mensaje ${usuario ? (msg.emisorTipo === 'Usuario' ? 'mensaje-usuario' : 'mensaje-prestador') : (msg.emisorTipo === 'Usuario' ? 'mensaje-prestador' : 'mensaje-usuario')}`}
           >
             <div className="mensaje-contenido">
               {msg.mensaje}

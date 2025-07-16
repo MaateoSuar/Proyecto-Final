@@ -1,3 +1,4 @@
+// Reservar.jsx
 import React, { useEffect, useState } from "react";
 import formatRating from '../utils/formatRating';
 import ComentariosProveedor from './ComentariosProveedor';
@@ -11,12 +12,15 @@ import '../estilos/Reservar.css';
 import { toast } from 'react-toastify';
 import { useMediaQuery } from 'react-responsive';
 import StarRating from './ReviewForm';
+import { useSocket } from '../context/SocketContext';
+
 
 registerLocale('es', es);
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 const Reservar = () => {
+  const socket = useSocket();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,6 +42,7 @@ const Reservar = () => {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
+  const userId = localStorage.getItem('usuario') && JSON.parse(localStorage.getItem('usuario')).id;
 
   const cargarReservas = async () => {
     try {
@@ -123,6 +128,10 @@ const Reservar = () => {
       navigate(-1);
     }
   };
+  useEffect(() => {
+    if (!socket) return;
+    console.log('🧪 socket conectado:', socket?.connected);
+  }, [socket]);
 
   useEffect(() => {
     const obtenerHorarios = async () => {
@@ -239,7 +248,18 @@ const Reservar = () => {
         }
       );
 
-      if (resReserva.status === 201) {
+      if (resReserva.status === 201 && socket && socket.connected) {
+
+        socket?.emit('reservaRealizada', {
+          proveedorId: proveedor._id, // <- corregido con populate
+          userId, // <- obtenido del localStorage
+          reservaId: resReserva.data._id,
+          fecha: fechaISO,
+          hora: selectedTime,
+          mascota: misMascotas.find(p => p._id === mascotaSeleccionada)?.name || 'Mascota',
+        });
+        console.log('📤 Evento emitido reservaRealizada');
+
         try {
           await cargarReservas();
 
@@ -252,6 +272,8 @@ const Reservar = () => {
         } catch (error) {
           console.error('Error al actualizar reservas:', error);
         }
+      } else {
+        console.warn('⚠️ Socket no disponible o no conectado, no se pudo emitir evento');
       }
     } catch (err) {
       console.error('Error al reservar:', err);

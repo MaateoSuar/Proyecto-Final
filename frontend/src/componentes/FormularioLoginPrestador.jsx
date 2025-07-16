@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/login.css';
 
-export default function FormularioLogin() {
+export default function FormularioLoginCuidador() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
@@ -24,7 +24,7 @@ export default function FormularioLogin() {
     }
 
     try {
-      const respuesta = await fetch(`${API_URL}/auth/login`, {
+      const respuesta = await fetch(`${API_URL}/auth/login-cuidador`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,18 +40,12 @@ export default function FormularioLogin() {
       if (!respuesta.ok) {
         throw new Error(data.msg || 'Credenciales inválidas');
       }
-
+      
       localStorage.setItem('token', data.token);
-      localStorage.setItem('usuario', JSON.stringify(data.usuario));
+      localStorage.setItem('prestador', JSON.stringify(data.prestador));
 
-      toast.success('¡Inicio de sesión exitoso!');
-
-      // Redirigir según el email
-      if (correo === 'admin@admin.com') {
-        navigate('/admin');
-      } else {
-        navigate('/inicio');
-      }
+      toast.success('¡Inicio de sesión exitoso como cuidador!');
+      navigate('/cuidador/inicio');
 
     } catch (error) {
       toast.error('Error al iniciar sesión: ' + error.message);
@@ -60,10 +54,9 @@ export default function FormularioLogin() {
 
   return (
     <div className="contenedor-login">
-      <h1>PetCare</h1>
-      <h2>Iniciar sesión</h2>
+      <h1>PetCare<span className="r">r</span></h1>
+      <h2>Iniciar sesión como prestador</h2>
 
-      {/* FORMULARIO */}
       <form onSubmit={handleLogin}>
         <div className="grupo-formulario">
           <label htmlFor="correo">Correo electrónico</label>
@@ -102,12 +95,11 @@ export default function FormularioLogin() {
       </form>
 
       <div className="divisor"></div>
-
       <div className="crear-cuenta">
-        ¿No tienes una cuenta? <Link to="/registro">Crear cuenta</Link>
+        ¿Querés empezar a ofrecer tus servicios? <Link to="/registro-cuidador">Registrarse como prestador</Link>
       </div>
       <div className="crear-cuenta">
-        ¿Sos cuidador? <Link to="/login-cuidador">Iniciar sesión como prestador</Link>
+        ¿No sos prestador? <Link to="/login">Iniciar sesión como usuario</Link>
       </div>
     </div>
   );

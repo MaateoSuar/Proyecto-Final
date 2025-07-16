@@ -19,9 +19,7 @@ export default function PaginaHome() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const userId = JSON.parse(localStorage.getItem('usuario')).id; // Asegurate de guardar el userId en el login
-    console.log(userId);
-
+    const userId = localStorage.getItem('usuario') && JSON.parse(localStorage.getItem('usuario')).id; // Asegurate de guardar el userId en el login
     if (!userId || !token) return;
 
     // 1. Conectamos al socket con el token como query
@@ -35,7 +33,6 @@ export default function PaginaHome() {
     // 3. Escuchamos el evento de nuevo mensaje
     newSocket.on('mensajeRecibido', (mensaje) => {
       setNotificaciones(prev => [...prev, mensaje]);
-      console.log(notificaciones);
     });
 
     setSocket(newSocket);
