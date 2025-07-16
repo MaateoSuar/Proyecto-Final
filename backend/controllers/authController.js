@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { cloudinary } = require('../config/cloudinary.js');
 
 const registrarUsuario = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, country } = req.body;
 
   try {
     const usuarioExistente = await Usuario.findOne({ email });
@@ -18,7 +18,9 @@ const registrarUsuario = async (req, res) => {
       email,
       password: hashedPassword,
       address: "",
-      phone: ""
+      phone: "",
+      country,
+      countryChanged: false
     });
 
     await nuevoUsuario.save();
@@ -28,6 +30,7 @@ const registrarUsuario = async (req, res) => {
       usuario: {
         fullName: nuevoUsuario.fullName,
         email: nuevoUsuario.email,
+        country: nuevoUsuario.country
       }
     });
   } catch (error) {
@@ -71,10 +74,22 @@ const loginUsuario = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const userId = req.user.id;
-  const { fullName, address, phone } = req.body;
+  const { fullName, address, phone, country } = req.body;
   const updateFields = { fullName, address, phone };
 
   try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) return res.status(404).json({ msg: "Usuario no encontrado" });
+
+    // Lógica para cambio de país solo una vez
+    if (country && country !== usuario.country) {
+      if (usuario.countryChanged) {
+        return res.status(400).json({ msg: "Solo puedes cambiar el país una vez por cuenta. Si necesitas cambiarlo de nuevo, contacta soporte." });
+      }
+      updateFields.country = country;
+      updateFields.countryChanged = true;
+    }
+
     if (req.file) {
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(

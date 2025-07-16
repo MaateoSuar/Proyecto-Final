@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/registro.css';
+import countries from '../utils/countries';
 
 export default function FormularioRegistro() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export default function FormularioRegistro() {
     email: '',
     password: '',
     confirmPassword: '',
+    country: '',
   });
 
   const [mostrarPassword, setMostrarPassword] = useState(false);
@@ -40,6 +42,7 @@ export default function FormularioRegistro() {
           fullName: formulario.fullName,
           email: formulario.email,
           password: formulario.password,
+          country: formulario.country,
         }),
       });
   
@@ -150,6 +153,26 @@ export default function FormularioRegistro() {
             >
               {mostrarConfirmar ? '🙉' : '🙈'}
             </span>
+          </div>
+        </div>
+
+        <div className="grupo-formulario">
+          <label htmlFor="country">País</label>
+          <div className="envoltura-input">
+            <select
+              id="country"
+              name="country"
+              value={formulario.country}
+              onChange={handleChange}
+              required
+              className="input-contrasena"
+            >
+              <option value="" disabled>Selecciona tu país</option>
+              {countries.map((c) => (
+                <option key={c.code} value={c.name}>{c.name}</option>
+              ))}
+            </select>
+            <span className="espaciador"></span>
           </div>
         </div>
 
