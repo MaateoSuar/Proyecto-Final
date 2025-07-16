@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/login.css';
@@ -11,6 +11,26 @@ export default function FormularioLogin() {
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Si viene un token en la URL (login con Google)
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+      localStorage.setItem('token', token);
+      // Obtener perfil del usuario
+      fetch(`${API_URL}/auth/perfil`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(res => res.json())
+        .then(data => {
+          localStorage.setItem('usuario', JSON.stringify(data));
+          emitTokenChange();
+          window.location.href = '/inicio';
+        });
+    }
+  }, []);
 
   const alternarContrasena = () => {
     setMostrarContrasena(!mostrarContrasena);
@@ -62,6 +82,11 @@ export default function FormularioLogin() {
     }
   };
 
+  const handleGoogleLogin = () => {
+    // Aquí irá la lógica de Google Sign-In
+    window.location.href = `${API_URL}/auth/google`;
+  };
+
   return (
     <div className="contenedor-login">
       <h1>PetCare</h1>
@@ -104,6 +129,35 @@ export default function FormularioLogin() {
           Ingresar
         </button>
       </form>
+
+      <div style={{ textAlign: 'center', margin: '18px 0 0 0', fontWeight: 500, color: '#875e39' }}>o</div>
+      <button
+        className="google-login-btn"
+        style={{
+          width: '100%',
+          margin: '16px 0 0 0',
+          background: '#fff',
+          color: '#444',
+          border: '1px solid #ddd',
+          borderRadius: 6,
+          padding: '10px 0',
+          fontWeight: 600,
+          fontSize: 16,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 10,
+          cursor: 'pointer',
+        }}
+        onClick={handleGoogleLogin}
+      >
+        <img
+          src="/img/google.png"
+          alt="Google"
+          style={{ width: 22, height: 22, marginRight: 10 }}
+        />
+        Iniciar sesión con Google
+      </button>
 
       <div className="divisor"></div>
 
