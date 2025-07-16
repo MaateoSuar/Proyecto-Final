@@ -23,10 +23,9 @@ export default function HeaderUsuario() {
         .then((res) => res.json())
         .then((data) => {
           setUser({
-            name: data.fullName || "",
+            name: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
             image: data.profileImage || null,
           });
-          
         })
         .catch((err) => console.error("Error al obtener perfil:", err));
   }, []);

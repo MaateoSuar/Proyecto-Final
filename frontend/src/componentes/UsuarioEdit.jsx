@@ -8,7 +8,8 @@ import countries from '../utils/countries';
 export default function UsuarioEdit({ isEditMode }) {
   const API_URL = import.meta.env.VITE_API_URL;
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     phone: "",
     address: "",
     email: ""
@@ -48,7 +49,8 @@ export default function UsuarioEdit({ isEditMode }) {
       .then((res) => res.json())
       .then((data) => {
         setForm({
-          name: data.fullName || "",
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
           phone: data.phone || "",
           address: data.address || "",
           email: data.email || ""
@@ -126,7 +128,8 @@ export default function UsuarioEdit({ isEditMode }) {
     const token = localStorage.getItem("token");
     const formData = new FormData();
 
-    formData.append("fullName", form.name);
+    formData.append("firstName", form.firstName);
+    formData.append("lastName", form.lastName);
     formData.append("address", form.address);
     formData.append("phone", form.phone);
     if (fileInputRef.current.files[0]) {
@@ -152,7 +155,8 @@ export default function UsuarioEdit({ isEditMode }) {
       }
 
       const storedUser = JSON.parse(localStorage.getItem("usuario")) || {};
-      storedUser.fullName = data.fullName || form.name;
+      storedUser.firstName = data.firstName || form.firstName;
+      storedUser.lastName = data.lastName || form.lastName;
       storedUser.profileImage = data.profileImage || avatar;
       storedUser.country = data.country || country;
       storedUser.countryChanged = data.countryChanged;
@@ -209,13 +213,25 @@ export default function UsuarioEdit({ isEditMode }) {
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
         <label>
-          <span>Nombre</span>
+          <span>Nombre(s)*</span>
           <input
-            name="name"
+            name="firstName"
             type="text"
-            value={form.name}
+            value={form.firstName}
             onChange={handleChange}
             disabled={!isEditMode}
+            required
+          />
+        </label>
+        <label>
+          <span>Apellido(s)*</span>
+          <input
+            name="lastName"
+            type="text"
+            value={form.lastName}
+            onChange={handleChange}
+            disabled={!isEditMode}
+            required
           />
         </label>
 

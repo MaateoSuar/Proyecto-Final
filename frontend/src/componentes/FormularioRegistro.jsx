@@ -9,7 +9,8 @@ export default function FormularioRegistro() {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
   const [formulario, setFormulario] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -39,7 +40,8 @@ export default function FormularioRegistro() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fullName: formulario.fullName,
+          firstName: formulario.firstName,
+          lastName: formulario.lastName,
           email: formulario.email,
           password: formulario.password,
           country: formulario.country,
@@ -55,7 +57,7 @@ export default function FormularioRegistro() {
       // GUARDAR EN LOCALSTORAGE
       localStorage.setItem(
         'usuario',
-        JSON.stringify({ fullName: formulario.fullName })
+        JSON.stringify({ firstName: formulario.firstName, lastName: formulario.lastName })
       );
   
       toast.success('¡Cuenta creada con éxito! 🎉', {
@@ -81,14 +83,29 @@ export default function FormularioRegistro() {
       <h2>Crear cuenta</h2>
       <form onSubmit={handleSubmit}>
         <div className="grupo-formulario">
-          <label htmlFor="fullName">Nombre completo</label>
+          <label htmlFor="firstName">Nombre(s)*</label>
           <div className="envoltura-input">
             <input
               type="text"
-              id="fullName"
-              name="fullName"
-              placeholder="Nombre completo"
-              value={formulario.fullName}
+              id="firstName"
+              name="firstName"
+              placeholder="Nombre(s)"
+              value={formulario.firstName}
+              onChange={handleChange}
+              required
+            />
+            <span className="espaciador"></span>
+          </div>
+        </div>
+        <div className="grupo-formulario">
+          <label htmlFor="lastName">Apellido(s)*</label>
+          <div className="envoltura-input">
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              placeholder="Apellido(s)"
+              value={formulario.lastName}
               onChange={handleChange}
               required
             />

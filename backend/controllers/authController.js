@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { cloudinary } = require('../config/cloudinary.js');
 
 const registrarUsuario = async (req, res) => {
-  const { fullName, email, password, country } = req.body;
+  const { firstName, lastName, email, password, country } = req.body;
 
   try {
     const usuarioExistente = await Usuario.findOne({ email });
@@ -14,7 +14,8 @@ const registrarUsuario = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const nuevoUsuario = new Usuario({
-      fullName,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
       address: "",
@@ -28,7 +29,8 @@ const registrarUsuario = async (req, res) => {
     res.status(201).json({ 
       msg: 'Usuario registrado correctamente',
       usuario: {
-        fullName: nuevoUsuario.fullName,
+        firstName: nuevoUsuario.firstName,
+        lastName: nuevoUsuario.lastName,
         email: nuevoUsuario.email,
         country: nuevoUsuario.country
       }
@@ -66,7 +68,7 @@ const loginUsuario = async (req, res) => {
       process.env.JWT_SECRET
     );
 
-    res.json({ token, usuario: { fullName: usuario.fullName, email: usuario.email, id: usuario._id } });
+    res.json({ token, usuario: { firstName: usuario.firstName, lastName: usuario.lastName, email: usuario.email, id: usuario._id } });
   } catch (error) {
     res.status(500).json({ msg: 'Error del servidor' });
   }
@@ -74,8 +76,8 @@ const loginUsuario = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const userId = req.user.id;
-  const { fullName, address, phone, country } = req.body;
-  const updateFields = { fullName, address, phone };
+  const { firstName, lastName, address, phone, country } = req.body;
+  const updateFields = { firstName, lastName, address, phone };
 
   try {
     const usuario = await Usuario.findById(userId);
@@ -121,7 +123,7 @@ const getAllUsers = async (req, res) => {
   try {
     const usuarios = await Usuario.find()
       .select('-password')
-      .sort({ fullName: 1 }); // Ordenar por nombre
+      .sort({ firstName: 1, lastName: 1 }); // Ordenar por nombre y apellido
 
     if (!usuarios || usuarios.length === 0) {
       return res.status(404).json({
