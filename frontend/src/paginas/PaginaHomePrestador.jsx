@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import HeaderPrestador from '../componentes/HeaderPrestador';
 import MisReservas from '../componentes/MisReservas';
+import CalendarioReservas from '../componentes/CalendarioReservas';
 import '../estilos/home/index.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -47,6 +48,7 @@ export default function PaginaHome() {
       </div>
       <div className='content-container'>
         {socket && <MisReservas />}
+        <CalendarioReservas />
       </div>
       <div className="footer">
         Amá a tus mascotas con PetCare <span>❤️</span>
