@@ -196,6 +196,12 @@ const MisReservas = () => {
     }
   };
 
+  // Función para poner la primera letra en mayúscula
+  function upper(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   if (isLoading) return <div className="reservas-loading">Cargando reservas...</div>;
 
   if (reservas.length === 0) {
@@ -220,7 +226,7 @@ const MisReservas = () => {
               <span className="reserva-date"> {formatearFechaCorta(reserva.date)} - {reserva.time}</span>
               {localStorage.getItem('prestador') && (<p className="reserva-pet">Usuario: <b>{reserva.user.fullName}</b></p>)}
               <p className="reserva-pet">Mascota: <b>{reserva.pet.name}</b></p>
-              <b className="reserva-status">{reserva.status}</b>
+              <b className="reserva-status">{upper(reserva.status)}</b>
             </div>
 
             {/* Acciones condicionales */}
