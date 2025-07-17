@@ -248,20 +248,18 @@ const Reservar = () => {
         }
       );
 
-      if (resReserva.status === 201) {
-        if (socket && socket.connected) {
-          socket?.emit('reservaRealizada', {
-            proveedorId: proveedor._id, // <- corregido con populate
-            userId, // <- obtenido del localStorage
-            reservaId: resReserva.data._id,
-            fecha: fechaISO,
-            hora: selectedTime,
-            mascota: misMascotas.find(p => p._id === mascotaSeleccionada)?.name || 'Mascota',
-          });
-          console.log('📤 Evento emitido reservaRealizada');
-        } else {
-          console.warn('⚠️ Socket no disponible o no conectado, no se pudo emitir evento');
-        }
+      if (resReserva.status === 201 && socket && socket.connected) {
+
+        socket?.emit('reservaRealizada', {
+          proveedorId: proveedor._id, // <- corregido con populate
+          userId, // <- obtenido del localStorage
+          reservaId: resReserva.data._id,
+          fecha: fechaISO,
+          hora: selectedTime,
+          mascota: misMascotas.find(p => p._id === mascotaSeleccionada)?.name || 'Mascota',
+        });
+        console.log('📤 Evento emitido reservaRealizada');
+
         try {
           await cargarReservas();
 
@@ -271,11 +269,11 @@ const Reservar = () => {
           setSelectedDate(new Date());
 
           toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDate.toLocaleDateString('es-AR')} a las ${selectedTime}`);
-          navigate('/inicio'); // Redirige a la página de inicio después de reservar
-          setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
         } catch (error) {
           console.error('Error al actualizar reservas:', error);
         }
+      } else {
+        console.warn('⚠️ Socket no disponible o no conectado, no se pudo emitir evento');
       }
     } catch (err) {
       console.error('Error al reservar:', err);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaMapMarkerAlt, FaHome, FaBriefcase, FaMapPin, FaTimes } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaHome, FaBriefcase, FaMapPin, FaTimes, FaEdit, FaTrash } from 'react-icons/fa';
 import { useUbicacion } from '../context/UbicacionContext';
 import '../estilos/home/ubicacion.css';
 
@@ -9,7 +9,9 @@ const SelectorUbicacion = ({ oculto }) => {
     ubicacionesGuardadas, 
     seleccionarUbicacion, 
     guardarUbicacion,
-    cargando 
+    eliminarUbicacion, // <-- Añado función para borrar
+    cargando,
+    actualizarUbicacion // <-- Añado función para actualizar
   } = useUbicacion();
 
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -19,6 +21,9 @@ const SelectorUbicacion = ({ oculto }) => {
   const [cargandoSug, setCargandoSug] = useState(false);
   const [detalle, setDetalle] = useState({ nombre: '', tipo: 'casa', referencia: '' });
   const [partes, setPartes] = useState({});
+  const [editando, setEditando] = useState(null); // id de la ubicación en edición
+  const [formEdicion, setFormEdicion] = useState({ nombre: '', tipo: 'casa', referencia: '', provincia: '', ciudad: '', direccion: '' });
+  const [confirmarBorrado, setConfirmarBorrado] = useState(null); // id de la ubicación a borrar
 
   useEffect(() => {
     const handler = (e) => {
@@ -92,6 +97,33 @@ const SelectorUbicacion = ({ oculto }) => {
     }
   };
 
+  // Función para iniciar edición
+  const handleEditar = (ubicacion) => {
+    setEditando(ubicacion._id);
+    setFormEdicion({
+      nombre: ubicacion.nombre,
+      tipo: ubicacion.tipo,
+      referencia: ubicacion.referencia || '',
+      provincia: ubicacion.provincia || '',
+      ciudad: ubicacion.ciudad || '',
+      direccion: `${ubicacion.calle || ''} ${ubicacion.numero || ''}`.trim(),
+    });
+  };
+  // Función para guardar cambios
+  const guardarEdicion = async (e) => {
+    e.preventDefault();
+    try {
+      await actualizarUbicacion(editando, {
+        nombre: formEdicion.nombre,
+        tipo: formEdicion.tipo,
+        referencia: formEdicion.referencia
+      });
+      setEditando(null);
+    } catch (error) {
+      // Manejo de error
+    }
+  };
+
   const getIconoTipo = (tipo) => {
     switch (tipo) {
       case 'casa': return <FaHome />;
@@ -130,6 +162,22 @@ const SelectorUbicacion = ({ oculto }) => {
                       <span className="ubicacion-direccion">{ubicacion.calle} {ubicacion.numero}</span>
                       {ubicacion.referencia && <span className="ubicacion-referencia">{ubicacion.referencia}</span>}
                     </div>
+                    <button
+                      className="editar-ubicacion-btn btn-marron"
+                      type="button"
+                      onClick={e => { e.stopPropagation(); handleEditar(ubicacion); }}
+                      title="Editar"
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="borrar-ubicacion-btn btn-marron"
+                      type="button"
+                      onClick={e => { e.stopPropagation(); setConfirmarBorrado(ubicacion._id); }}
+                      title="Borrar"
+                    >
+                      <FaTrash />
+                    </button>
                   </div>
                 ))}
               </div>
@@ -205,6 +253,88 @@ const SelectorUbicacion = ({ oculto }) => {
             </div>
           </div>
         )}
+        {editando && (
+          <form onSubmit={guardarEdicion} className="formulario-ubicacion">
+            <div className="campo-formulario">
+              <label>Nombre</label>
+              <input type="text" value={formEdicion.nombre} onChange={e => setFormEdicion(f => ({ ...f, nombre: e.target.value }))} required />
+            </div>
+            <div className="campo-formulario">
+              <label>Tipo</label>
+              <div className="tipos-ubicacion" role="radiogroup">
+                {['casa', 'trabajo', 'otro'].map(tipo => (
+                  <button
+                    type="button"
+                    key={tipo}
+                    role="radio"
+                    className={`tipo-btn ${formEdicion.tipo === tipo ? 'activo' : ''}`}
+                    aria-checked={formEdicion.tipo === tipo}
+                    onClick={() => setFormEdicion(f => ({ ...f, tipo }))}
+                  >
+                    {getIconoTipo(tipo)} {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="campo-formulario">
+              <label>Provincia</label>
+              <select
+                value={formEdicion.provincia}
+                onChange={e => setFormEdicion(f => ({ ...f, provincia: e.target.value, ciudad: '', direccion: '' }))}
+                required
+                className="provincia-select formulario-input"
+              >
+                <option value="">Selecciona una provincia</option>
+                {PROVINCIAS.map(p => (
+                  <option key={p} value={p}>{p}</option>
+                ))}
+              </select>
+            </div>
+            <div className="campo-formulario">
+              <label>Ciudad</label>
+              <select
+                value={formEdicion.ciudad}
+                onChange={e => setFormEdicion(f => ({ ...f, ciudad: e.target.value, direccion: '' }))}
+                required
+                className="ciudad-select formulario-input"
+                disabled={!formEdicion.provincia || !CIUDADES[formEdicion.provincia]}
+              >
+                <option value="">Selecciona una ciudad</option>
+                {(CIUDADES[formEdicion.provincia] || []).map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <div className="campo-formulario">
+              <label>Dirección</label>
+              <input
+                type="text"
+                value={formEdicion.direccion}
+                onChange={e => setFormEdicion(f => ({ ...f, direccion: e.target.value }))}
+                required
+                className="formulario-input"
+                disabled={!formEdicion.provincia || !formEdicion.ciudad}
+              />
+            </div>
+            <div className="campo-formulario">
+              <label>Referencia (opcional)</label>
+              <input type="text" value={formEdicion.referencia} onChange={e => setFormEdicion(f => ({ ...f, referencia: e.target.value }))} />
+            </div>
+            <button type="submit" className="guardar-ubicacion">Guardar cambios</button>
+            <button type="button" className="borrar-ubicacion-btn" onClick={() => setEditando(null)}>Cancelar</button>
+          </form>
+        )}
+        {confirmarBorrado && (
+          <div className="modal-confirmacion">
+            <div className="modal-contenido">
+              <h3>¿Seguro que quieres borrar esta ubicación?</h3>
+              <div className="botones-confirmacion">
+                <button className="btn-marron" onClick={() => { eliminarUbicacion(confirmarBorrado); setConfirmarBorrado(null); }}>Sí, borrar</button>
+                <button className="btn-marron" onClick={() => setConfirmarBorrado(null)}>Cancelar</button>
+              </div>
+            </div>
+          </div>
+        )}
       </>
     ) : null;
   }
@@ -247,6 +377,22 @@ const SelectorUbicacion = ({ oculto }) => {
                     <span className="ubicacion-direccion">{ubicacion.calle} {ubicacion.numero}</span>
                     {ubicacion.referencia && <span className="ubicacion-referencia">{ubicacion.referencia}</span>}
                   </div>
+                  <button
+                    className="editar-ubicacion-btn btn-marron"
+                    type="button"
+                    onClick={e => { e.stopPropagation(); handleEditar(ubicacion); }}
+                    title="Editar"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    className="borrar-ubicacion-btn btn-marron"
+                    type="button"
+                    onClick={e => { e.stopPropagation(); setConfirmarBorrado(ubicacion._id); }}
+                    title="Borrar"
+                  >
+                    <FaTrash />
+                  </button>
                 </div>
               ))}
             </div>
@@ -319,6 +465,17 @@ const SelectorUbicacion = ({ oculto }) => {
 
               <button type="submit" className="guardar-ubicacion">Guardar ubicación</button>
             </form>
+          </div>
+        </div>
+      )}
+      {confirmarBorrado && (
+        <div className="modal-confirmacion">
+          <div className="modal-contenido">
+            <h3>¿Seguro que quieres borrar esta ubicación?</h3>
+            <div className="botones-confirmacion">
+              <button className="btn-marron" onClick={() => { eliminarUbicacion(confirmarBorrado); setConfirmarBorrado(null); }}>Sí, borrar</button>
+              <button className="btn-marron" onClick={() => setConfirmarBorrado(null)}>Cancelar</button>
+            </div>
           </div>
         </div>
       )}
