@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../estilos/historialreservashome.css';
+import { getEstadoText } from '../utils/estadoReserva';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -68,7 +69,7 @@ const HistorialReservas = () => {
                 <p><strong>Servicio:</strong> {reserva.provider?.name}</p>
                 <p><strong>Fecha:</strong> {reserva.date} a las {reserva.time}</p>
               </div>
-              <span className="estado estado-pendiente">Pendiente</span>
+              <span className="estado estado-pendiente">{getEstadoText(reserva.status)}</span>
             </li>
           ))}
         </ul>
