@@ -202,7 +202,13 @@ const MisReservas = () => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  if (isLoading) return <div className="reservas-loading">Cargando reservas...</div>;
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '40vh' }}>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   if (reservas.length === 0) {
     return (

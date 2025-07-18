@@ -36,11 +36,12 @@ export default function UsuarioEdit({ isEditMode }) {
   const [country, setCountry] = useState('');
   const [countryChanged, setCountryChanged] = useState(false);
   const [showCountryWarning, setShowCountryWarning] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ✅ Cargar datos desde localStorage y backend
   useEffect(() => {
     const token = localStorage.getItem("token");
-
+    setIsLoading(true);
     fetch(`${API_URL}/auth/perfil`, {
       method: "GET",
       headers: {
@@ -71,8 +72,12 @@ export default function UsuarioEdit({ isEditMode }) {
         if (data.profileImage) {
           setAvatar(data.profileImage);
         }
+        setIsLoading(false);
       })
-      .catch((err) => console.error("Error al obtener perfil:", err));
+      .catch((err) => {
+        console.error("Error al obtener perfil:", err);
+        setIsLoading(false);
+      });
   }, []);
 
   const handleChange = (e) => {
@@ -202,6 +207,14 @@ export default function UsuarioEdit({ isEditMode }) {
       [field]: !prev[field]
     }));
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     

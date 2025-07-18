@@ -20,6 +20,7 @@ const PerfilMascotas = () => {
   const [nuevaVacuna, setNuevaVacuna] = useState('');
   const [nuevaAlergia, setNuevaAlergia] = useState('');
   const API_URL = import.meta.env.VITE_API_URL;
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -62,6 +63,7 @@ const PerfilMascotas = () => {
   };
 
   const handleSave = async () => {
+    setIsLoading(true);
     try {
       const form = new FormData();
       form.append('name', formData.nombre);
@@ -90,8 +92,18 @@ const PerfilMascotas = () => {
     } catch (error) {
       console.error(error);
       toast.error('Error al guardar la mascota');
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container" style={{ position: 'relative' }}>

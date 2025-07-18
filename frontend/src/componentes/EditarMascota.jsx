@@ -160,7 +160,9 @@ export default function EditarMascota() {
 
   if (isLoading) {
     return (
-      <div className="container"><div className="card"><p>Cargando datos de la mascota...</p></div></div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <div className="spinner"></div>
+      </div>
     );
   }
   if (error) {

@@ -41,6 +41,7 @@ const ProviderList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const filterRef = useRef();
+  const [isLoading, setIsLoading] = useState(true);
 
   const params = new URLSearchParams(location.search);
   const ordenActual = params.get('orden');
@@ -121,9 +122,10 @@ const ProviderList = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     const categoria = params.get('categoria');
     const precio = params.get('precio');
-    fetchProviders(categoria, precio);
+    fetchProviders(categoria, precio).finally(() => setIsLoading(false));
   }, [location.search, userCoords]);
 
   useEffect(() => {
@@ -210,6 +212,14 @@ const ProviderList = () => {
   const getSelectedCategory = () => {
     return new URLSearchParams(location.search).get('categoria');
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '40vh' }}>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="provider-list-container" style={{ position: 'relative' }}>

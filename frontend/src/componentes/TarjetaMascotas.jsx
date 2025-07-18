@@ -6,10 +6,12 @@ export default function TarjetaMascotas() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [mascotas, setMascotas] = useState([]);
   const [selectedPet, setSelectedPet] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMascotas = async () => {
+      setIsLoading(true);
       try {
         const token = localStorage.getItem("token");
         const res = await axios.get(`${API_URL}/pets`, {
@@ -21,6 +23,8 @@ export default function TarjetaMascotas() {
         }
       } catch (err) {
         console.error("Error al traer mascotas:", err);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchMascotas();
@@ -34,6 +38,14 @@ export default function TarjetaMascotas() {
   const handlePetClick = (mascota) => {
     setSelectedPet(mascota);
   };
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '40vh' }}>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
 
   return (
     <>
