@@ -233,3 +233,24 @@ input[type="number"] {
     padding: 12px;
   }
 }
+
+.delete-button {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 400px;
+  padding: 15px;
+  background-color: #dc3545;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  text-align: center;
+  font-family: inherit;
+}
+
+.delete-button:active {
+  background-color: #b52a37;
+}
