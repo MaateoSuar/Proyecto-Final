@@ -176,138 +176,140 @@ export default function EditarMascota() {
         onClick={() => navigate('/inicio')}
         aria-label="Volver al inicio"
       >
-        ← Atrás
+        &larr;
       </button>
-      <div className="card">
-        <div className="header">
-          <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
-            {fotoMascota ? (
-              <img src={fotoMascota} alt="Mascota" className="previewFoto" />
-            ) : (
-              <div className="icon">+</div>
-            )}
-          </label>
-          <input
-            id="fotoInput"
-            type="file"
-            accept="image/*"
-            onChange={handleImagenChange}
-            style={{ display: 'none' }}
-          />
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre"
-            value={formData.nombre}
-            onChange={handleInputChange}
-            className="nameInput"
-          />
-        </div>
-        <div className="list">
-          <div className="item">
-            <input
-              type="text"
-              name="raza"
-              placeholder="Raza"
-              value={formData.raza}
-              onChange={handleInputChange}
-              className="input"
-            />
-          </div>
-          <div className="item">
-            <input
-              type="date"
-              name="fechaNacimiento"
-              value={formData.fechaNacimiento}
-              onChange={handleInputChange}
-              className="input"
-            />
-          </div>
-          <div className="item">
-            <input
-              type="number"
-              name="peso"
-              placeholder="Peso (kg)"
-              value={formData.peso}
-              onChange={handleInputChange}
-              className="input"
-            />
-          </div>
-          <div className="item">
-            <span className="label">Esterilizado</span>
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={formData.esterilizado}
-                onChange={handleToggleChange}
-                style={{ display: 'none' }}
-              />
-              <span
-                className="slider"
-                style={{
-                  backgroundColor: formData.esterilizado ? '#a57449' : '#ccc',
-                }}
-              >
-                <span
-                  className="knob"
-                  style={{
-                    transform: formData.esterilizado
-                      ? 'translateX(22px)'
-                      : 'translateX(0px)',
-                  }}
-                />
-              </span>
+      <div className="mascota-card">
+        <div className="card">
+          <div className="header">
+            <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
+              {fotoMascota ? (
+                <img src={fotoMascota} alt="Mascota" className="previewFoto" />
+              ) : (
+                <div className="icon">+</div>
+              )}
             </label>
-          </div>
-          <div className="item full-width">
-            <span className="label">Vacunas</span>
-          </div>
-          <div className="item full-width">
+            <input
+              id="fotoInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImagenChange}
+              style={{ display: 'none' }}
+            />
             <input
               type="text"
-              placeholder="Añadir vacuna"
-              value={nuevaVacuna}
-              onChange={(e) => setNuevaVacuna(e.target.value)}
-              className="input"
-              style={{ flex: 1 }}
+              name="nombre"
+              placeholder="Nombre"
+              value={formData.nombre}
+              onChange={handleInputChange}
+              className="nameInput"
             />
-            <button onClick={handleAddVacuna} className="addBtn">+</button>
           </div>
-          {formData.vacunas.map((vacuna, i) => (
-            <div className="item full-width" key={i}>{vacuna}</div>
-          ))}
-          <div className="item full-width">
-            <span className="label">Alergias</span>
+          <div className="list">
+            <div className="item">
+              <input
+                type="text"
+                name="raza"
+                placeholder="Raza"
+                value={formData.raza}
+                onChange={handleInputChange}
+                className="input"
+              />
+            </div>
+            <div className="item">
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleInputChange}
+                className="input"
+              />
+            </div>
+            <div className="item">
+              <input
+                type="number"
+                name="peso"
+                placeholder="Peso (kg)"
+                value={formData.peso}
+                onChange={handleInputChange}
+                className="input"
+              />
+            </div>
+            <div className="item">
+              <span className="label">Esterilizado</span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={formData.esterilizado}
+                  onChange={handleToggleChange}
+                  style={{ display: 'none' }}
+                />
+                <span
+                  className="slider"
+                  style={{
+                    backgroundColor: formData.esterilizado ? '#a57449' : '#ccc',
+                  }}
+                >
+                  <span
+                    className="knob"
+                    style={{
+                      transform: formData.esterilizado
+                        ? 'translateX(22px)'
+                        : 'translateX(0px)',
+                    }}
+                  />
+                </span>
+              </label>
+            </div>
+            <div className="item full-width">
+              <span className="label">Vacunas</span>
+            </div>
+            <div className="item full-width">
+              <input
+                type="text"
+                placeholder="Añadir vacuna"
+                value={nuevaVacuna}
+                onChange={(e) => setNuevaVacuna(e.target.value)}
+                className="input"
+                style={{ flex: 1 }}
+              />
+              <button onClick={handleAddVacuna} className="addBtn">+</button>
+            </div>
+            {formData.vacunas.map((vacuna, i) => (
+              <div className="item full-width" key={i}>{vacuna}</div>
+            ))}
+            <div className="item full-width">
+              <span className="label">Alergias</span>
+            </div>
+            <div className="item full-width">
+              <input
+                type="text"
+                placeholder="Añadir alergia"
+                value={nuevaAlergia}
+                onChange={(e) => setNuevaAlergia(e.target.value)}
+                className="input"
+                style={{ flex: 1 }}
+              />
+              <button onClick={handleAddAlergia} className="addBtn">+</button>
+            </div>
+            {formData.alergias.map((alergia, i) => (
+              <div className="item full-width" key={i}>{alergia}</div>
+            ))}
           </div>
-          <div className="item full-width">
-            <input
-              type="text"
-              placeholder="Añadir alergia"
-              value={nuevaAlergia}
-              onChange={(e) => setNuevaAlergia(e.target.value)}
-              className="input"
-              style={{ flex: 1 }}
-            />
-            <button onClick={handleAddAlergia} className="addBtn">+</button>
-          </div>
-          {formData.alergias.map((alergia, i) => (
-            <div className="item full-width" key={i}>{alergia}</div>
-          ))}
-        </div>
-        <button className="button" onClick={handleSave} disabled={isLoading}>
-          {isLoading ? 'Guardando...' : 'Guardar Cambios'}
-        </button>
-        {showConfirmDelete ? (
-          <div className="confirm-delete" style={{ backgroundColor: '#dc3545', color: 'white', padding: 10, marginTop: 10, borderRadius: 8, textAlign: 'center' }}>
-            <p>¿Estás seguro de que deseas eliminar esta mascota?</p>
-            <button className="confirm" style={{ margin: 5, padding: '5px 15px', border: 'none', borderRadius: 4, cursor: 'pointer', backgroundColor: '#fff', color: '#dc3545' }} onClick={handleDelete}>Sí, eliminar</button>
-            <button className="cancel" style={{ margin: 5, padding: '5px 15px', border: '1px solid #fff', borderRadius: 4, cursor: 'pointer', backgroundColor: 'transparent', color: '#fff' }} onClick={() => setShowConfirmDelete(false)}>Cancelar</button>
-          </div>
-        ) : (
-          <button className="delete-button" style={{ marginTop: 10, width: '100%', padding: 12, backgroundColor: '#dc3545', color: 'white', fontWeight: 'bold', border: 'none', borderRadius: 8, cursor: 'pointer' }} onClick={handleDelete}>
-            Eliminar Mascota
+          <button className="button" onClick={handleSave} disabled={isLoading}>
+            {isLoading ? 'Guardando...' : 'Guardar Cambios'}
           </button>
-        )}
+          {showConfirmDelete ? (
+            <div className="confirm-delete" style={{ backgroundColor: '#dc3545', color: 'white', padding: 10, marginTop: 10, borderRadius: 8, textAlign: 'center' }}>
+              <p>¿Estás seguro de que deseas eliminar esta mascota?</p>
+              <button className="confirm" style={{ margin: 5, padding: '5px 15px', border: 'none', borderRadius: 4, cursor: 'pointer', backgroundColor: '#fff', color: '#dc3545' }} onClick={handleDelete}>Sí, eliminar</button>
+              <button className="cancel" style={{ margin: 5, padding: '5px 15px', border: '1px solid #fff', borderRadius: 4, cursor: 'pointer', backgroundColor: 'transparent', color: '#fff' }} onClick={() => setShowConfirmDelete(false)}>Cancelar</button>
+            </div>
+          ) : (
+            <button className="delete-button" style={{ marginTop: 10, width: '100%', padding: 12, backgroundColor: '#dc3545', color: 'white', fontWeight: 'bold', border: 'none', borderRadius: 8, cursor: 'pointer' }} onClick={handleDelete}>
+              Eliminar Mascota
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

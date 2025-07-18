@@ -212,15 +212,15 @@ const ProviderList = () => {
   };
 
   return (
-    <div className="provider-list-container">
-      <div className="headerList" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
-        <button className="back-button" style={{ position: 'relative', left: 0 }} onClick={() => navigate('/inicio')}>
-          &larr;
-        </button>
+    <div className="provider-list-container" style={{ position: 'relative' }}>
+      <button className="back-button" onClick={() => navigate('/inicio')}>
+        &larr;
+      </button>
+      <div className="headerList" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
         <h2 className="title" style={{ margin: 0, position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
           Nuestros Servicios
         </h2>
-        <div className="filter-container" style={{ position: 'relative', right: 0 }}>
+        <div className="filter-container" style={{ position: 'absolute', right: 0 }}>
           <select
             value={ordenActual || precioActual || ''}
             onChange={(e) => {

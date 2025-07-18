@@ -100,7 +100,7 @@ const PerfilMascotas = () => {
         onClick={() => navigate('/inicio')}
         aria-label="Volver al inicio"
       >
-        ← Atrás
+        &larr;
       </button>
       <div className="card">
         <div className="header">

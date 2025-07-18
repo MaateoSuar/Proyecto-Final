@@ -212,7 +212,7 @@
 }
 
 .back-button {
-  position: fixed;
+  position: absolute;
   top: 24px;
   left: 24px;
   background: var(--background, #fff8dc);

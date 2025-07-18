@@ -48,8 +48,7 @@ export default function PaginaUsuario() {
         }}
         onClick={() => navigate('/inicio')}
       >
-        <span className="back-arrow">←</span>
-        <span className="back-text"> Atrás</span>
+        <span className="back-arrow">&larr;</span>
       </button>
       <div className={`tabs${activeTab === 'perfil' ? ' tabs-perfil' : ''}`}
         style={{ marginBottom: 0 }}>
@@ -86,7 +85,10 @@ export default function PaginaUsuario() {
           {isEditMode ? '❌' : '✏️'}
         </button>
         )}
+
+        
       </div>
+      
       <div className="tab-content">
         {activeTab === 'perfil' && (
           <div className="perfil-contenedor perfil-espaciado-movil">
@@ -95,12 +97,13 @@ export default function PaginaUsuario() {
             </div>
           </div>
         )}
+
         {activeTab === 'reservas' && (
           <MisReservas />
         )}
       </div>
+      {/* Montamos SelectorUbicacion oculto para que el modal funcione pero sin mostrar el recuadro */}
       <SelectorUbicacion oculto={true} />
     </div>
   );
 }
-
