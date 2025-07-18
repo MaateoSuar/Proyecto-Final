@@ -206,7 +206,7 @@ export default function UsuarioEdit({ isEditMode }) {
   return (
     
     <div className="container">
-      <div className="avatar" onClick={handleAvatarClick}>
+      <div className="avatar avatar-profile" onClick={handleAvatarClick}>
         {avatar ? (
           <img src={avatar} alt="Avatar" className="avatar-img" />
         ) : (

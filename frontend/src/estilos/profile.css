@@ -32,6 +32,13 @@
   width: 150px;
   height: 150px;
   font-size: 70px;
+  margin-top: 0;
+  margin-bottom: 32px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .greeting {
@@ -229,5 +236,3 @@
     align-self: center !important;
   }
 }
-  
-

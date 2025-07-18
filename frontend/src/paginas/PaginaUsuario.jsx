@@ -86,10 +86,7 @@ export default function PaginaUsuario() {
           {isEditMode ? '❌' : '✏️'}
         </button>
         )}
-
-        
       </div>
-      
       <div className="tab-content">
         {activeTab === 'perfil' && (
           <div className="perfil-contenedor perfil-espaciado-movil">
@@ -98,12 +95,10 @@ export default function PaginaUsuario() {
             </div>
           </div>
         )}
-
         {activeTab === 'reservas' && (
           <MisReservas />
         )}
       </div>
-      {/* Montamos SelectorUbicacion oculto para que el modal funcione pero sin mostrar el recuadro */}
       <SelectorUbicacion oculto={true} />
     </div>
   );
