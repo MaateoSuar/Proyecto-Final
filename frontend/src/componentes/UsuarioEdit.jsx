@@ -49,9 +49,17 @@ export default function UsuarioEdit({ isEditMode }) {
     })
       .then((res) => res.json())
       .then((data) => {
+        // Separar fullName si no hay firstName/lastName
+        let firstName = data.firstName || "";
+        let lastName = data.lastName || "";
+        if ((!firstName || !lastName) && data.fullName) {
+          const parts = data.fullName.trim().split(" ");
+          firstName = parts.slice(0, -1).join(" ") || "";
+          lastName = parts.slice(-1).join(" ") || "";
+        }
         setForm({
-          firstName: data.firstName || "",
-          lastName: data.lastName || "",
+          firstName,
+          lastName,
           nickname: data.nickname || "",
           phone: data.phone || "",
           address: data.address || "",
@@ -129,9 +137,8 @@ export default function UsuarioEdit({ isEditMode }) {
   const handleSave = async () => {
     const token = localStorage.getItem("token");
     const formData = new FormData();
-
-    formData.append("firstName", form.firstName);
-    formData.append("lastName", form.lastName);
+    // Unir nombre y apellido en fullName
+    formData.append("fullName", `${form.firstName} ${form.lastName}`.trim());
     formData.append("nickname", form.nickname);
     formData.append("address", form.address);
     formData.append("phone", form.phone);
@@ -158,8 +165,8 @@ export default function UsuarioEdit({ isEditMode }) {
       }
 
       const storedUser = JSON.parse(localStorage.getItem("usuario")) || {};
-      storedUser.firstName = data.firstName || form.firstName;
-      storedUser.lastName = data.lastName || form.lastName;
+      storedUser.firstName = form.firstName;
+      storedUser.lastName = form.lastName;
       storedUser.nickname = data.nickname || form.nickname;
       storedUser.profileImage = data.profileImage || avatar;
       storedUser.country = data.country || country;

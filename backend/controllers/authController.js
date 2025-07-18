@@ -153,8 +153,8 @@ const loginUsuario = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   const userId = req.user.id;
-  const { fullName, address, phone } = req.body;
-  const updateFields = { fullName, address, phone };
+  const { fullName, address, phone, nickname, country } = req.body;
+  const updateFields = { fullName, address, phone, nickname, country };
 
   try {
     if (req.file) {
