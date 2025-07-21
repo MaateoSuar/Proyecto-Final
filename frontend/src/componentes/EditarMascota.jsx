@@ -217,12 +217,12 @@ export default function EditarMascota() {
       {/* Barra lateral */}
       <div className="sidebar">
         {/* Botón de regreso */}
-        <button
+      <button
           className="back-button-sidebar"
-          onClick={() => navigate('/inicio')}
-        >
+        onClick={() => navigate('/inicio')}
+      >
           <span className="back-arrow">&larr;</span>
-        </button>
+      </button>
 
         {/* Menú principal */}
         <div className="sidebar-menu">
@@ -260,128 +260,128 @@ export default function EditarMascota() {
               <div className="list">
                 <div className="item full-width" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <label htmlFor="fotoInput" style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
-                    {fotoMascota ? (
+              {fotoMascota ? (
                       <img src={fotoMascota} alt="Mascota" className="previewFoto editar-mascota-foto" />
-                    ) : (
+              ) : (
                       <div className="icon editar-mascota-foto">+</div>
-                    )}
-                  </label>
-                  <input
-                    id="fotoInput"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImagenChange}
-                    style={{ display: 'none' }}
-                  />
-                  <input
-                    type="text"
-                    name="nombre"
-                    placeholder="Nombre"
-                    value={formData.nombre}
-                    onChange={handleInputChange}
+              )}
+            </label>
+            <input
+              id="fotoInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImagenChange}
+              style={{ display: 'none' }}
+            />
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre"
+              value={formData.nombre}
+              onChange={handleInputChange}
                     className="editar-mascota-input"
                     style={{ marginTop: '10px', textAlign: 'center', fontSize: '18px', fontWeight: 'bold', color: '#a57449' }}
-                  />
-                </div>
+            />
+          </div>
                 <div className="editar-mascota-item">
-                  <input
-                    type="text"
-                    name="raza"
-                    placeholder="Raza"
-                    value={formData.raza}
-                    onChange={handleInputChange}
+              <input
+                type="text"
+                name="raza"
+                placeholder="Raza"
+                value={formData.raza}
+                onChange={handleInputChange}
                     className="editar-mascota-input"
-                  />
-                </div>
+              />
+            </div>
                 <div className="editar-mascota-item">
-                  <input
-                    type="date"
-                    name="fechaNacimiento"
-                    value={formData.fechaNacimiento}
-                    onChange={handleInputChange}
+              <input
+                type="date"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
+                onChange={handleInputChange}
                     className="editar-mascota-input"
-                  />
-                </div>
+              />
+            </div>
                 <div className="editar-mascota-item">
-                  <input
-                    type="number"
-                    name="peso"
-                    placeholder="Peso (kg)"
-                    value={formData.peso}
-                    onChange={handleInputChange}
+              <input
+                type="number"
+                name="peso"
+                placeholder="Peso (kg)"
+                value={formData.peso}
+                onChange={handleInputChange}
                     className="editar-mascota-input"
-                  />
-                </div>
+              />
+            </div>
                 <div className="editar-mascota-item">
-                  <span className="label">Esterilizado</span>
-                  <label className="switch">
-                    <input
-                      type="checkbox"
-                      checked={formData.esterilizado}
-                      onChange={handleToggleChange}
-                      style={{ display: 'none' }}
-                    />
-                    <span
-                      className="slider"
-                      style={{
-                        backgroundColor: formData.esterilizado ? '#a57449' : '#ccc',
-                      }}
-                    >
-                      <span
-                        className="knob"
-                        style={{
-                          transform: formData.esterilizado
-                            ? 'translateX(22px)'
-                            : 'translateX(0px)',
-                        }}
-                      />
-                    </span>
-                  </label>
-                </div>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Esterilizado</span>
+              <label className="switch">
+                <input
+                  type="checkbox"
+                  checked={formData.esterilizado}
+                  onChange={handleToggleChange}
+                  style={{ display: 'none' }}
+                />
+                <span
+                  className="slider"
+                  style={{
+                    backgroundColor: formData.esterilizado ? '#a57449' : '#ccc',
+                  }}
+                >
+                  <span
+                    className="knob"
+                    style={{
+                      transform: formData.esterilizado
+                        ? 'translateX(22px)'
+                        : 'translateX(0px)',
+                    }}
+                  />
+                </span>
+              </label>
+            </div>
                 <div className="editar-mascota-item full-width">
-                  <span className="label">Vacunas</span>
-                </div>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Vacunas</span>
+            </div>
                 <div className="editar-mascota-item full-width">
-                  <input
-                    type="text"
-                    placeholder="Añadir vacuna"
-                    value={nuevaVacuna}
-                    onChange={(e) => setNuevaVacuna(e.target.value)}
+              <input
+                type="text"
+                placeholder="Añadir vacuna"
+                value={nuevaVacuna}
+                onChange={(e) => setNuevaVacuna(e.target.value)}
                     className="editar-mascota-input"
-                    style={{ flex: 1 }}
-                  />
-                  <button onClick={handleAddVacuna} className="addBtn">+</button>
-                </div>
+                style={{ flex: 1 }}
+              />
+              <button onClick={handleAddVacuna} className="addBtn">+</button>
+            </div>
                 <div className="tags-container">
-                  {formData.vacunas.map((vacuna, i) => (
+            {formData.vacunas.map((vacuna, i) => (
                     <div className="vacuna-tag" key={i}>
                       <span>{vacuna}</span>
                       <button className="remove-tag-btn" onClick={() => handleRemoveVacuna(i)}>×</button>
                     </div>
-                  ))}
+            ))}
                 </div>
                 <div className="editar-mascota-item full-width">
-                  <span className="label">Alergias</span>
-                </div>
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Alergias</span>
+            </div>
                 <div className="editar-mascota-item full-width">
-                  <input
-                    type="text"
-                    placeholder="Añadir alergia"
-                    value={nuevaAlergia}
-                    onChange={(e) => setNuevaAlergia(e.target.value)}
+              <input
+                type="text"
+                placeholder="Añadir alergia"
+                value={nuevaAlergia}
+                onChange={(e) => setNuevaAlergia(e.target.value)}
                     className="editar-mascota-input"
-                    style={{ flex: 1 }}
-                  />
-                  <button onClick={handleAddAlergia} className="addBtn">+</button>
-                </div>
+                style={{ flex: 1 }}
+              />
+              <button onClick={handleAddAlergia} className="addBtn">+</button>
+            </div>
                 <div className="tags-container">
-                  {formData.alergias.map((alergia, i) => (
+            {formData.alergias.map((alergia, i) => (
                     <div className="alergia-tag" key={i}>
                       <span>{alergia}</span>
                       <button className="remove-tag-btn" onClick={() => handleRemoveAlergia(i)}>×</button>
                     </div>
-                  ))}
-                </div>
+            ))}
+          </div>
               </div>
               <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '20px' }}>
                 <button className="save-button" onClick={handleSave} disabled={isLoading}>
@@ -389,7 +389,7 @@ export default function EditarMascota() {
                 </button>
                 <button className="save-button" style={{ backgroundColor: '#dc3545', width: '250px' }} onClick={handleDelete}>
                   Eliminar Mascota
-                </button>
+          </button>
               </div>
             </div>
           </div>

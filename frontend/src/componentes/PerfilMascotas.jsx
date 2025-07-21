@@ -128,7 +128,7 @@ const PerfilMascotas = () => {
       >
         &larr;
       </button>
-      <div className="card">
+      <div className="card editar-mascota-card">
         <div className="header">
           <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
             {fotoMascota ? (
@@ -188,7 +188,7 @@ const PerfilMascotas = () => {
           </div>
 
           <div className="item">
-            <span className="label">Esterilizado</span>
+            <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A', lineHeight: '1.2', letterSpacing: '0.2px' }}>Esterilizado</span>
             <label className="switch">
               <input
                 type="checkbox"
@@ -215,7 +215,7 @@ const PerfilMascotas = () => {
           </div>
 
           <div className="item full-width">
-            <span className="label">Vacunas</span>
+            <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A', lineHeight: '1.2', letterSpacing: '0.2px' }}>Vacunas</span>
           </div>
           <div className="item full-width">
             <input
@@ -238,7 +238,7 @@ const PerfilMascotas = () => {
           </div>
 
           <div className="item full-width">
-            <span className="label">Alergias</span>
+            <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A', lineHeight: '1.2', letterSpacing: '0.2px' }}>Alergias</span>
           </div>
           <div className="item full-width">
             <input
@@ -261,7 +261,7 @@ const PerfilMascotas = () => {
           </div>
         </div>
 
-        <button className="button" onClick={handleSave}>
+        <button className="save-button" onClick={handleSave}>
           {isLoading ? 'Guardando...' : 'Guardar Mascota'}
         </button>
       </div>

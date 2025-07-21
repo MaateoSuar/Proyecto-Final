@@ -24,6 +24,7 @@ import Footer from './componentes/Footer';
 import PaginaSobreNosotros from './paginas/PaginaSobreNosotros';
 import PaginaContacto from './paginas/PaginaContacto';
 import { LoadScript } from "@react-google-maps/api";
+import ScrollToTop from './ScrollToTop';
 
 // Componente condicional para el Footer
 const ConditionalFooter = () => {
@@ -33,7 +34,9 @@ const ConditionalFooter = () => {
   const hideFooterRoutes = [
     '/profile',
     '/registromascota',
-    '/editar-mascota'
+    '/editar-mascota',
+    '/sobre-nosotros',
+    '/contacto'
   ];
   
   // Si la ruta actual está en la lista de rutas donde ocultar footer, no mostrar
@@ -49,6 +52,7 @@ export default function App() {
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY} libraries={['places']}>
       <BrowserRouter>
+        <ScrollToTop />
         <UbicacionProvider>
           <ToastContainer
             position="top-right"
