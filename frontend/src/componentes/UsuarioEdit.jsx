@@ -219,6 +219,37 @@ export default function UsuarioEdit({ isEditMode }) {
   return (
     
     <div className="container">
+      {/* Botón de editar en la esquina superior derecha del formulario */}
+      <button 
+        className="edit-button-form"
+        onClick={() => {
+          if (showPasswordForm) {
+            // Si estamos en el formulario de contraseña, volver al perfil en modo visualización
+            setShowPasswordForm(false);
+            // También salir del modo de edición si estaba activo
+            if (isEditMode) {
+              window.dispatchEvent(new CustomEvent('toggleEditMode'));
+            }
+          } else {
+            // Si estamos en el perfil, alternar modo de edición
+            window.dispatchEvent(new CustomEvent('toggleEditMode'));
+          }
+        }}
+        title={showPasswordForm ? "Volver al perfil" : (isEditMode ? "Cerrar edición" : "Editar perfil")}
+      >
+        {showPasswordForm ? '❌' : (isEditMode ? '❌' : '✏️')}
+      </button>
+      
+      {!showPasswordForm ? (
+        <>
+          <form className="form" onSubmit={(e) => e.preventDefault()}>
+        <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
+          {/* Información Personal */}
+          <div className="form-section">
+            <h3 className="profile-section-title">Información Personal</h3>
+            
+            {/* Avatar dentro de la sección de información personal */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', position: 'relative' }}>
       <div className="avatar avatar-profile" onClick={handleAvatarClick}>
         {avatar ? (
           <img src={avatar} alt="Avatar" className="avatar-img" />
@@ -233,11 +264,15 @@ export default function UsuarioEdit({ isEditMode }) {
           style={{ display: "none" }}
           disabled={!isEditMode}
         />
+              </div>
+              {isEditMode && (
+                <div className="avatar-edit-icon">✏️</div>
+              )}
       </div>
 
-      <form className="form" onSubmit={(e) => e.preventDefault()}>
         <label>
           <span>Nombre(s)*</span>
+              <div className="field-container">
           <input
             name="firstName"
             type="text"
@@ -245,10 +280,14 @@ export default function UsuarioEdit({ isEditMode }) {
             onChange={handleChange}
             disabled={!isEditMode}
             required
+                  className={isEditMode ? 'input-editable' : 'input-display'}
           />
+                {isEditMode && <span className="field-edit-icon">✏️</span>}
+              </div>
         </label>
         <label>
           <span>Apellido(s)*</span>
+              <div className="field-container">
           <input
             name="lastName"
             type="text"
@@ -256,10 +295,14 @@ export default function UsuarioEdit({ isEditMode }) {
             onChange={handleChange}
             disabled={!isEditMode}
             required
+                  className={isEditMode ? 'input-editable' : 'input-display'}
           />
+                {isEditMode && <span className="field-edit-icon">✏️</span>}
+              </div>
         </label>
         <label>
           <span>Apodo (opcional)</span>
+              <div className="field-container">
           <input
             name="nickname"
             type="text"
@@ -267,28 +310,53 @@ export default function UsuarioEdit({ isEditMode }) {
             onChange={handleChange}
             disabled={!isEditMode}
             placeholder="Apodo (opcional)"
-          />
+                  className={isEditMode ? 'input-editable' : 'input-display'}
+                />
+                {isEditMode && <span className="field-edit-icon">✏️</span>}
+              </div>
+            </label>
+          </div>
+
+          {/* Información de Contacto */}
+          <div className="form-section">
+            <h3 className="profile-section-title">Información de Contacto</h3>
+            <label>
+              <span>Correo electrónico</span>
+              <div className="field-container">
+                <input
+                  name="email"
+                  type="email"
+                  value={form.email}
+                  disabled
+                  className="input-display"
+                />
+                {isEditMode && <span className="field-edit-icon">✏️</span>}
+              </div>
         </label>
         <label>
           <span>Teléfono</span>
+              <div className="field-container">
           <input
             name="phone"
             type="text"
             value={form.phone}
             onChange={handleChange}
             disabled={!isEditMode}
+                  className={isEditMode ? 'input-editable' : 'input-display'}
           />
+                {isEditMode && <span className="field-edit-icon">✏️</span>}
+              </div>
         </label>
-
         <label>
           <span>Dirección</span>
+              <div className="field-container">
           {ubicacionActual ? (
             <input
               name="address"
               type="text"
               value={`${ubicacionActual.calle || ''}${ubicacionActual.numero ? ' ' + ubicacionActual.numero : ''}`}
               disabled
-              className="input-disabled"
+                    className="input-display"
             />
           ) : (
             isEditMode ? (
@@ -297,7 +365,7 @@ export default function UsuarioEdit({ isEditMode }) {
                 type="text"
                 value={''}
                 placeholder="Seleccionar una ubicación..."
-                className="input-disabled"
+                      className="input-display"
                 readOnly
                 style={{ cursor: 'pointer', background: '#f8f8f8' }}
                 onClick={() => window.dispatchEvent(new CustomEvent('abrirSelectorUbicacion'))}
@@ -308,59 +376,77 @@ export default function UsuarioEdit({ isEditMode }) {
                 type="text"
                 value={''}
                 disabled
-                className="input-disabled"
+                      className="input-display"
               />
             )
           )}
+                {isEditMode && <span className="field-edit-icon">✏️</span>}
+              </div>
         </label>
-
         <label>
           <span>País</span>
+              <div className="field-container">
           {isEditMode ? (
-            countryChanged ? (
-              <>
+                  <div className="select-container">
                 <input
                   name="country"
                   type="text"
-                  value={country}
-                  disabled
-                  className="input-contrasena input-disabled"
-                />
-              </>
-            ) : (
-              <>
+                      value={country || ""}
+                      readOnly
+                      className="input-display"
+                      placeholder="Selecciona tu país"
+                      onClick={() => !countryChanged && document.querySelector('select[name="country"]').focus()}
+                      style={{ cursor: countryChanged ? 'default' : 'pointer' }}
+                    />
                 <select
                   name="country"
-                  value={country}
+                      value={country || ""}
                   onChange={handleCountryChange}
                   required
-                  className="input-contrasena"
+                      className="input-editable"
+                      disabled={countryChanged}
+                      style={{ 
+                        position: 'absolute', 
+                        top: 0, 
+                        left: 0, 
+                        width: '100%', 
+                        height: '100%', 
+                        opacity: 0,
+                        cursor: 'pointer'
+                      }}
                 >
                   <option value="" disabled>Selecciona tu país</option>
                   {countries.map((c) => (
                     <option key={c.code} value={c.name}>{c.name}</option>
                   ))}
                 </select>
-                {showCountryWarning && (
-                  <span style={{ color: '#b85c2a', fontSize: 13, marginTop: 4, display: 'block' }}>
+                    {isEditMode && <span className="field-edit-icon">✏️</span>}
+                    <span className="field-edit-icon" style={{ right: '40px', color: '#000' }}>▼</span>
+                  </div>
+                ) : (
+                  <input
+                    name="country"
+                    type="text"
+                    value={country || ""}
+                    disabled
+                    className="input-display"
+                    placeholder="No especificado"
+                  />
+                )}
+                {isEditMode && !countryChanged && (
+                  <span style={{ color: '#b85c2a', fontSize: 13, marginTop: 4, display: 'block', position: 'absolute', top: '100%', left: 0 }}>
                     Recuerda: solo puedes cambiar el país una vez.
                   </span>
                 )}
-              </>
-            )
-          ) : (
-            <input
-              name="country"
-              type="text"
-              value={country}
-              disabled
-              className="input-contrasena input-disabled"
-            />
-          )}
+              </div>
         </label>
+          </div>
+        </div>
+      </form>
 
-          {isEditMode && (
-            <>
+      {/* Espacio reservado o contenedor de botones */}
+      {isEditMode && !showPasswordForm ? (
+        <div className="buttons-container">
               <button type="submit" className="save-button" onClick={handleSave}>
                 Guardar
               </button>
@@ -368,16 +454,20 @@ export default function UsuarioEdit({ isEditMode }) {
               <button
                 type="button"
                 className="change-password-button"
-                onClick={() => setShowPasswordForm(!showPasswordForm)}
+            onClick={() => setShowPasswordForm(true)}
               >
-                {showPasswordForm ? "Cancelar cambio de contraseña" : "Cambiar contraseña"}
+            CAMBIAR CONTRASEÑA
               </button>
+        </div>
+      ) : (
+        <div className="buttons-space"></div>
+      )}
             </>
-          )}
+      ) : (
+        <div className="password-form-main">
+          <h3 className="password-form-title">CAMBIAR CONTRASEÑA</h3>
 
-
-        {showPasswordForm && (
-          <div className="password-form">
+          <div className="password-form-content">
             <label>
               <span>Contraseña actual</span>
               <div className="password-input-container">
@@ -386,6 +476,7 @@ export default function UsuarioEdit({ isEditMode }) {
                   type={showPasswords.currentPassword ? "text" : "password"}
                   value={passwordForm.currentPassword}
                   onChange={handlePasswordChange}
+                  className="password-input"
                 />
                 <span 
                   className="toggle-password"
@@ -404,7 +495,7 @@ export default function UsuarioEdit({ isEditMode }) {
                   type={showPasswords.newPassword ? "text" : "password"}
                   value={passwordForm.newPassword}
                   onChange={handlePasswordChange}
-                  disabled={!isEditMode}
+                  className="password-input"
                 />
                 <span 
                   className="toggle-password"
@@ -423,6 +514,7 @@ export default function UsuarioEdit({ isEditMode }) {
                   type={showPasswords.confirmPassword ? "text" : "password"}
                   value={passwordForm.confirmPassword}
                   onChange={handlePasswordChange}
+                  className="password-input"
                 />
                 <span 
                   className="toggle-password"
@@ -433,12 +525,22 @@ export default function UsuarioEdit({ isEditMode }) {
               </div>
             </label>
 
-            <button type="button" className="save-password-button" onClick={handleChangePassword}>
-              Actualizar contraseña
+            <div className="password-buttons-container">
+              <button type="button" className="update-password-button" onClick={handleChangePassword}>
+                ACTUALIZAR CONTRASEÑA
+              </button>
+              
+              <button
+                type="button"
+                className="cancel-password-button"
+                onClick={() => setShowPasswordForm(false)}
+              >
+                CANCELAR
             </button>
+            </div>
+          </div>
           </div>
         )}
-      </form>
     </div>
   );
 }

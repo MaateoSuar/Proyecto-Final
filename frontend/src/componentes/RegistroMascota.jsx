@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import '../estilos/PerfilMascotas.css';
+import '../estilos/PaginaUsuario.css';
 
-export default function EditarMascota() {
+export default function RegistroMascota() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const API_URL = import.meta.env.VITE_API_URL;
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [mascotas, setMascotas] = useState([]);
-  const [mascotaSeleccionada, setMascotaSeleccionada] = useState(null);
-
   const [formData, setFormData] = useState({
     nombre: '',
     raza: '',
@@ -26,52 +20,24 @@ export default function EditarMascota() {
   const [fotoMascota, setFotoMascota] = useState(null);
   const [nuevaVacuna, setNuevaVacuna] = useState('');
   const [nuevaAlergia, setNuevaAlergia] = useState('');
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [mascotas, setMascotas] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const cargarDatosMascota = async () => {
-      if (!id) {
-        setError('ID de mascota no proporcionado');
-        setIsLoading(false);
-        return;
-      }
+    const cargarMascotas = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
         const token = localStorage.getItem('token');
-        
-        // Cargar la mascota específica
-        const response = await axios.get(`${API_URL}/pets/${id}`, {
+        const response = await axios.get(`${API_URL}/pets`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        const mascota = response.data;
-        setMascotaSeleccionada(mascota);
-        setFormData({
-          nombre: mascota.name || '',
-          raza: mascota.breed || '',
-          fechaNacimiento: mascota.birthdate ? mascota.birthdate.split('T')[0] : new Date().toISOString().split('T')[0],
-          peso: mascota.weight || '',
-          esterilizado: Boolean(mascota.spayed),
-          vacunas: Array.isArray(mascota.vaccines) ? mascota.vaccines : [],
-          alergias: Array.isArray(mascota.allergies) ? mascota.allergies : [],
-        });
-        if (mascota.image) {
-          setFotoMascota(mascota.image);
-        }
-
-        // Cargar todas las mascotas del usuario
-        const responseMascotas = await axios.get(`${API_URL}/pets`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setMascotas(responseMascotas.data);
+        setMascotas(response.data);
       } catch (error) {
-        setError(error.response?.data?.message || 'Error al cargar los datos de la mascota');
-      } finally {
-        setIsLoading(false);
+        console.error('Error al cargar mascotas:', error);
       }
     };
-    cargarDatosMascota();
-  }, [id, API_URL]);
+    cargarMascotas();
+  }, [API_URL]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -127,75 +93,38 @@ export default function EditarMascota() {
     });
   };
 
-  const handleCambiarMascota = (mascota) => {
-    setMascotaSeleccionada(mascota);
-    setFormData({
-      nombre: mascota.name || '',
-      raza: mascota.breed || '',
-      fechaNacimiento: mascota.birthdate ? mascota.birthdate.split('T')[0] : new Date().toISOString().split('T')[0],
-      peso: mascota.weight || '',
-      esterilizado: Boolean(mascota.spayed),
-      vacunas: Array.isArray(mascota.vaccines) ? mascota.vaccines : [],
-      alergias: Array.isArray(mascota.allergies) ? mascota.allergies : [],
-    });
-    setFotoMascota(mascota.image || null);
-    // Actualizar la URL sin recargar la página
-    navigate(`/editar-mascota/${mascota._id}`, { replace: true });
-  };
-
   const handleSave = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      setError(null);
-      const token = localStorage.getItem('token');
       const form = new FormData();
       form.append('name', formData.nombre);
+      form.append('type', 'dog');
       form.append('breed', formData.raza);
       form.append('birthdate', formData.fechaNacimiento);
       form.append('weight', formData.peso);
       form.append('spayed', formData.esterilizado);
-      form.append('vaccines', JSON.stringify(formData.vacunas));
-      form.append('allergies', JSON.stringify(formData.alergias));
-      if (fotoMascota && !fotoMascota.startsWith('http')) {
+      form.append("vaccines", JSON.stringify(formData.vacunas));
+      form.append("allergies", JSON.stringify(formData.alergias));
+
+      if (fotoMascota) {
         const blob = await (await fetch(fotoMascota)).blob();
         form.append('image', blob, 'mascota.jpg');
       }
-      await axios.put(`${API_URL}/pets/${id}`, form, {
+
+      await axios.post(`${API_URL}/pets`, form, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      toast.success('¡Mascota actualizada con éxito!');
-      navigate('/inicio');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Error al actualizar la mascota');
-      setError(error.response?.data?.message || 'Error al actualizar la mascota');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  const handleDelete = async () => {
-    if (!showConfirmDelete) {
-      setShowConfirmDelete(true);
-      return;
-    }
-    try {
-      setIsLoading(true);
-      setError(null);
-      const token = localStorage.getItem('token');
-      await axios.delete(`${API_URL}/pets/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      toast.success('Mascota eliminada con éxito');
+      toast.success('¡Mascota registrada con éxito!');
       navigate('/inicio');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error al eliminar la mascota');
-      setError(error.response?.data?.message || 'Error al eliminar la mascota');
+      console.error(error);
+      toast.error('Error al guardar la mascota');
     } finally {
       setIsLoading(false);
-      setShowConfirmDelete(false);
     }
   };
 
@@ -204,11 +133,6 @@ export default function EditarMascota() {
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
         <div className="spinner"></div>
       </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="container"><div className="card"><p>{error}</p><button className="button" onClick={() => navigate('/inicio')}>Volver al inicio</button></div></div>
     );
   }
 
@@ -226,12 +150,12 @@ export default function EditarMascota() {
 
         {/* Menú principal */}
         <div className="sidebar-menu">
-          <div className="sidebar-title">Mis Mascotas</div>
+          <div className="sidebar-title">Mascotas Registradas</div>
           {mascotas.map((mascota) => (
             <button 
               key={mascota._id}
-              className={`sidebar-item ${mascotaSeleccionada?._id === mascota._id ? 'active' : ''}`}
-              onClick={() => handleCambiarMascota(mascota)}
+              className="sidebar-item"
+              onClick={() => navigate(`/editar-mascota/${mascota._id}`)}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
             >
               {mascota.image ? (
@@ -384,11 +308,8 @@ export default function EditarMascota() {
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '20px' }}>
-                <button className="save-button" onClick={handleSave} disabled={isLoading}>
-                  {isLoading ? 'Guardando...' : 'Guardar'}
-                </button>
-                <button className="save-button" style={{ backgroundColor: '#dc3545', width: '250px' }} onClick={handleDelete}>
-                  Eliminar Mascota
+                <button className="save-button" style={{ width: '250px' }} onClick={handleSave} disabled={isLoading}>
+                  {isLoading ? 'Guardando...' : 'Guardar Mascota'}
                 </button>
               </div>
             </div>
@@ -397,4 +318,4 @@ export default function EditarMascota() {
       </div>
     </div>
   );
-}
+} 

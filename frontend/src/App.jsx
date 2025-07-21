@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UbicacionProvider } from './context/UbicacionContext';
@@ -25,6 +25,25 @@ import PaginaSobreNosotros from './paginas/PaginaSobreNosotros';
 import PaginaContacto from './paginas/PaginaContacto';
 import { LoadScript } from "@react-google-maps/api";
 
+// Componente condicional para el Footer
+const ConditionalFooter = () => {
+  const location = useLocation();
+  
+  // Rutas donde NO debe aparecer el footer
+  const hideFooterRoutes = [
+    '/profile',
+    '/registromascota',
+    '/editar-mascota'
+  ];
+  
+  // Si la ruta actual está en la lista de rutas donde ocultar footer, no mostrar
+  if (hideFooterRoutes.some(route => location.pathname.startsWith(route))) {
+    return null;
+  }
+  
+  // En todas las demás rutas, mostrar el footer
+  return <Footer />;
+};
 
 export default function App() {
   return (
@@ -171,7 +190,7 @@ export default function App() {
             />
             <Route path="*" element={<Navigate to="/inicio" replace />} />
           </Routes>
-          <Footer />
+          <ConditionalFooter />
         </UbicacionProvider>
       </BrowserRouter>
     </LoadScript>

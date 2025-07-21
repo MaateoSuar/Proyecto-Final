@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import '../estilos/PerfilMascotas.css';
+import '../estilos/perfilmascotas.css';
 
 const PerfilMascotas = () => {
   const navigate = useNavigate();
@@ -60,6 +60,20 @@ const PerfilMascotas = () => {
       });
       setNuevaAlergia('');
     }
+  };
+
+  const handleRemoveVacuna = (index) => {
+    setFormData({
+      ...formData,
+      vacunas: formData.vacunas.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleRemoveAlergia = (index) => {
+    setFormData({
+      ...formData,
+      alergias: formData.alergias.filter((_, i) => i !== index),
+    });
   };
 
   const handleSave = async () => {
@@ -214,9 +228,14 @@ const PerfilMascotas = () => {
             />
             <button onClick={handleAddVacuna} className="addBtn">+</button>
           </div>
-          {formData.vacunas.map((vacuna, i) => (
-            <div className="item full-width" key={i}>{vacuna}</div>
-          ))}
+          <div className="tags-container">
+            {formData.vacunas.map((vacuna, i) => (
+              <div className="vacuna-tag" key={i}>
+                <span>{vacuna}</span>
+                <button className="remove-tag-btn" onClick={() => handleRemoveVacuna(i)}>×</button>
+              </div>
+            ))}
+          </div>
 
           <div className="item full-width">
             <span className="label">Alergias</span>
@@ -232,13 +251,18 @@ const PerfilMascotas = () => {
             />
             <button onClick={handleAddAlergia} className="addBtn">+</button>
           </div>
-          {formData.alergias.map((alergia, i) => (
-            <div className="item full-width" key={i}>{alergia}</div>
-          ))}
+          <div className="tags-container">
+            {formData.alergias.map((alergia, i) => (
+              <div className="alergia-tag" key={i}>
+                <span>{alergia}</span>
+                <button className="remove-tag-btn" onClick={() => handleRemoveAlergia(i)}>×</button>
+              </div>
+            ))}
+          </div>
         </div>
 
         <button className="button" onClick={handleSave}>
-          Guardar
+          {isLoading ? 'Guardando...' : 'Guardar Mascota'}
         </button>
       </div>
     </div>

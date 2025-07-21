@@ -5,7 +5,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 0 10px;
+  padding: 15px 10px 0 10px;
   margin: 0 auto;
   max-width: 800px;
 }
@@ -41,6 +41,19 @@
   justify-content: center;
 }
 
+/* Avatar dentro de la sección de información personal */
+.form-section .avatar {
+  width: 120px;
+  height: 120px;
+  font-size: 60px;
+  margin: 10px auto 0px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #8B5C2A;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .greeting {
     display: flex;
     flex-direction: column;
@@ -59,18 +72,20 @@
 
 .form {
   width: 100%;
-  max-width: 400px;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-top: 0;
+  margin-top: 20px;
+  min-height: 400px;
 }
 
 .form label {
   display: flex;
   flex-direction: column;
   font-size: 12px;
-  color: #bfaf9b;
+  color: #8B5C2A;
+  font-weight: bold;
 }
 
 .form input {
@@ -130,34 +145,52 @@
 .save-button {
   background-color: #b77b4b;
   color: white;
-  padding: 12px;
+  padding: 9px 30px;
   border: none;
   border-radius: 8px;
   font-weight: bold;
-  margin-top: 20px;
+  font-size: 16px;
   cursor: pointer;
-  transition: box-shadow 0.2s ease;
+  transition: all 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  width: 200px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .save-button:hover {
+  background-color: #a57449;
+  transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .change-password-button {
   background-color: #dce8c3;
   color: #4a5e32;
-  padding: 12px;
+  padding: 9px 30px;
   border: none;
   border-radius: 8px;
   font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 260px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .change-password-button:hover {
   background-color: #c8d9b7;
+  transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -167,6 +200,28 @@
   border-radius: 8px;
   margin-top: 10px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor para los botones */
+.buttons-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 0px;
+  padding-top: 20px;
+  width: 100%;
+  flex-wrap: nowrap;
+  height: 80px;
+  min-height: 80px;
+}
+
+/* Espacio reservado para mantener la posición del formulario */
+.buttons-space {
+  height: 80px;
+  min-height: 80px;
+  margin-top: 0px;
+  width: 100%;
 }
 
 .save-password-button {
@@ -263,4 +318,363 @@
     margin-bottom: 8px !important;
     align-self: center !important;
   }
+  
+  /* En móviles, las secciones se apilan verticalmente */
+  .form > div {
+    flex-direction: column !important;
+  }
+  
+  .form-section {
+    margin-bottom: 0;
+  }
+  
+  /* En móviles, restaurar bordes redondeados */
+  .form-section:first-child {
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-right: none;
+    border-bottom: 1px solid rgba(165, 116, 73, 0.1);
+  }
+  
+  .form-section:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 12px;
+    border-top-right-radius: 0;
+  }
+
+  /* Botones en móviles */
+  .buttons-container {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+    height: 120px;
+    min-height: 120px;
+  }
+
+  .buttons-space {
+    height: 120px;
+    min-height: 120px;
+    margin-top: 20px;
+  }
+
+  .save-button {
+    padding: 12px 20px;
+    font-size: 14px;
+    width: 180px;
+  }
+
+  .change-password-button {
+    padding: 12px 20px;
+    font-size: 14px;
+    width: 180px;
+  }
+}
+
+/* Estilos para las secciones del formulario */
+.form-section {
+  background-color: #fff4da;
+  padding: 15px 20px 15px 20px;
+  border-radius: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+  border: none;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: 100%;
+}
+
+/* Contenedor principal del formulario */
+.form > div {
+  background-color: #fff4da;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(165, 116, 73, 0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  min-height: 380px; /* Altura mínima aún más reducida */
+}
+
+/* Primera sección (izquierda) */
+.form-section:first-child {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-right: 1px solid rgba(165, 116, 73, 0.1);
+}
+
+/* Segunda sección (derecha) */
+.form-section:last-child {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.section-title {
+  color: #8B5C2A;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  padding: 10px 0;
+  text-align: center;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+/* Clase específica para los títulos de secciones del perfil */
+.profile-section-title {
+  color: #8B5C2A !important;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 0;
+  padding: 8px 0 12px 0;
+  border-bottom: 2px solid #C8D9B7;
+  text-align: center;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.form-section .form label {
+  margin-bottom: 10px;
+}
+
+/* Espacio adicional para el campo de correo electrónico */
+.form-section label:has(input[name="email"]) {
+  margin-bottom: 20px;
+}
+
+  .form-section .form input,
+  .form-section .form select {
+    margin-top: 6px;
+  }
+
+/* Estilos para los estados de visualización y edición */
+.field-container {
+  position: relative;
+  width: 100%;
+  height: 44px; /* Altura fija para el contenedor */
+  margin-bottom: 10px; /* Espaciado aún más reducido entre campos */
+}
+
+/* Asegurar que ambas secciones tengan la misma altura */
+.form-section:first-child {
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.form-section:last-child {
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.field-edit-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #b77b4b;
+  font-size: 16px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Icono de lápiz específico para el campo país */
+.field-container .field-edit-icon:first-of-type {
+  color: #ff8c00;
+}
+
+.avatar-edit-icon {
+  position: absolute;
+  bottom: 0px;
+  right: 70px;
+  background-color: #fff4da;
+  border: 1px solid #000;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #FF69B4;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Estados de los inputs - Ambos estados iguales */
+.input-display,
+.input-editable {
+  background-color: #fffadd !important;
+  color: #000 !important;
+  border: 2px solid transparent !important;
+  cursor: text !important;
+  padding-right: 40px !important; /* Espacio para el icono de lápiz */
+  height: 44px !important; /* Altura fija para todos los campos */
+  box-sizing: border-box !important;
+}
+
+.input-display:hover,
+.input-display:focus,
+.input-editable:hover {
+  border-color: rgba(165, 116, 73, 0.5) !important;
+}
+
+.input-display:focus,
+.input-editable:focus {
+  border-color: #a57449 !important;
+  box-shadow: 0 2px 8px rgba(165, 116, 73, 0.3) !important;
+}
+
+/* Contenedor para select */
+.select-container {
+  position: relative;
+  width: 100%;
+  height: 44px; /* Altura fija para el select */
+}
+
+.select-container select {
+  padding-right: 40px;
+  height: 44px !important; /* Altura fija para el select */
+  box-sizing: border-box !important;
+}
+
+.select-container .field-edit-icon {
+  pointer-events: none;
+}
+
+/* Formulario de contraseña en página principal */
+.password-form-main {
+  background-color: #fff4da;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(165, 116, 73, 0.1);
+  max-width: 450px;
+  margin: 40px auto 0 auto;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+
+
+/* Título del formulario */
+.password-form-title {
+  color: #8B5C2A;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0 0 30px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(165, 116, 73, 0.1);
+  text-transform: uppercase;
+}
+
+.password-form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  flex: 1;
+}
+
+.password-form-content label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.password-form-content label span {
+  color: #8B5C2A;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.password-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border: 1px solid rgba(165, 116, 73, 0.2);
+  border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  color: #000000;
+  box-sizing: border-box;
+}
+
+.password-input:focus {
+  outline: none;
+  border-color: #a57449;
+  box-shadow: 0 0 0 2px rgba(165, 116, 73, 0.1);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+  color: #8B5C2A;
+}
+
+.password-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.update-password-button {
+  background-color: #a57449;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.update-password-button:hover {
+  background-color: #8d5b3e;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-password-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-password-button:hover {
+  background-color: #c0392b;
 }
