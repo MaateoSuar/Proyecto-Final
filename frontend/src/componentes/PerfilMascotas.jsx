@@ -155,40 +155,40 @@ const PerfilMascotas = () => {
         </div>
 
         <div className="list">
-          <div className="item">
+          <div className="editar-mascota-item">
             <input
               type="text"
               name="raza"
               placeholder="Raza"
               value={formData.raza}
               onChange={handleInputChange}
-              className="input"
+              className="editar-mascota-input"
             />
           </div>
 
-          <div className="item">
+          <div className="editar-mascota-item">
             <input
               type="date"
               name="fechaNacimiento"
               value={formData.fechaNacimiento}
               onChange={handleInputChange}
-              className="input"
+              className="editar-mascota-input"
             />
           </div>
 
-          <div className="item">
+          <div className="editar-mascota-item">
             <input
               type="number"
               name="peso"
               placeholder="Peso (kg)"
               value={formData.peso}
               onChange={handleInputChange}
-              className="input"
+              className="editar-mascota-input"
             />
           </div>
 
-          <div className="item">
-            <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A', lineHeight: '1.2', letterSpacing: '0.2px' }}>Esterilizado</span>
+          <div className="editar-mascota-item">
+            <span className="titulo-seccion-mascota">Esterilizado</span>
             <label className="switch">
               <input
                 type="checkbox"
@@ -215,49 +215,49 @@ const PerfilMascotas = () => {
           </div>
 
           <div className="item full-width">
-            <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A', lineHeight: '1.2', letterSpacing: '0.2px' }}>Vacunas</span>
+            <span className="titulo-seccion-mascota">Vacunas</span>
           </div>
-          <div className="item full-width">
+          <div className="editar-mascota-item">
             <input
               type="text"
               placeholder="Añadir vacuna"
               value={nuevaVacuna}
               onChange={(e) => setNuevaVacuna(e.target.value)}
-              className="input"
+              className="editar-mascota-input"
               style={{ flex: 1 }}
             />
             <button onClick={handleAddVacuna} className="addBtn">+</button>
           </div>
           <div className="tags-container">
-            {formData.vacunas.map((vacuna, i) => (
+          {formData.vacunas.map((vacuna, i) => (
               <div className="vacuna-tag" key={i}>
                 <span>{vacuna}</span>
                 <button className="remove-tag-btn" onClick={() => handleRemoveVacuna(i)}>×</button>
               </div>
-            ))}
+          ))}
           </div>
 
           <div className="item full-width">
-            <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A', lineHeight: '1.2', letterSpacing: '0.2px' }}>Alergias</span>
+            <span className="titulo-seccion-mascota">Alergias</span>
           </div>
-          <div className="item full-width">
+          <div className="editar-mascota-item">
             <input
               type="text"
               placeholder="Añadir alergia"
               value={nuevaAlergia}
               onChange={(e) => setNuevaAlergia(e.target.value)}
-              className="input"
+              className="editar-mascota-input"
               style={{ flex: 1 }}
             />
             <button onClick={handleAddAlergia} className="addBtn">+</button>
           </div>
           <div className="tags-container">
-            {formData.alergias.map((alergia, i) => (
+          {formData.alergias.map((alergia, i) => (
               <div className="alergia-tag" key={i}>
                 <span>{alergia}</span>
                 <button className="remove-tag-btn" onClick={() => handleRemoveAlergia(i)}>×</button>
               </div>
-            ))}
+          ))}
           </div>
         </div>
 

@@ -101,7 +101,7 @@ export default function PaginaContacto() {
             <button className="contacto-cta-btn-primary" onClick={() => window.open(`mailto:${EMAIL}`, '_blank')}>Enviar Email</button>
             <button className="contacto-cta-btn-secondary" onClick={() => window.open(`tel:${PHONE}`, '_blank')}>Llamar Ahora</button>
           </div>
-        </div>
+      </div>
       </section>
     </div>
   );

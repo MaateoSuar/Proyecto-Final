@@ -57,7 +57,7 @@ export default function PaginaSobreNosotros() {
         <div className="sobre-cta">
           <h2>¿Listo para darle a tu mascota el mejor cuidado?</h2>
           <button className="sobre-cta-btn" onClick={() => navigate('/inicio')}>Comenzar Ahora</button>
-        </div>
+      </div>
       </section>
     </div>
   );

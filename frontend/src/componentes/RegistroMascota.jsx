@@ -150,7 +150,7 @@ export default function RegistroMascota() {
 
         {/* Menú principal */}
         <div className="sidebar-menu">
-          <div className="sidebar-title">Mascotas Registradas</div>
+          <div className="sidebar-title">Mis mascotas</div>
           {mascotas.map((mascota) => (
             <button 
               key={mascota._id}
@@ -237,7 +237,7 @@ export default function RegistroMascota() {
                   />
                 </div>
                 <div className="editar-mascota-item">
-                  <span className="label">Esterilizado</span>
+                  <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Esterilizado</span>
                   <label className="switch">
                     <input
                       type="checkbox"
@@ -263,7 +263,7 @@ export default function RegistroMascota() {
                   </label>
                 </div>
                 <div className="editar-mascota-item full-width">
-                  <span className="label">Vacunas</span>
+                  <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Vacunas</span>
                 </div>
                 <div className="editar-mascota-item full-width">
                   <input
@@ -285,7 +285,7 @@ export default function RegistroMascota() {
                   ))}
                 </div>
                 <div className="editar-mascota-item full-width">
-                  <span className="label">Alergias</span>
+                  <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Alergias</span>
                 </div>
                 <div className="editar-mascota-item full-width">
                   <input

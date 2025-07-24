@@ -242,6 +242,13 @@ export default function EditarMascota() {
               <span style={{ textAlign: 'left' }}>{mascota.name || 'Sin nombre'}</span>
             </button>
           ))}
+          <button
+            className="sidebar-item"
+            style={{marginTop: '24px', background: '#e0c9a6', color: '#8B5C2A', fontWeight: 'bold', fontSize: '16px'}}
+            onClick={() => navigate('/registromascota')}
+          >
+            ➕ Crear Mascota
+          </button>
         </div>
 
         {/* Enlaces adicionales */}
@@ -383,13 +390,13 @@ export default function EditarMascota() {
             ))}
           </div>
               </div>
-              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '20px' }}>
+              <div className="botones-editar-mascota" style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '20px' }}>
                 <button className="save-button" onClick={handleSave} disabled={isLoading}>
                   {isLoading ? 'Guardando...' : 'Guardar'}
                 </button>
                 <button className="save-button" style={{ backgroundColor: '#dc3545', width: '250px' }} onClick={handleDelete}>
                   Eliminar Mascota
-          </button>
+                </button>
               </div>
             </div>
           </div>

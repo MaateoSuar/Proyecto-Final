@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaFilter, FaSearch } from 'react-icons/fa';
 import '../estilos/ProviderList.css';
+import '../estilos/PaginaUsuario.css';
 
 const categories = [
   { label: 'Peluquería', value: 'peluqueria' },
@@ -222,99 +223,140 @@ const ProviderList = () => {
   }
 
   return (
-    <div className="provider-list-container" style={{ position: 'relative' }}>
-      <button className="back-button" onClick={() => navigate('/inicio')}>
-        &larr;
-      </button>
-      <div className="headerList" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-        <h2 className="title" style={{ margin: 0, position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          Nuestros Servicios
-        </h2>
-        <div className="filter-container" style={{ position: 'absolute', right: 0 }}>
-          <select
-            value={ordenActual || precioActual || ''}
-            onChange={(e) => {
-              const value = e.target.value;
-              const newParams = new URLSearchParams(location.search);
-
-              if (value === '') {
-                newParams.delete('orden');
-                newParams.delete('precio');
-              } else if (value === 'cercania') {
-                newParams.set('orden', 'cercania');
-                newParams.delete('precio');
-              } else {
-                newParams.set('precio', value);
-                newParams.delete('orden');
-              }
-
-              navigate({ search: newParams.toString() }, { replace: true });
-            }}
-            className="order-select"
-          >
-            <option value="">Ordenar por...</option>
-            <option value="asc">Precio: Menor - Mayor</option>
-            <option value="desc">Precio: Mayor - Menor</option>
-            <option value="cercania">Más cercanos</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="search-container">
-        <div className="search-wrapper">
-          <FaSearch className="search-icon" />
-          <input
-            type="text"
-            placeholder="Buscar por nombre..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
-          />
-        </div>
-      </div>
-
-      <div className="filtros">
-        {categories.map(cat => (
+    <div className="pagina-usuario">
+      {/* Barra lateral igual a profile */}
+      <div className="sidebar">
+        <button
+          className="back-button-sidebar"
+          onClick={() => navigate('/inicio')}
+        >
+          <span className="back-arrow">&larr;</span>
+        </button>
+        <div style={{
+          textAlign: 'center',
+          fontWeight: 700,
+          fontSize: '22px',
+          color: '#8B5C2A',
+          borderBottom: '1.5px solid #e0c9a6',
+          paddingBottom: '14px',
+          marginTop: '-20px',
+          marginBottom: '32px',
+          letterSpacing: '0.5px'
+        }}>Servicios</div>
+        <div className="sidebar-menu" style={{marginTop: '0px'}}>
           <button
-            key={cat.value}
-            onClick={() => handleCategoryClick(cat.value)}
-            className={`category-button ${getSelectedCategory() === cat.value ? 'active' : ''}`}
+            className={`sidebar-item ${getSelectedCategory() === 'peluqueria' ? 'active' : ''}`}
+            onClick={() => handleCategoryClick('peluqueria')}
           >
-            {cat.label}
+            ✂️ Peluquería
           </button>
-        ))}
-      </div>
-
-      <h3 className="subtitle">Especialistas disponibles</h3>
-
-      {filteredProviders.length === 0 ? (
-        <p className="no-providers">No se encontraron proveedores para esta búsqueda.</p>
-      ) : (
-        <div className="providers-grid">
-          {filteredProviders.map(provider => (
-            <div className="provider-card" key={provider._id} onClick={() => handleProviderClick(provider)}>
-              <img
-                src={provider.profileImage?.replace(/\u200E|\u202A|\u202C/g, '')}
-                alt={provider.name}
-                className="provider-image"
-              />
-              <div className="provider-info">
-                <h3>{provider.name}</h3>
-                <p>
-                  {upper(renderServices(provider.services))} · 💰
-                  {provider.precioFiltrado !== null && provider.precioFiltrado !== undefined
-                    ? `$${provider.precioFiltrado}`
-                    : 'Sin precio'}
-                </p>
-                <p>
-                  ⭐ {formatRating(provider.rating?.average)} · 📍{' '}
-                  {provider.distancia ? `${provider.distancia.toFixed(1)} km` : `No disponible`}
-                </p>
-              </div>
-            </div>
-          ))}
+          <button
+            className={`sidebar-item ${getSelectedCategory() === 'paseo' ? 'active' : ''}`}
+            onClick={() => handleCategoryClick('paseo')}
+          >
+            🐾 Paseo
+          </button>
+          <button
+            className={`sidebar-item ${getSelectedCategory() === 'cuidado' ? 'active' : ''}`}
+            onClick={() => handleCategoryClick('cuidado')}
+          >
+            ❤️ Cuidado
+          </button>
         </div>
-      )}
+        <div className="sidebar-links">
+          <div className="sidebar-link">PetCare®</div>
+          <div className="sidebar-link" onClick={() => navigate('/sobre-nosotros')}>Sobre nosotros</div>
+          <div className="sidebar-link" onClick={() => navigate('/contacto')}>Contacto</div>
+        </div>
+      </div>
+      {/* Contenido principal ajustado */}
+      <div className="main-content">
+        <div className="provider-list-container" style={{ position: 'relative' }}>
+          <div className="headerList" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <h2 className="title" style={{ margin: 0, position: 'absolute', left: '50%', transform: 'translateX(-50%)', color: '#8B5C2A' }}>
+              Nuestros Servicios
+            </h2>
+            <div className="filter-container" style={{ position: 'absolute', right: 0 }}>
+              <select
+                value={ordenActual || precioActual || ''}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const newParams = new URLSearchParams(location.search);
+                  if (value === '') {
+                    newParams.delete('orden');
+                    newParams.delete('precio');
+                  } else if (value === 'cercania') {
+                    newParams.set('orden', 'cercania');
+                    newParams.delete('precio');
+                  } else {
+                    newParams.set('precio', value);
+                    newParams.delete('orden');
+                  }
+                  navigate({ search: newParams.toString() }, { replace: true });
+                }}
+                className="order-select"
+              >
+                <option value="">Ordenar por...</option>
+                <option value="asc">Precio: Menor - Mayor</option>
+                <option value="desc">Precio: Mayor - Menor</option>
+                <option value="cercania">Más cercanos</option>
+              </select>
+            </div>
+          </div>
+          <div className="search-container">
+            <div className="search-wrapper">
+              <FaSearch className="search-icon" />
+              <input
+                type="text"
+                placeholder="Buscar por nombre..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+          </div>
+          <div className="filtros filtros-categorias-movil">
+            {categories.map(cat => (
+              <button
+                key={cat.value}
+                onClick={() => handleCategoryClick(cat.value)}
+                className={`category-button ${getSelectedCategory() === cat.value ? 'active' : ''}`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+          <h3 className="subtitle" style={{ color: '#8B5C2A' }}>Especialistas disponibles</h3>
+          {filteredProviders.length === 0 ? (
+            <p className="no-providers">No se encontraron proveedores para esta búsqueda.</p>
+          ) : (
+            <div className="providers-grid">
+              {filteredProviders.map(provider => (
+                <div className="provider-card" key={provider._id} onClick={() => handleProviderClick(provider)}>
+                  <img
+                    src={provider.profileImage?.replace(/\u200E|\u202A|\u202C/g, '')}
+                    alt={provider.name}
+                    className="provider-image"
+                  />
+                  <div className="provider-info">
+                    <h3>{provider.name}</h3>
+                    <p>
+                      {upper(renderServices(provider.services))} · 💰
+                      {provider.precioFiltrado !== null && provider.precioFiltrado !== undefined
+                        ? `$${provider.precioFiltrado}`
+                        : 'Sin precio'}
+                    </p>
+                    <p>
+                      ⭐ {formatRating(provider.rating?.average)} · 📍{' '}
+                      {provider.distancia ? `${provider.distancia.toFixed(1)} km` : `No disponible`}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
