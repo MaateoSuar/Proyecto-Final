@@ -1,6 +1,7 @@
 // src/paginas/PaginaHomePrestador.jsx
 import React, { useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
 import HeaderPrestador from '../componentes/HeaderPrestador';
 import MisReservas from '../componentes/MisReservas';
 import CalendarioReservas from '../componentes/CalendarioReservas';
@@ -11,6 +12,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export default function PaginaHome() {
   const [notificaciones, setNotificaciones] = useState([]);
   const [socket, setSocket] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -41,14 +43,32 @@ export default function PaginaHome() {
     };
   }, []);
 
+  const irAProgramarDisponibilidad = () => {
+    navigate('/cuidador/programar-disponibilidad');
+  };
+
   return (
     <div className="pagina-home">
       <div className="header-container">
         <HeaderPrestador />
       </div>
       <div className='content-container'>
-        {socket && <MisReservas />}
-        <CalendarioReservas />
+        <div className="dashboard-grid">
+          <div className="dashboard-section">
+            {socket && <MisReservas />}
+          </div>
+          <div className="dashboard-section">
+            <CalendarioReservas />
+            <button 
+                className="btn-programar-disponibilidad"
+                onClick={irAProgramarDisponibilidad}
+              >
+                Programar Disponibilidad
+              </button>
+          </div>
+          <div className="dashboard-section">
+          </div>
+        </div>
       </div>
       <div className="footer">
         Amá a tus mascotas con PetCare <span>❤️</span>

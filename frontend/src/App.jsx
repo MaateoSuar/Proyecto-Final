@@ -20,6 +20,7 @@ import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
 import RutaProtegida from './componentes/RutaProtegida';
 import RutaPublica from './componentes/RutaPublica';
 import PaginaHomePrestador from './paginas/PaginaHomePrestador';
+import PaginaProgramarDisponibilidad from './paginas/PaginaProgramarDisponibilidad';
 import Footer from './componentes/Footer';
 import PaginaSobreNosotros from './paginas/PaginaSobreNosotros';
 import PaginaContacto from './paginas/PaginaContacto';
@@ -118,6 +119,12 @@ export default function App() {
               path="/cuidador/inicio"
               element={
                 <PaginaHomePrestador />
+              }
+            />
+            <Route
+              path="/cuidador/programar-disponibilidad"
+              element={
+                <PaginaProgramarDisponibilidad />
               }
             />
             <Route

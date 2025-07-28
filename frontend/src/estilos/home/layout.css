@@ -69,3 +69,73 @@
     padding: 40px 32px 32px 32px;
   }
 }
+
+/* Dashboard Grid para prestadores */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+  width: 100%;
+}
+
+.dashboard-section:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .dashboard-section {
+    padding: 16px;
+  }
+  
+  /* En móviles, todas las secciones ocupan el ancho completo */
+  .dashboard-section:nth-child(3) {
+    grid-column: 1;
+  }
+}
+
+/* Estilos para la tarjeta de programar disponibilidad */
+.programar-disponibilidad-card {
+  text-align: center;
+}
+
+.programar-disponibilidad-card h3 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.programar-disponibilidad-card p {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.btn-programar-disponibilidad {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-programar-disponibilidad:hover {
+  background-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-programar-disponibilidad:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
