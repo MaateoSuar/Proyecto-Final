@@ -271,90 +271,90 @@ const ProviderList = () => {
       </div>
       {/* Contenido principal ajustado */}
       <div className="main-content">
-        <div className="provider-list-container" style={{ position: 'relative' }}>
-          <div className="headerList" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+    <div className="provider-list-container" style={{ position: 'relative' }}>
+      <div className="headerList" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
             <h2 className="title" style={{ margin: 0, position: 'absolute', left: '50%', transform: 'translateX(-50%)', color: '#8B5C2A' }}>
-              Nuestros Servicios
-            </h2>
-            <div className="filter-container" style={{ position: 'absolute', right: 0 }}>
-              <select
-                value={ordenActual || precioActual || ''}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  const newParams = new URLSearchParams(location.search);
-                  if (value === '') {
-                    newParams.delete('orden');
-                    newParams.delete('precio');
-                  } else if (value === 'cercania') {
-                    newParams.set('orden', 'cercania');
-                    newParams.delete('precio');
-                  } else {
-                    newParams.set('precio', value);
-                    newParams.delete('orden');
-                  }
-                  navigate({ search: newParams.toString() }, { replace: true });
-                }}
-                className="order-select"
-              >
-                <option value="">Ordenar por...</option>
-                <option value="asc">Precio: Menor - Mayor</option>
-                <option value="desc">Precio: Mayor - Menor</option>
-                <option value="cercania">Más cercanos</option>
-              </select>
-            </div>
-          </div>
-          <div className="search-container">
-            <div className="search-wrapper">
-              <FaSearch className="search-icon" />
-              <input
-                type="text"
-                placeholder="Buscar por nombre..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-            </div>
-          </div>
+          Nuestros Servicios
+        </h2>
+        <div className="filter-container" style={{ position: 'absolute', right: 0 }}>
+          <select
+            value={ordenActual || precioActual || ''}
+            onChange={(e) => {
+              const value = e.target.value;
+              const newParams = new URLSearchParams(location.search);
+              if (value === '') {
+                newParams.delete('orden');
+                newParams.delete('precio');
+              } else if (value === 'cercania') {
+                newParams.set('orden', 'cercania');
+                newParams.delete('precio');
+              } else {
+                newParams.set('precio', value);
+                newParams.delete('orden');
+              }
+              navigate({ search: newParams.toString() }, { replace: true });
+            }}
+            className="order-select"
+          >
+            <option value="">Ordenar por...</option>
+            <option value="asc">Precio: Menor - Mayor</option>
+            <option value="desc">Precio: Mayor - Menor</option>
+            <option value="cercania">Más cercanos</option>
+          </select>
+        </div>
+      </div>
+      <div className="search-container">
+        <div className="search-wrapper">
+          <FaSearch className="search-icon" />
+          <input
+            type="text"
+            placeholder="Buscar por nombre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+      </div>
           <div className="filtros filtros-categorias-movil">
-            {categories.map(cat => (
-              <button
-                key={cat.value}
-                onClick={() => handleCategoryClick(cat.value)}
-                className={`category-button ${getSelectedCategory() === cat.value ? 'active' : ''}`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
+        {categories.map(cat => (
+          <button
+            key={cat.value}
+            onClick={() => handleCategoryClick(cat.value)}
+            className={`category-button ${getSelectedCategory() === cat.value ? 'active' : ''}`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
           <h3 className="subtitle" style={{ color: '#8B5C2A' }}>Especialistas disponibles</h3>
-          {filteredProviders.length === 0 ? (
-            <p className="no-providers">No se encontraron proveedores para esta búsqueda.</p>
-          ) : (
-            <div className="providers-grid">
-              {filteredProviders.map(provider => (
-                <div className="provider-card" key={provider._id} onClick={() => handleProviderClick(provider)}>
-                  <img
-                    src={provider.profileImage?.replace(/\u200E|\u202A|\u202C/g, '')}
-                    alt={provider.name}
-                    className="provider-image"
-                  />
-                  <div className="provider-info">
-                    <h3>{provider.name}</h3>
-                    <p>
-                      {upper(renderServices(provider.services))} · 💰
-                      {provider.precioFiltrado !== null && provider.precioFiltrado !== undefined
-                        ? `$${provider.precioFiltrado}`
-                        : 'Sin precio'}
-                    </p>
-                    <p>
-                      ⭐ {formatRating(provider.rating?.average)} · 📍{' '}
-                      {provider.distancia ? `${provider.distancia.toFixed(1)} km` : `No disponible`}
-                    </p>
-                  </div>
-                </div>
-              ))}
+      {filteredProviders.length === 0 ? (
+        <p className="no-providers">No se encontraron proveedores para esta búsqueda.</p>
+      ) : (
+        <div className="providers-grid">
+          {filteredProviders.map(provider => (
+            <div className="provider-card" key={provider._id} onClick={() => handleProviderClick(provider)}>
+              <img
+                src={provider.profileImage?.replace(/\u200E|\u202A|\u202C/g, '')}
+                alt={provider.name}
+                className="provider-image"
+              />
+              <div className="provider-info">
+                <h3>{provider.name}</h3>
+                <p>
+                  {upper(renderServices(provider.services))} · 💰
+                  {provider.precioFiltrado !== null && provider.precioFiltrado !== undefined
+                    ? `$${provider.precioFiltrado}`
+                    : 'Sin precio'}
+                </p>
+                <p>
+                  ⭐ {formatRating(provider.rating?.average)} · 📍{' '}
+                  {provider.distancia ? `${provider.distancia.toFixed(1)} km` : `No disponible`}
+                </p>
+              </div>
             </div>
-          )}
+          ))}
+        </div>
+      )}
         </div>
       </div>
     </div>
