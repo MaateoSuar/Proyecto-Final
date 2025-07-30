@@ -1,0 +1,24 @@
+.contenedor-calendario-detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel-detalles {
+  max-width: 400px;
+  padding: 12px;
+  border-left: 2px solid #ddd;
+}
+
+/* Diseño para pantallas grandes */
+@media (min-width: 768px) {
+  .contenedor-calendario-detalles {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .panel-detalles {
+    margin-left: 20px;
+  }
+}

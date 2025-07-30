@@ -25,8 +25,6 @@ const Notificaciones = ({ notificaciones }) => {
       {visible && (
         <div className="panel-notificaciones">
           <h4>Notificaciones</h4>
-          {notificaciones.length !== 0 && (console.log(notificaciones))
-          }
           {notificaciones.length === 0 ? (
             <p>No hay notificaciones nuevas.</p>
           ) : (

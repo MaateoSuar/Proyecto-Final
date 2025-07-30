@@ -1,6 +1,7 @@
 // prestadorController.js
 const Prestador = require('../models/Prestador');
 const Reserva = require('../models/Reservation');
+const Usuario = require('../models/Usuario');
 
 // Obtener todos los prestadores con opción de filtrado
 const getAllPrestadores = async (req, res) => {
@@ -139,6 +140,43 @@ const updateAvailability = async (req, res) => {
     }
 };
 
+// Actualizar toda la disponibilidad del prestador
+const updateFullAvailability = async (req, res) => {
+    try {
+        const { proveedorId } = req.params;
+        const { availability } = req.body;
+
+        if (!proveedorId) {
+            return res.status(400).json({ success: false, message: 'Falta el ID del proveedor.' });
+        }
+
+        const prestador = await Prestador.findById(proveedorId);
+        if (!prestador) {
+            return res.status(404).json({ success: false, message: 'Prestador no encontrado.' });
+        }
+
+        // Validar que availability sea un array
+        if (!Array.isArray(availability)) {
+            return res.status(400).json({ success: false, message: 'La disponibilidad debe ser un array.' });
+        }
+
+        // Actualizar la disponibilidad completa
+        prestador.availability = availability;
+
+        await prestador.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Disponibilidad actualizada correctamente.',
+            availability: prestador.availability
+        });
+
+    } catch (error) {
+        console.error('Error al actualizar disponibilidad completa:', error);
+        return res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+    }
+};
+
 // Activar/Desactivar prestador
 const togglePrestadorStatus = async (req, res) => {
     try {
@@ -198,6 +236,32 @@ const deletePrestador = async (req, res) => {
     }
 };
 
+// GET /prestadores/:id/reviews
+const getReviewsFromProvider = async (req, res) => {
+  try {
+    const prestador = await Prestador.findById(req.params.id).lean();
+
+    if (!prestador || !prestador.reviews) {
+      return res.status(404).json({ error: 'Prestador no encontrado o sin comentarios' });
+    }
+
+    const reviews = await Promise.all(
+      prestador.reviews.map(async (review) => {
+        const user = await Usuario.findById(review.userId).select('fullName email');
+        return {
+          ...review,
+          user
+        };
+      })
+    );
+
+    res.json(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener reviews del prestador' });
+  }
+};
+
 // Obtener un prestador por su ID
 const getPrestadorById = async (req, res) => {
     try {
@@ -225,8 +289,10 @@ module.exports = {
     getAllPrestadores,
     createManyPrestadores,
     updateAvailability,
+    updateFullAvailability,
     togglePrestadorStatus,
     deletePrestador,
     getPrestadorById,
-    getHorariosDisponibles
+    getHorariosDisponibles,
+    getReviewsFromProvider
 }; 

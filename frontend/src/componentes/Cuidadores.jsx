@@ -62,7 +62,9 @@ export default function Cuidadores() {
 
   const irADetalleProveedor = (cuidador) => {
     let categoria = cuidador.services && cuidador.services[0] ? cuidador.services[0].type : '';
-    navigate(`/proveedor/${cuidador._id}?categoria=${categoria}`);
+    navigate(`/proveedor/${cuidador._id}?categoria=${categoria}`, {
+      state: { provider: cuidador }
+    });
   };
 
   // Si no hay ubicación seleccionada
@@ -122,4 +124,3 @@ export default function Cuidadores() {
   );
 }
 
-  

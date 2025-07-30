@@ -56,7 +56,16 @@ const cancelReservation = async (req, res) => {
     const userId = req.user.id;
 
     // Buscar la reserva y verificar que pertenezca al usuario
-    const reservation = await Reservation.findOne({ _id: id, user: userId });
+    const reservation = await Reservation.findById(id);
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reserva no encontrada' });
+    }
+    const isUser = reservation.user.toString() === userId;
+    const isProvider = reservation.provider.toString() === userId;
+
+    if (!isUser && !isProvider) {
+      return res.status(403).json({ message: 'No tienes permiso para cancelar esta reserva' });
+    }
 
     if (!reservation) {
       return res.status(404).json({ message: 'Reserva no encontrada o no autorizada' });
@@ -176,18 +185,18 @@ const getReservationsByProvider = async (req, res) => {
   }
 };
 
- const getReservationById = async (req, res) => {
-    try {
-      const reservation = await Reservation.findById(req.params.id);
-      if (!reservation) {
-        return res.status(404).json({ message: 'Reserva no encontrada' });
-      }
-      res.status(200).json(reservation);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Error al obtener la reserva' });
+const getReservationById = async (req, res) => {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) {
+      return res.status(404).json({ message: 'Reserva no encontrada' });
     }
-  };
+    res.status(200).json(reservation);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al obtener la reserva' });
+  }
+};
 
 
 const updateReservationStatus = async (req, res) => {

@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { useMediaQuery } from 'react-responsive';
 import StarRating from './ReviewForm';
 import { useSocket } from '../context/SocketContext';
+import ReviewForm from "./ReviewForm";
 
 
 registerLocale('es', es);
@@ -34,9 +35,30 @@ const Reservar = () => {
   const [mascotaSeleccionada, setMascotaSeleccionada] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [reservas, setReservas] = useState([]);
+  const [showAllReviews, setShowAllReviews] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showReviewsModal, setShowReviewsModal] = useState(false);
+  const [showPetDropdown, setShowPetDropdown] = useState(false);
   const isDesktop = useMediaQuery({ minWidth: 900 });
+  const isMobile = useMediaQuery({ maxWidth: 711 });
+  const isTablet = useMediaQuery({minWidth: 712})
+
+  const comentarios = () =>{
+    if (isDesktop) return 2;
+    if (isTablet) return 3;
+    if (isMobile && showAllReviews) return null;
+    return 2;
+  }
+
+  const verComentarios = () => {
+    if (isTablet) {
+      setShowReviewsModal(true);
+    } else if (isMobile && !showAllReviews) {
+      setShowAllReviews(true);
+    } else if (isMobile && showAllReviews) {
+      setShowAllReviews(false);
+    }
+  }
 
   function upper(str) {
     if (!str) return '';
@@ -130,7 +152,6 @@ const Reservar = () => {
   };
   useEffect(() => {
     if (!socket) return;
-    console.log('🧪 socket conectado:', socket?.connected);
   }, [socket]);
 
   useEffect(() => {
@@ -258,8 +279,6 @@ const Reservar = () => {
           hora: selectedTime,
           mascota: misMascotas.find(p => p._id === mascotaSeleccionada)?.name || 'Mascota',
         });
-        console.log('📤 Evento emitido reservaRealizada');
-
         try {
           await cargarReservas();
 
@@ -289,13 +308,14 @@ const Reservar = () => {
       }
     } finally {
       setIsLoading(false);
+      setShowConfirmModal(false);
     }
   };
 
   // Función para mostrar estrellas solo lectura
   function ReadOnlyStars({ rating }) {
     return (
-      <div className="star-rating" style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}>
+      <div className="reserva-stars">
         {[1, 2, 3, 4, 5].map((star) => (
           <span
             key={star}
@@ -312,209 +332,161 @@ const Reservar = () => {
   if (!proveedor) return <p style={{ padding: "1rem" }}>Cargando proveedor...</p>;
 
   return (
-    <div className="fb-proveedor-main" style={{ color: '#875e39', background: '#fdefce', minHeight: '100vh', position: 'relative' }}>
-      {/* Flecha de volver */}
-      <button
-        className="back-button"
-        style={{ position: 'absolute', top: 24, left: 24, fontSize: 32, color: '#875e39', zIndex: 1000 }}
-        onClick={() => navigate(-1)}
-        aria-label="Volver"
-      >
-        &larr;
-      </button>
-      {/* Banda superior crema */}
-      <div className="fb-proveedor-cover" style={{ background: '#fdefce', height: 110, width: '100%' }}></div>
-      {/* Avatar centrado sobresaliendo */}
-      <div className="fb-proveedor-avatar-outer">
-        <div className="fb-proveedor-avatar-box">
-          <img src={proveedor.profileImage} alt={proveedor.name} className="fb-proveedor-avatar" />
-        </div>
-      </div>
-      {/* Header info centrado */}
-      <div className="fb-proveedor-header-info" style={{ textAlign: 'center', marginTop: 10 }}>
-        <h1 className="fb-proveedor-nombre" style={{ color: '#000', fontSize: '2.5rem', margin: '0.5em 0 0.2em 0' }}>{proveedor.name}</h1>
-        <div className="fb-proveedor-rating-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 6 }}>
-          <ReadOnlyStars rating={proveedor.rating?.average || 0} />
-          <span className="fb-proveedor-rating-num" style={{ color: '#a57449', fontWeight: 600, fontSize: '1.1em' }}>({formatRating(proveedor.rating?.average)})</span>
-          {isDesktop && (
-            <button className="ver-reseñas-btn" onClick={() => setShowReviewsModal(true)}>
-              Ver reseñas
-            </button>
-          )}
-        </div>
-        <div className="fb-proveedor-subinfo" style={{ color: '#a57449', fontSize: '1.1em', marginBottom: 18 }}>
-          {upper(proveedor.services?.map(s => s.type).join(', '))} · {proveedor.location?.address ?? 'Ubicación N/D'} · ${proveedor.services?.[0]?.price ?? 'N/A'}
-        </div>
-      </div>
-      {/* Tabs visuales */}
-      {/* <div className="fb-proveedor-tabs" style={{ display: 'flex', justifyContent: 'center', gap: 16, margin: '18px 0 28px 0' }}>
-        <a href="#fb-sobre" className="fb-tab">Sobre</a>
-        <a href="#fb-fotos" className="fb-tab">Fotos</a>
-        <a href="#fb-reseñas" className="fb-tab">Reseñas</a>
-        <a href="#fb-reunion" className="fb-tab">Programar reunión</a>
-      </div> */}
-      <div className="fb-proveedor-content" style={{ maxWidth: 700, margin: '0 auto', padding: '0 16px' }}>
-        {/* Servicios ofrecidos */}
-        <div id="fb-sobre" className="fb-proveedor-section" style={{ marginBottom: 40 }}>
-          <h2 style={{ color: '#875e39' }}>Servicios ofrecidos</h2>
-          {proveedor.description && <p>{proveedor.description}</p>}
-          <ul>
-            {proveedor.services?.map((s, idx) => (
-              <li key={idx}><strong>{upper(s.type)}</strong>: {s.description}</li>
-            ))}
-          </ul>
-        </div>
-        {/* Reseñas */}
-        <div id="fb-reseñas" className="fb-proveedor-section" style={{ marginBottom: 40 }}>
-          <h2 style={{ color: '#875e39' }}>Reseñas</h2>
-          {isDesktop ? (
-            <button className="ver-reseñas-btn" onClick={() => setShowReviewsModal(true)}>
-              Ver todas las reseñas
-            </button>
-          ) : <ComentariosProveedor providerId={proveedor?._id} />}
-        </div>
-        {/* Programar reunión */}
-        <div id="fb-reunion" className="fb-proveedor-section" style={{ marginBottom: 40 }}>
-          <h2 style={{ color: '#875e39' }}>Programar reunión</h2>
-          <div className="fb-reunion-form" style={{ display: 'flex', flexWrap: 'wrap', gap: 18, alignItems: 'flex-end', flexDirection: 'column', maxWidth: 350, margin: '0 auto' }}>
-            {/* Fecha primero (azul) */}
-            <div style={{ width: '100%' }}>
-              <label style={{ color: '#a57449', fontWeight: 600, fontSize: '1.1em' }}>Fecha:</label>
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => {
-                  if (date instanceof Date && !isNaN(date)) {
-                    setSelectedDate(date);
-                    setSelectedTime(null);
-                  }
-                }}
-                minDate={new Date()}
-                dateFormat="dd/MM/yyyy"
-                placeholderText="Selecciona una fecha"
-                className="date-picker-input"
-                locale="es"
-                showPopperArrow={false}
-                isClearable
-                onSelect={(date) => {
-                  if (date instanceof Date && !isNaN(date)) {
-                    setSelectedDate(date);
-                    setSelectedTime(null);
-                  }
-                }}
-                style={{ width: '100%' }}
-              />
-            </div>
-            {/* Hora label (naranja) */}
-            <div style={{ width: '100%', marginTop: 18 }}>
-              <label style={{ color: '#a57449', fontWeight: 600, fontSize: '1.1em' }}>Hora:</label>
-            </div>
-            {/* Horarios (rojo) */}
-            {horariosDelBackend.length > 0 ? (
-              horariosDelBackend.map((time) => (
-                <button
-                  key={time}
-                  className={`time-button ${selectedTime === time ? "selected" : ""}`}
-                  onClick={() => setSelectedTime(time)}
-                  style={{ width: '100%' }}
-                >
-                  {time}
-                </button>
-              ))
-            ) : (
-              <p style={{ color: '#666', fontSize: '0.9rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                {selectedDate ? 'No hay horarios disponibles para este día' : 'Selecciona una fecha para ver los horarios disponibles'}
-              </p>
-            )}
+    <div className="reservar-container">
+      {/* Flecha para volver */}
+      <button className="back-button" onClick={() => navigate(-1)}>&larr;</button>
 
-            {/* Mascota y acciones igual */}
-            <div style={{ width: '100%', marginTop: 18 }}>
-              <label style={{ color: '#a57449' }}>Mascota:</label>
-              <div className="pet-thumbnails">
-                {misMascotas.map((pet) => (
-                  <div
-                    key={pet._id}
-                    className={`pet-thumb ${mascotaSeleccionada === pet._id ? 'selected' : ''}`}
-                    onClick={() => setMascotaSeleccionada(pet._id)}
-                    title={pet.name}
-                  >
-                    <img
-                      src={pet.image || 'https://via.placeholder.com/80'}
-                      alt={pet.name}
-                    />
-                  </div>
-                ))}
-              </div>
+      <div className="reservar-main">
+        {/* Columna izquierda - Perfil del proveedor */}
+        <div className="columna-izquierda">
+          <div className="perfil-proveedor">
+            <div className="reserva-avatar-box">
+              <img src={proveedor.profileImage} alt={proveedor.name} className="reserva-avatar" />
             </div>
-            <div className="fb-reunion-actions" style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%' }}>
-              <button
-                className="location-button"
-                onClick={() => toast.info("Mostrando ubicación...")}
-              >
-                📍 Ver ubicación
+            <h1 className="pres-nombre">{proveedor.name}</h1>
+            <div className="rating-row">
+              <ReadOnlyStars rating={proveedor.rating?.average || 0} />
+              <span className="rating-num">({formatRating(proveedor.rating?.average)})</span>
+            </div>
+            <p className="subinfo">
+              {upper(proveedor.services?.map(s => s.type).join(', '))} · {proveedor.location?.address ?? 'Ubicación N/D'} · ${proveedor.services?.[0]?.price ?? 'N/A'}
+            </p>
+            <div className="pres-descripcion">
+              <h3>Sobre el proveedor</h3>
+              <p>{proveedor.description}</p>
+              <ul>
+                {proveedor.services?.map((s, idx) => (
+                  <li key={idx}><strong>{upper(s.type)}</strong>: {s.description}</li>
+                ))}
+              </ul>
+              <h3 style={{ marginTop: '2rem', marginBottom: '0' }}>Comentarios</h3>
+              <ComentariosProveedor providerId={proveedor?._id} cantidad={comentarios()} />
+              <button className="ver-reseñas-btn" onClick={verComentarios}>
+                {showAllReviews ? 'Ver menos' : 'Ver más'}
               </button>
-              <button
-                className="book-button"
-                onClick={abrirResumenReserva}
-                disabled={isLoading}
+            </div>
+          </div>
+        </div>
+
+        {/* Columna derecha - Formulario de reserva */}
+        <div className="columna-derecha">
+          <div className="formulario-reserva">
+            <h2>Programar reunión</h2>
+
+            <label>Fecha:</label>
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => {
+                if (date instanceof Date && !isNaN(date)) {
+                  setSelectedDate(date);
+                  setSelectedTime(null);
+                }
+              }}
+              minDate={new Date()}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Selecciona una fecha"
+              className="date-picker-input"
+              locale="es"
+              showPopperArrow={false}
+              isClearable
+            />
+
+            <label>Hora:</label>
+            { horariosDelBackend.length === 0 && (<p>{selectedDate ? 'No hay horarios disponibles para este día' : 'Selecciona una fecha'}</p>)}
+            <div className={`reserva-horarios ${isDesktop ? 'reserva-horarios-desktop' : ''} ${isMobile ? 'reserva-horarios-mobile' : ''}`}>
+              {horariosDelBackend.length > 0 && (
+                horariosDelBackend.map((time) => (
+                  <button
+                    key={time}
+                    className={`reserva-time-button ${selectedTime === time ? "selected" : ""}`}
+                    onClick={() => setSelectedTime(time)}
+                  >
+                    {time}
+                  </button>
+                ))
+              )}
+            </div>
+
+            <label>Mascota:</label>
+            <div className="custom-pet-select">
+              <div
+                className="custom-select-trigger"
+                onClick={() => setShowPetDropdown(prev => !prev)}
               >
+                {mascotaSeleccionada ? (
+                  <>
+                    <img
+                      src={misMascotas.find(p => p._id === mascotaSeleccionada)?.image || 'https://via.placeholder.com/80'}
+                      alt="Seleccionada"
+                      className="pet-preview-img"
+                    />
+                    <span>{misMascotas.find(p => p._id === mascotaSeleccionada)?.name}</span>
+                  </>
+                ) : (
+                  <span className="placeholder">Selecciona una mascota</span>
+                )}
+              </div>
+
+              {showPetDropdown && (
+                <div className="custom-options">
+                  {misMascotas.map((pet) => (
+                    <div
+                      key={pet._id}
+                      className="custom-option"
+                      onClick={() => {
+                        setMascotaSeleccionada(pet._id);
+                        setShowPetDropdown(false);
+                      }}
+                    >
+                      <img
+                        src={pet.image || null}
+                        alt={pet.name}
+                        className="pet-preview-img"
+                      />
+                      <span>{pet.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="reserva-acciones">
+              <button className="book-button" onClick={abrirResumenReserva} disabled={isLoading}>
                 {isLoading ? 'Reservando...' : 'Reservar ahora'}
               </button>
             </div>
           </div>
         </div>
       </div>
-      {/* Modal de reseñas solo en desktop */}
-      {isDesktop && showReviewsModal && (
+
+      {/* Modales */}
+      { showReviewsModal && (
         <div className="modal-overlay" onClick={() => setShowReviewsModal(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()} style={{ maxWidth: 400, width: '90vw', maxHeight: '80vh', overflowY: 'auto' }}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
             <button className="close-btn" onClick={() => setShowReviewsModal(false)}>&times;</button>
             <ComentariosProveedor providerId={proveedor?._id} />
           </div>
         </div>
       )}
+
       {showConfirmModal && (
         <div className="modal-overlay" onClick={() => setShowConfirmModal(false)}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              maxWidth: 400,
-              width: '90vw',
-              padding: 24,
-              backgroundColor: 'white',
-              borderRadius: 12,
-              boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
-              textAlign: 'center'
-            }}
-          >
-            <h3 style={{ color: '#875e39' }}>Confirmar reserva</h3>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h3>Confirmar reserva</h3>
             <p><strong>Proveedor:</strong> {proveedor.name}</p>
             <p><strong>Fecha:</strong> {selectedDate?.toLocaleDateString('es-AR')}</p>
             <p><strong>Hora:</strong> {selectedTime}</p>
             <p><strong>Mascota:</strong> {misMascotas.find(p => p._id === mascotaSeleccionada)?.name}</p>
-            <div style={{ marginTop: 20, display: 'flex', gap: 12, justifyContent: 'center' }}>
-              <button
-                onClick={() => {
-                  setShowConfirmModal(false);
-                  confirmarReserva();
-                }}
-                className="book-button"
-                style={{ backgroundColor: '#875e39', color: 'white' }}
-              >
-                Confirmar
-              </button>
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                className="location-button"
-              >
-                Cancelar
-              </button>
+            <div className="modal-actions">
+              <button onClick={confirmarReserva} className="book-button">Confirmar</button>
+              <button onClick={() => setShowConfirmModal(false)} className="location-button">Cancelar</button>
             </div>
           </div>
         </div>
       )}
     </div>
   );
+
 };
 
 export default Reservar;

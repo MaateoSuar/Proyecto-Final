@@ -9,6 +9,17 @@ const API_URL = import.meta.env.VITE_API_URL;
 const HistorialReservas = () => {
   const [reservas, setReservas] = useState([]);
   const navigate = useNavigate();
+  const formatearFechaCorta = (isoDate) => {
+    const fecha = new Date(isoDate);
+    if (isNaN(fecha.getTime())) return '';
+
+    return new Intl.DateTimeFormat('es-AR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      timeZone: 'UTC'
+    }).format(fecha);
+  };
 
   useEffect(() => {
     const cargarReservas = async () => {
@@ -67,7 +78,7 @@ const HistorialReservas = () => {
               <div className="info-reserva">
                 <p><strong>Mascota:</strong> {reserva.pet?.name}</p>
                 <p><strong>Servicio:</strong> {reserva.provider?.name}</p>
-                <p><strong>Fecha:</strong> {reserva.date} a las {reserva.time}</p>
+                <p><strong>Fecha:</strong> {formatearFechaCorta(reserva.date)} a las {reserva.time}</p>
               </div>
               <span className="estado estado-pendiente">{getEstadoText(reserva.status)}</span>
             </li>

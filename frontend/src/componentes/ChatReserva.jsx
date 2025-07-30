@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../estilos/chatReserva.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
+const BACK_URL = import.meta.env.VITE_BACK_URL;
 
 const ChatReserva = ({ reservaId, onClose }) => {
   const [mensajes, setMensajes] = useState([]);
@@ -106,7 +107,7 @@ const ChatReserva = ({ reservaId, onClose }) => {
     const token = localStorage.getItem('token');
     const userId = JSON.parse(localStorage.getItem('usuario'))?.id;
 
-    const socket = io("http://localhost:5000", {
+    const socket = io(`${BACK_URL}`, {
       auth: { token },
     });
 

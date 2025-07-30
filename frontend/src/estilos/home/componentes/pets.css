@@ -242,6 +242,7 @@
   
   /* Mostrar versión vertical en desktop */
   .pets-vertical-container {
+    scrollbar-color: transparent transparent;
     display: block;
     width: 155px;
     background-color: #FEFAE0;

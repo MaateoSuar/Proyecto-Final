@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import { io } from 'socket.io-client';
 
 const SocketContext = createContext(null);
+const BACK_URL = import.meta.env.VITE_BACK_URL;
 
 export const useSocket = () => useContext(SocketContext);
 
@@ -14,12 +15,11 @@ export const SocketProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        const newSocket = io("http://localhost:5000", {
+        const newSocket = io(`${BACK_URL}`, {
             auth: { token }
         });
 
         newSocket.on('connect', () => {
-            console.log('✅ Socket conectado:', newSocket.id);
             setSocket(newSocket);
             setReady(true);
         });
