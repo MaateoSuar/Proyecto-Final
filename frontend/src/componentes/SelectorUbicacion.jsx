@@ -3,11 +3,11 @@ import { FaMapMarkerAlt, FaHome, FaBriefcase, FaMapPin, FaTimes, FaEdit, FaTrash
 import { useUbicacion } from '../context/UbicacionContext';
 import '../estilos/home/ubicacion.css';
 
-const SelectorUbicacion = ({ oculto }) => {
-  const { 
-    ubicacionActual, 
-    ubicacionesGuardadas, 
-    seleccionarUbicacion, 
+const SelectorUbicacion = ({ mobile, oculto }) => {
+  const {
+    ubicacionActual,
+    ubicacionesGuardadas,
+    seleccionarUbicacion,
     guardarUbicacion,
     eliminarUbicacion, // <-- Añado función para borrar
     cargando,
@@ -149,7 +149,7 @@ const SelectorUbicacion = ({ oculto }) => {
 
               <div className="ubicaciones-guardadas">
                 {ubicacionesGuardadas.map(ubicacion => (
-                  <div 
+                  <div
                     key={ubicacion._id}
                     className={`ubicacion-item ${ubicacionActual?._id === ubicacion._id ? 'seleccionada' : ''}`}
                     onClick={() => {
@@ -341,19 +341,29 @@ const SelectorUbicacion = ({ oculto }) => {
   }
 
   return (
-    <div className="selector-ubicacion">
-      <div className="ubicacion-principal" onClick={() => setMostrarModal(true)}>
-        <FaMapMarkerAlt className="icono-ubicacion" />
-        <div className="texto-ubicacion">
-          {ubicacionActual ? (
-            <>
-              <span className="etiqueta-ubicacion">{ubicacionActual.nombre}</span>
-              <span className="direccion-ubicacion">{ubicacionActual.calle} {ubicacionActual.numero}</span>
-            </>
-          ) : <span className="sin-ubicacion">Seleccionar ubicación</span>}
+    <div className="selector-ubicacion" style={mobile ? { margin: '10px 0' } : {}}>
+      {mobile ?
+        <div className="ubicacion-principal" onClick={() => setMostrarModal(true)}>
+          <FaMapMarkerAlt className="icono-ubicacion" />
+          <div className="texto-ubicacion">
+            {ubicacionActual ? (
+                <span className="direccion-ubicacion"><span className="etiqueta-ubicacion">{ubicacionActual.nombre}</span>       {ubicacionActual.calle} {ubicacionActual.numero}</span>
+            ) : <span className="sin-ubicacion">Seleccionar ubicación</span>}
+          </div>
         </div>
-      </div>
-
+        :
+        <div className="ubicacion-principal" onClick={() => setMostrarModal(true)}>
+          <FaMapMarkerAlt className="icono-ubicacion" />
+          <div className="texto-ubicacion">
+            {ubicacionActual ? (
+              <>
+                <span className="etiqueta-ubicacion">{ubicacionActual.nombre}</span>
+                <span className="direccion-ubicacion">{ubicacionActual.calle} {ubicacionActual.numero}</span>
+              </>
+            ) : <span className="sin-ubicacion">Seleccionar ubicación</span>}
+          </div>
+        </div>
+      }
       {mostrarModal && (
         <div className="modal-overlay fade-in" onClick={() => setMostrarModal(false)}>
           <div className="modal-contenido" onClick={e => e.stopPropagation()}>
@@ -364,7 +374,7 @@ const SelectorUbicacion = ({ oculto }) => {
 
             <div className="ubicaciones-guardadas">
               {ubicacionesGuardadas.map(ubicacion => (
-                <div 
+                <div
                   key={ubicacion._id}
                   className={`ubicacion-item ${ubicacionActual?._id === ubicacion._id ? 'seleccionada' : ''}`}
                   onClick={() => {

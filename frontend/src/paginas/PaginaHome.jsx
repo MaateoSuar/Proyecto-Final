@@ -5,6 +5,7 @@ import HeaderUsuario from '../componentes/HeaderUsuario';
 import TarjetaMascotas from '../componentes/TarjetaMascotas';
 import Servicios from '../componentes/Servicios';
 import Planes from '../componentes/Planes';
+import { useMediaQuery } from 'react-responsive';
 import Cuidadores from '../componentes/Cuidadores';
 import HistorialReservasHome from '../componentes/HistorialReservasHome';
 import SelectorUbicacion from '../componentes/SelectorUbicacion';
@@ -15,6 +16,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 
 export default function PaginaHome() {
+  const isMobile = useMediaQuery({ maxWidth: 680 });
   const [notificaciones, setNotificaciones] = useState([]);
   const [socket, setSocket] = useState(null);
 
@@ -45,23 +47,32 @@ export default function PaginaHome() {
   }, []);
 
   return (
-    <div className="pagina-home">
-      <div className="header-container">
-        <HeaderUsuario />
-        <div className="right-box">
-          <div className="location-box">
-            <SelectorUbicacion />
-          </div>
-            <Notificaciones notificaciones={notificaciones} />
-        </div>
-      </div>
 
+    <div className="pagina-home">
+      {isMobile ?
+          <div className="header-container">
+            <HeaderUsuario />
+            <div className="right-box">
+              <Notificaciones notificaciones={notificaciones} />
+            </div>
+          </div> :
+        <div className="header-container">
+          <HeaderUsuario />
+          <div className="right-box">
+            <div className="location-box">
+              <SelectorUbicacion mobile={isMobile} />
+            </div>
+            <Notificaciones notificaciones={notificaciones} />
+          </div>
+        </div>
+      }
       <div className="content-container">
         <div className="left-column">
           <TarjetaMascotas />
         </div>
 
         <div className="right-column">
+          {isMobile && <SelectorUbicacion mobile={isMobile} />}
           <div className="pets-box">
             <h2 className="section-title">Tus mascotas</h2>
             <TarjetaMascotas />
