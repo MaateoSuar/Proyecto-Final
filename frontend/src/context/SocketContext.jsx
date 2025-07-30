@@ -19,7 +19,6 @@ export const SocketProvider = ({ children }) => {
         });
 
         newSocket.on('connect', () => {
-            console.log('✅ Socket conectado:', newSocket.id);
             setSocket(newSocket);
             setReady(true);
         });

@@ -26,7 +26,6 @@ export default function PaginaHome() {
 
     // 2. Unirse a la sala del usuario (backend escucha esto)
     newSocket.emit('joinSala', userId);
-    console.log('🔌 Unido a la sala', userId);
 
     // 3. Escuchamos el evento de nuevo mensaje
     newSocket.on('mensajeRecibido', (mensaje) => {
@@ -47,11 +46,10 @@ export default function PaginaHome() {
         <HeaderPrestador />
       </div>
       <div className='content-container'>
-        {socket && <MisReservas />}
-        <CalendarioReservas />
-      </div>
-      <div className="footer">
-        Amá a tus mascotas con PetCare <span>❤️</span>
+        <div className="right-column">
+          {socket && <MisReservas />}
+          <CalendarioReservas />
+        </div>
       </div>
     </div>
   );

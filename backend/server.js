@@ -1,9 +1,5 @@
 // server.js
 require('dotenv').config({ path: __dirname + '/.env' });
-console.log('CWD:', process.cwd());
-console.log('__dirname:', __dirname);
-console.log('GOOGLE_CLIENT_ID:', process.env.GOOGLE_CLIENT_ID);
-console.log('GOOGLE_CLIENT_SECRET:', process.env.GOOGLE_CLIENT_SECRET);
 
 const express = require('express');
 const mongoose = require('mongoose');

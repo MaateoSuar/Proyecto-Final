@@ -1,6 +1,7 @@
 // prestadorController.js
 const Prestador = require('../models/Prestador');
 const Reserva = require('../models/Reservation');
+const Usuario = require('../models/Usuario');
 
 // Obtener todos los prestadores con opción de filtrado
 const getAllPrestadores = async (req, res) => {
@@ -198,6 +199,32 @@ const deletePrestador = async (req, res) => {
     }
 };
 
+// GET /prestadores/:id/reviews
+const getReviewsFromProvider = async (req, res) => {
+  try {
+    const prestador = await Prestador.findById(req.params.id).lean();
+
+    if (!prestador || !prestador.reviews) {
+      return res.status(404).json({ error: 'Prestador no encontrado o sin comentarios' });
+    }
+
+    const reviews = await Promise.all(
+      prestador.reviews.map(async (review) => {
+        const user = await Usuario.findById(review.userId).select('fullName email');
+        return {
+          ...review,
+          user
+        };
+      })
+    );
+
+    res.json(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener reviews del prestador' });
+  }
+};
+
 // Obtener un prestador por su ID
 const getPrestadorById = async (req, res) => {
     try {
@@ -228,5 +255,6 @@ module.exports = {
     togglePrestadorStatus,
     deletePrestador,
     getPrestadorById,
-    getHorariosDisponibles
+    getHorariosDisponibles,
+    getReviewsFromProvider
 }; 

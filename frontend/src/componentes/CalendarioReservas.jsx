@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
+import '../estilos/calendarioReservas.css'; // Asegúrate de tener estilos para el calendario
 import { es } from 'date-fns/locale';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -23,6 +24,7 @@ export default function CalendarioReservas() {
         });
         // Solo reservas activas (pendiente o aceptada)
         const activas = res.data.filter(r => r.status === 'pendiente' || r.status === 'aceptada');
+        console.log('Reservas activas:', activas.map(r => ({ date: r.date, time: r.time })));
         setReservas(activas);
       } catch (error) {
         console.error('Error al obtener reservas:', error);
@@ -32,13 +34,20 @@ export default function CalendarioReservas() {
   }, []);
 
   // Días con reservas
-  const fechasReservadas = reservas.map(r => new Date(r.date + 'T00:00:00'));
-
+  const fechasReservadas = reservas
+    .map(r => new Date(r.date))
+    .filter(date => !isNaN(date)); // por si acaso
   // Al seleccionar un día, mostrar detalles de reservas de ese día
   const handleChange = (date) => {
+    if (!date) {
+      setFechaSeleccionada(null);
+      setDetalles([]);
+      return;
+    }
+
     setFechaSeleccionada(date);
     const detallesDia = reservas.filter(r => {
-      const fechaReserva = new Date(r.date + 'T00:00:00');
+      const fechaReserva = new Date(r.date);
       return (
         fechaReserva.getFullYear() === date.getFullYear() &&
         fechaReserva.getMonth() === date.getMonth() &&
@@ -56,36 +65,40 @@ export default function CalendarioReservas() {
   ];
 
   return (
-    <div style={{ maxWidth: 400, margin: '0 auto', padding: 16 }}>
+    <div style={{ padding: 16 }}>
       <h2 style={{ textAlign: 'center', marginBottom: 16 }}>Calendario de Reservas</h2>
-      <DatePicker
-        locale={es}
-        inline
-        selected={fechaSeleccionada}
-        onChange={handleChange}
-        highlightDates={highlightWithRanges}
-        placeholderText="Selecciona un día"
-        calendarClassName="calendario-reservas"
-      />
-      {fechaSeleccionada && (
-        <div style={{ marginTop: 20 }}>
-          <h3>Reservas para el {fechaSeleccionada.toLocaleDateString('es-AR')}</h3>
-          {detalles.length === 0 ? (
-            <p>No hay reservas para este día.</p>
-          ) : (
-            <ul>
-              {detalles.map(r => (
-                <li key={r._id} style={{ marginBottom: 8 }}>
-                  <b>Mascota:</b> {r.pet?.name} <br />
-                  <b>Usuario:</b> {r.user?.fullName || r.user?.email} <br />
-                  <b>Hora:</b> {r.time} <br />
-                  <b>Estado:</b> {r.status}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+
+      <div className="contenedor-calendario-detalles">
+        <DatePicker
+          locale={es}
+          inline
+          selected={fechaSeleccionada}
+          onChange={handleChange}
+          highlightDates={highlightWithRanges}
+          placeholderText="Selecciona un día"
+          calendarClassName="calendario-reservas"
+        />
+
+        {fechaSeleccionada && (
+          <div className="panel-detalles">
+            <h3>Reservas para el {fechaSeleccionada.toLocaleDateString('es-AR')}</h3>
+            {detalles.length === 0 ? (
+              <p>No hay reservas para este día.</p>
+            ) : (
+              <ul>
+                {detalles.map(r => (
+                  <li key={r._id} style={{ marginBottom: 8 }}>
+                    <b>Mascota:</b> {r.pet?.name} <br />
+                    <b>Usuario:</b> {r.user?.fullName || r.user?.email} <br />
+                    <b>Hora:</b> {r.time} <br />
+                    <b>Estado:</b> {r.status}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 } 

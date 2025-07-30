@@ -33,8 +33,10 @@ body {
 .reservaHeader {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* los elementos se alinean a la izquierda */
-  text-align: center;          /* centra el texto dentro de los elementos, útil para el <h2> */
+  justify-content: flex-start;
+  /* los elementos se alinean a la izquierda */
+  text-align: center;
+  /* centra el texto dentro de los elementos, útil para el <h2> */
   padding: 16px 16px 5px 16px;
   background: transparent;
 }
@@ -155,7 +157,7 @@ body {
 }
 
 .day-button,
-.time-button {
+.reserva-time-button {
   background-color: var(--secondary);
   color: var(--text);
   border: none;
@@ -167,7 +169,7 @@ body {
 }
 
 .day-button.selected,
-.time-button.selected {
+.reserva-time-button.selected {
   background-color: var(--primary);
   color: white;
 }
@@ -226,7 +228,7 @@ body {
   }
 
   .day-button,
-  .time-button {
+  .reserva-time-button {
     font-size: 12px;
     padding: 6px 12px;
   }
@@ -395,7 +397,7 @@ body {
 }
 
 /* Desktop Styles - Diseño que se acopla con la aplicación */
-@media (min-width: 768px) {
+@media (min-width: 200px) {
   .profile-container {
     max-width: none;
     margin: 0;
@@ -405,7 +407,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto 1fr;
-    grid-template-areas: 
+    grid-template-areas:
       "header header"
       "image image"
       "left right";
@@ -620,7 +622,7 @@ body {
     margin-bottom: 0;
   }
 
-  .time-button {
+  .reserva-time-button {
     background-color: #FEFAE0;
     border: 1px solid #d4a373;
     border-radius: 8px;
@@ -632,14 +634,14 @@ body {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .time-button:hover {
+  .reserva-time-button:hover {
     background-color: #d4a373;
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .time-button.selected {
+  .reserva-time-button.selected {
     background-color: #d4a373;
     color: white;
     font-weight: 600;
@@ -647,7 +649,7 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  .time-button:disabled {
+  .reserva-time-button:disabled {
     background-color: #f5f5f5;
     border-color: #ddd;
     color: #999;
@@ -744,7 +746,7 @@ body {
   }
 
   /* Comentarios section */
-  .profile-container > div:last-child {
+  .profile-container>div:last-child {
     grid-area: right;
     margin: 0 2rem 2rem 2rem;
     background-color: #FEFAE0;
@@ -814,7 +816,7 @@ body {
     font-size: 1.1rem;
   }
 
-  .time-button {
+  .reserva-time-button {
     padding: 1.2rem;
     font-size: 1.1rem;
   }
@@ -836,6 +838,7 @@ body {
   border: none;
   color: #a57449;
   font-size: 0.95em;
+  margin: 0 auto;
   font-weight: 600;
   cursor: pointer;
   padding: 0 6px;
@@ -846,16 +849,6 @@ body {
   box-shadow: none;
   text-decoration: none;
   border-bottom: 2px solid transparent;
-}
-.ver-reseñas-btn:hover, .ver-reseñas-btn:focus {
-  color: #875e39;
-  border-bottom: 2px solid #875e39;
-}
-
-@media (max-width: 900px) {
-  .ver-reseñas-btn {
-    display: none;
-  }
 }
 
 .profile-proveedor-main {
@@ -890,11 +883,20 @@ body {
   justify-content: center;
   overflow: hidden;
 }
+
 .proveedor-main-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 12px;
+}
+
+.reserva-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .proveedor-main-info {
@@ -904,23 +906,27 @@ body {
   gap: 8px;
   align-items: flex-start;
 }
+
 .proveedor-main-nombre {
   font-size: 2.1rem;
   font-weight: 700;
   color: #875e39;
   margin: 0;
 }
+
 .proveedor-main-rol {
   font-size: 1.1rem;
   color: #a57449;
   margin-bottom: 2px;
 }
+
 .proveedor-main-rating-box {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 2px;
 }
+
 .proveedor-main-rating-num {
   font-size: 1.1em;
   color: #a57449;
@@ -945,31 +951,225 @@ body {
 }
 
 @media (max-width: 900px) {
-  .profile-proveedor-main, .proveedor-main-content {
+
+  .profile-proveedor-main,
+  .proveedor-main-content {
     max-width: 100%;
     padding: 0 10px;
   }
+
   .proveedor-main-header {
     flex-direction: column;
     align-items: center;
     gap: 16px;
     padding: 24px 10px 10px 10px;
   }
+
   .proveedor-main-img-box {
     width: 90px;
     height: 90px;
   }
+
   .proveedor-main-info {
     align-items: center;
     text-align: center;
   }
+
   .proveedor-main-content {
     padding: 18px 10px 0 10px;
     gap: 18px;
   }
+
   .proveedor-main-actions {
     flex-direction: column;
     gap: 10px;
     margin-top: 10px;
   }
+}
+
+.reservar-container {
+  background: #fdefce;
+  color: #875e39;
+  padding: 2rem;
+  position: relative;
+}
+
+.back-button {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  font-size: 32px;
+  color: #875e39;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.reservar-main {
+  display: flex;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.columna-izquierda {
+  flex: 1;
+  min-width: 300px;
+}
+
+.columna-derecha {
+  flex: 1;
+  min-width: 300px;
+}
+
+.perfil-proveedor {
+  text-align: center;
+}
+
+.reserva-avatar-box {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #a57449;
+}
+
+.reserva-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pres-nombre {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.rating-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.rating-num {
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.subinfo {
+  font-size: 1rem;
+  color: #a57449;
+  margin-bottom: 1rem;
+}
+
+.pres-descripcion {
+  text-align: left;
+  border-radius: 8px;
+}
+
+.formulario-reserva {
+  background: #fff4da;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.formulario-reserva label {
+  font-weight: 600;
+  color: #a57449;
+  margin-top: 1rem;
+  display: block;
+}
+
+.reserva-time-button {
+  margin: 0;
+  width: 100%;
+}
+
+.reserva-acciones {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reserva-horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Si está en modo escritorio, mostramos dos columnas */
+.reserva-horarios-desktop {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.reserva-horarios-mobile {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.custom-pet-select {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.custom-select-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  min-height: 61.188px;
+  background-color: #FEFAE0;
+  border: 1px solid #d4a373;
+}
+
+.custom-select-trigger .placeholder {
+  color: #999;
+}
+
+.custom-options {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  max-height: 20vh;
+  scrollbar-color: #aeaeae transparent;
+}
+
+.custom-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.custom-option:hover {
+  background-color: #f0f0f0;
+}
+
+.pet-preview-img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #ccc;
 }

@@ -1,7 +1,7 @@
 // routes/prestador.js
 const express = require('express');
 const router = express.Router();
-const { getAllPrestadores, createManyPrestadores, updateAvailability, togglePrestadorStatus, deletePrestador, getPrestadorById, getHorariosDisponibles } = require('../controllers/prestadorController');
+const { getAllPrestadores, createManyPrestadores, updateAvailability, togglePrestadorStatus, deletePrestador, getPrestadorById, getHorariosDisponibles, getReviewsFromProvider } = require('../controllers/prestadorController');
 
 // Ruta para obtener todos los prestadores con filtro opcional
 router.get('/', getAllPrestadores);
@@ -22,5 +22,8 @@ router.delete('/:prestadorId', deletePrestador);
 
 // Ruta para obtener un prestador por su ID
 router.get('/:id', getPrestadorById);
+
+// obtener reviews de un prestador
+router.get('/:id/reviews', getReviewsFromProvider);
 
 module.exports = router; 
