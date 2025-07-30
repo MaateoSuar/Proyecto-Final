@@ -24,7 +24,6 @@ export default function CalendarioReservas() {
         });
         // Solo reservas activas (pendiente o aceptada)
         const activas = res.data.filter(r => r.status === 'pendiente' || r.status === 'aceptada');
-        console.log('Reservas activas:', activas.map(r => ({ date: r.date, time: r.time })));
         setReservas(activas);
       } catch (error) {
         console.error('Error al obtener reservas:', error);

@@ -42,7 +42,6 @@ const MisReservas = () => {
     if (!socket) return;
 
     const handleNotificacionReserva = (data) => {
-      console.log('🔔 Notificación recibida:', data); // Agregá este log
       toast.info(data.mensaje || 'Nueva reserva recibida');
       cargarReservas();
     };
@@ -111,7 +110,6 @@ const MisReservas = () => {
       }
 
       setReservas(reservasData);
-      console.log(reservasData);
 
     } catch (error) {
       console.error('Error al cargar reservas:', error);
@@ -167,11 +165,13 @@ const MisReservas = () => {
 
   const formatearFechaCorta = (isoDate) => {
     const fecha = new Date(isoDate);
-    if (isNaN(fecha.getTime())) return ''; // Si la fecha no es válida, devolvemos string vacío
+    if (isNaN(fecha.getTime())) return '';
+
     return new Intl.DateTimeFormat('es-AR', {
       day: '2-digit',
       month: '2-digit',
       year: '2-digit',
+      timeZone: 'UTC'
     }).format(fecha);
   };
 

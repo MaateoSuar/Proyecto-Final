@@ -52,7 +52,6 @@ export default function Planes() {
   }, [navigate]);
 
   const handleProviderClick = (provider) => {
-    console.log("Provider clickeado:", provider); // <-- agregá esto
 
     if (provider) {
       let categoria = '';
