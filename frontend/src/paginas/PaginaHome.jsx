@@ -12,6 +12,7 @@ import Notificaciones from '../componentes/Notificaciones';
 import '../estilos/home/index.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
+const BACK_URL = import.meta.env.VITE_BACK_URL;
 
 export default function PaginaHome() {
   const [notificaciones, setNotificaciones] = useState([]);
@@ -23,7 +24,7 @@ export default function PaginaHome() {
     if (!userId || !token) return;
 
     // 1. Conectamos al socket con el token como query
-    const newSocket = io('http://localhost:5000', {
+    const newSocket = io(`${BACK_URL}`, {
       auth: { token },
     });
 

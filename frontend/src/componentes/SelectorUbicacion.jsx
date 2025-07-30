@@ -24,6 +24,7 @@ const SelectorUbicacion = ({ oculto }) => {
   const [editando, setEditando] = useState(null); // id de la ubicación en edición
   const [formEdicion, setFormEdicion] = useState({ nombre: '', tipo: 'casa', referencia: '', provincia: '', ciudad: '', direccion: '' });
   const [confirmarBorrado, setConfirmarBorrado] = useState(null); // id de la ubicación a borrar
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const handler = (e) => {
@@ -45,7 +46,7 @@ const SelectorUbicacion = ({ oculto }) => {
     if (!input) return;
     setCargandoSug(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/sugerencias?input=${encodeURIComponent(input)}`);
+      const res = await fetch(`${API_URL}/sugerencias?input=${encodeURIComponent(input)}`);
       const data = await res.json();
       setSugerencias(data.status === 'OK' ? data.predictions : []);
     } catch (error) {
