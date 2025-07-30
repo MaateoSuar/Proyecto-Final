@@ -71,4 +71,3 @@ mongoose.connect(process.env.MONGO_URI)
     });
   })
   .catch(err => console.error('❌ Error de conexión:', err));
- 

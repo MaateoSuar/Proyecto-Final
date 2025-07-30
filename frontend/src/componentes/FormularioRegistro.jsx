@@ -40,8 +40,7 @@ export default function FormularioRegistro() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          firstName: formulario.firstName,
-          lastName: formulario.lastName,
+          fullName: formulario.fullName,
           email: formulario.email,
           password: formulario.password,
           country: formulario.country,
