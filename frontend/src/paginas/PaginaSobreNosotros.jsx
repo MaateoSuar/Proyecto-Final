@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import BotonVolver from '../componentes/BotonVolver';
 import '../estilos/PaginaSobreNosotros.css';
 
 export default function PaginaSobreNosotros() {
   const navigate = useNavigate();
   return (
     <div className="sobre-hero-bg">
+      <BotonVolver />
       <span className="back-arrow-sobre" style={{position:'fixed',top:32,left:32,zIndex:1000,cursor:'pointer'}} onClick={() => navigate(-1)}>&larr;</span>
       <section className="sobre-hero">
         <div className="sobre-hero-illustration">

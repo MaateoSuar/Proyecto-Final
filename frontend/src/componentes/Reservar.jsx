@@ -14,6 +14,7 @@ import { useMediaQuery } from 'react-responsive';
 import StarRating from './ReviewForm';
 import { useSocket } from '../context/SocketContext';
 import ReviewForm from "./ReviewForm";
+import BotonVolver from './BotonVolver';
 
 
 registerLocale('es', es);
@@ -110,7 +111,10 @@ const Reservar = () => {
           dataProveedor.services = [dataProveedor.services];
         }
       } else {
-        const res = await axios.get(`${API_URL}/prestadores/${id}`);
+        const token = localStorage.getItem('token');
+        const res = await axios.get(`${API_URL}/prestadores/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         if (!res.data.success) {
           throw new Error('No se pudo obtener la información del proveedor');
         }
@@ -288,6 +292,11 @@ const Reservar = () => {
           setSelectedDate(new Date());
 
           toast.success(`✅ Reserva confirmada con ${proveedor.name} el ${selectedDate.toLocaleDateString('es-AR')} a las ${selectedTime}`);
+          
+          // Redirigir a la página de prestadores después de confirmar la reserva
+          setTimeout(() => {
+            navigate('/proveedores');
+          }, 1000);
         } catch (error) {
           console.error('Error al actualizar reservas:', error);
         }
@@ -333,8 +342,13 @@ const Reservar = () => {
 
   return (
     <div className="reservar-container">
-      {/* Flecha para volver */}
-      <button className="back-button" onClick={() => navigate(-1)}>&larr;</button>
+      {/* Botón de volver para PC/tablet */}
+      {!isMobile && (
+        <button className="back-button" onClick={() => navigate(-1)}>&larr;</button>
+      )}
+      
+      {/* Botón de volver responsive para móvil */}
+      {isMobile && <BotonVolver />}
 
       <div className="reservar-main">
         {/* Columna izquierda - Perfil del proveedor */}

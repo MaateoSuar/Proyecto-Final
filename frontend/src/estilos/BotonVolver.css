@@ -1,0 +1,44 @@
+.boton-volver-responsive {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  background: #fff8dc;
+  color: #8B5C2A;
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.boton-volver-responsive:hover {
+  background: #f0e6c0;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.boton-volver-responsive:active {
+  transform: scale(0.95);
+}
+
+/* Solo mostrar en responsive */
+@media (max-width: 768px) {
+  .boton-volver-responsive {
+    display: flex;
+  }
+}
+
+/* Ocultar en desktop */
+@media (min-width: 769px) {
+  .boton-volver-responsive {
+    display: none;
+  }
+} 

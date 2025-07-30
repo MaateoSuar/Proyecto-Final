@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import BotonVolver from './BotonVolver';
 import '../estilos/PerfilMascotas.css';
 import '../estilos/PaginaUsuario.css';
 
@@ -138,6 +139,7 @@ export default function RegistroMascota() {
 
   return (
     <div className="pagina-usuario">
+      <BotonVolver />
       {/* Barra lateral */}
       <div className="sidebar">
         {/* Botón de regreso */}

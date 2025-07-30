@@ -3,6 +3,7 @@ import formatRating from '../utils/formatRating';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FaFilter, FaSearch } from 'react-icons/fa';
+import BotonVolver from './BotonVolver';
 import '../estilos/ProviderList.css';
 import '../estilos/PaginaUsuario.css';
 
@@ -224,6 +225,7 @@ const ProviderList = () => {
 
   return (
     <div className="pagina-usuario">
+      <BotonVolver />
       {/* Barra lateral igual a profile */}
       <div className="sidebar">
         <button

@@ -10,6 +10,7 @@ import Cuidadores from '../componentes/Cuidadores';
 import HistorialReservasHome from '../componentes/HistorialReservasHome';
 import SelectorUbicacion from '../componentes/SelectorUbicacion';
 import Notificaciones from '../componentes/Notificaciones';
+import BotonVolver from '../componentes/BotonVolver';
 import '../estilos/home/index.css';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -49,6 +50,7 @@ export default function PaginaHome() {
   return (
 
     <div className="pagina-home">
+      <BotonVolver />
       {isMobile ?
           <div className="header-container">
             <HeaderUsuario />

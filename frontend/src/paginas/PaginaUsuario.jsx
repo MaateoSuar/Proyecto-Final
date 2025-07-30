@@ -1,6 +1,7 @@
 import UsuarioEdit from '../componentes/UsuarioEdit';
 import MisReservas from '../componentes/MisReservas';
 import { useState, useEffect } from 'react';
+import BotonVolver from '../componentes/BotonVolver';
 import '../estilos/PaginaUsuario.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SelectorUbicacion from '../componentes/SelectorUbicacion';
@@ -41,6 +42,7 @@ export default function PaginaUsuario() {
 
   return (
     <div className="pagina-usuario">
+      <BotonVolver />
       {/* Barra lateral */}
       <div className="sidebar">
         {/* Botón de regreso */}
