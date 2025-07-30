@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UbicacionProvider } from './context/UbicacionContext';
@@ -20,16 +20,40 @@ import RutaProtegidaAdmin from './componentes/RutaProtegidaAdmin';
 import RutaProtegida from './componentes/RutaProtegida';
 import RutaPublica from './componentes/RutaPublica';
 import PaginaHomePrestador from './paginas/PaginaHomePrestador';
+import PaginaProgramarDisponibilidad from './paginas/PaginaProgramarDisponibilidad';
 import Footer from './componentes/Footer';
 import PaginaSobreNosotros from './paginas/PaginaSobreNosotros';
 import PaginaContacto from './paginas/PaginaContacto';
 import { LoadScript } from "@react-google-maps/api";
+import ScrollToTop from './ScrollToTop';
 
+// Componente condicional para el Footer
+const ConditionalFooter = () => {
+  const location = useLocation();
+  
+  // Rutas donde NO debe aparecer el footer
+  const hideFooterRoutes = [
+    '/profile',
+    '/registromascota',
+    '/editar-mascota',
+    '/sobre-nosotros',
+    '/contacto'
+  ];
+  
+  // Si la ruta actual está en la lista de rutas donde ocultar footer, no mostrar
+  if (hideFooterRoutes.some(route => location.pathname.startsWith(route))) {
+    return null;
+  }
+  
+  // En todas las demás rutas, mostrar el footer
+  return <Footer />;
+};
 
 export default function App() {
   return (
     <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_API_KEY} libraries={['places']}>
       <BrowserRouter>
+        <ScrollToTop />
         <UbicacionProvider>
           <ToastContainer
             position="top-right"
@@ -95,6 +119,12 @@ export default function App() {
               path="/cuidador/inicio"
               element={
                 <PaginaHomePrestador />
+              }
+            />
+            <Route
+              path="/cuidador/programar-disponibilidad"
+              element={
+                <PaginaProgramarDisponibilidad />
               }
             />
             <Route
@@ -171,7 +201,7 @@ export default function App() {
             />
             <Route path="*" element={<Navigate to="/inicio" replace />} />
           </Routes>
-          <Footer />
+          <ConditionalFooter />
         </UbicacionProvider>
       </BrowserRouter>
     </LoadScript>

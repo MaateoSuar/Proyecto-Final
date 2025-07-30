@@ -10,6 +10,8 @@ export default function EditarMascota() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [mascotas, setMascotas] = useState([]);
+  const [mascotaSeleccionada, setMascotaSeleccionada] = useState(null);
 
   const [formData, setFormData] = useState({
     nombre: '',
@@ -37,10 +39,13 @@ export default function EditarMascota() {
         setIsLoading(true);
         setError(null);
         const token = localStorage.getItem('token');
+        
+        // Cargar la mascota específica
         const response = await axios.get(`${API_URL}/pets/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const mascota = response.data;
+        setMascotaSeleccionada(mascota);
         setFormData({
           nombre: mascota.name || '',
           raza: mascota.breed || '',
@@ -53,6 +58,12 @@ export default function EditarMascota() {
         if (mascota.image) {
           setFotoMascota(mascota.image);
         }
+
+        // Cargar todas las mascotas del usuario
+        const responseMascotas = await axios.get(`${API_URL}/pets`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setMascotas(responseMascotas.data);
       } catch (error) {
         setError(error.response?.data?.message || 'Error al cargar los datos de la mascota');
       } finally {
@@ -100,6 +111,36 @@ export default function EditarMascota() {
       });
       setNuevaAlergia('');
     }
+  };
+
+  const handleRemoveVacuna = (index) => {
+    setFormData({
+      ...formData,
+      vacunas: formData.vacunas.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleRemoveAlergia = (index) => {
+    setFormData({
+      ...formData,
+      alergias: formData.alergias.filter((_, i) => i !== index),
+    });
+  };
+
+  const handleCambiarMascota = (mascota) => {
+    setMascotaSeleccionada(mascota);
+    setFormData({
+      nombre: mascota.name || '',
+      raza: mascota.breed || '',
+      fechaNacimiento: mascota.birthdate ? mascota.birthdate.split('T')[0] : new Date().toISOString().split('T')[0],
+      peso: mascota.weight || '',
+      esterilizado: Boolean(mascota.spayed),
+      vacunas: Array.isArray(mascota.vaccines) ? mascota.vaccines : [],
+      alergias: Array.isArray(mascota.allergies) ? mascota.allergies : [],
+    });
+    setFotoMascota(mascota.image || null);
+    // Actualizar la URL sin recargar la página
+    navigate(`/editar-mascota/${mascota._id}`, { replace: true });
   };
 
   const handleSave = async () => {
@@ -172,22 +213,64 @@ export default function EditarMascota() {
   }
 
   return (
-    <div className="container" style={{ position: 'relative' }}>
+    <div className="pagina-usuario">
+      {/* Barra lateral */}
+      <div className="sidebar">
+        {/* Botón de regreso */}
       <button
-        className="back-button"
+          className="back-button-sidebar"
         onClick={() => navigate('/inicio')}
-        aria-label="Volver al inicio"
       >
-        &larr;
+          <span className="back-arrow">&larr;</span>
       </button>
-      <div className="mascota-card">
-        <div className="card">
-          <div className="header">
-            <label htmlFor="fotoInput" style={{ cursor: 'pointer' }}>
-              {fotoMascota ? (
-                <img src={fotoMascota} alt="Mascota" className="previewFoto" />
+
+        {/* Menú principal */}
+        <div className="sidebar-menu">
+          <div className="sidebar-title">Mis Mascotas</div>
+          {mascotas.map((mascota) => (
+            <button 
+              key={mascota._id}
+              className={`sidebar-item ${mascotaSeleccionada?._id === mascota._id ? 'active' : ''}`}
+              onClick={() => handleCambiarMascota(mascota)}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
+            >
+              {mascota.image ? (
+                <img src={mascota.image} alt={mascota.name} style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '10px', flexShrink: 0 }} />
               ) : (
-                <div className="icon">+</div>
+                <span style={{ marginRight: '10px', fontSize: '20px' }}>🐾</span>
+              )}
+              <span style={{ textAlign: 'left' }}>{mascota.name || 'Sin nombre'}</span>
+            </button>
+          ))}
+          <button
+            className="sidebar-item"
+            style={{marginTop: '24px', background: '#e0c9a6', color: '#8B5C2A', fontWeight: 'bold', fontSize: '16px'}}
+            onClick={() => navigate('/registromascota')}
+          >
+            ➕ Crear Mascota
+          </button>
+        </div>
+
+        {/* Enlaces adicionales */}
+        <div className="sidebar-links">
+          <div className="sidebar-link">PetCare®</div>
+          <div className="sidebar-link" onClick={() => navigate('/sobre-nosotros')}>Sobre nosotros</div>
+          <div className="sidebar-link" onClick={() => navigate('/contacto')}>Contacto</div>
+        </div>
+      </div>
+      
+      {/* Contenido principal */}
+      <div className="main-content">
+        <div className="editar-mascota-container" style={{ position: 'relative' }}>
+          <div className="mascota-card">
+            <div className="card editar-mascota-card">
+              <div className="list">
+                <div className="item full-width" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <label htmlFor="fotoInput" style={{ cursor: 'pointer', display: 'flex', justifyContent: 'center', marginBottom: '15px' }}>
+              {fotoMascota ? (
+                      <img src={fotoMascota} alt="Mascota" className="previewFoto editar-mascota-foto" />
+              ) : (
+                      <div className="icon editar-mascota-foto">+</div>
               )}
             </label>
             <input
@@ -203,41 +286,41 @@ export default function EditarMascota() {
               placeholder="Nombre"
               value={formData.nombre}
               onChange={handleInputChange}
-              className="nameInput"
+                    className="editar-mascota-input"
+                    style={{ marginTop: '10px', textAlign: 'center', fontSize: '18px', fontWeight: 'bold', color: '#a57449' }}
             />
           </div>
-          <div className="list">
-            <div className="item">
+                <div className="editar-mascota-item">
               <input
                 type="text"
                 name="raza"
                 placeholder="Raza"
                 value={formData.raza}
                 onChange={handleInputChange}
-                className="input"
+                    className="editar-mascota-input"
               />
             </div>
-            <div className="item">
+                <div className="editar-mascota-item">
               <input
                 type="date"
                 name="fechaNacimiento"
                 value={formData.fechaNacimiento}
                 onChange={handleInputChange}
-                className="input"
+                    className="editar-mascota-input"
               />
             </div>
-            <div className="item">
+                <div className="editar-mascota-item">
               <input
                 type="number"
                 name="peso"
                 placeholder="Peso (kg)"
                 value={formData.peso}
                 onChange={handleInputChange}
-                className="input"
+                    className="editar-mascota-input"
               />
             </div>
-            <div className="item">
-              <span className="label">Esterilizado</span>
+                <div className="editar-mascota-item">
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Esterilizado</span>
               <label className="switch">
                 <input
                   type="checkbox"
@@ -262,55 +345,61 @@ export default function EditarMascota() {
                 </span>
               </label>
             </div>
-            <div className="item full-width">
-              <span className="label">Vacunas</span>
+                <div className="editar-mascota-item full-width">
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Vacunas</span>
             </div>
-            <div className="item full-width">
+                <div className="editar-mascota-item full-width">
               <input
                 type="text"
                 placeholder="Añadir vacuna"
                 value={nuevaVacuna}
                 onChange={(e) => setNuevaVacuna(e.target.value)}
-                className="input"
+                    className="editar-mascota-input"
                 style={{ flex: 1 }}
               />
               <button onClick={handleAddVacuna} className="addBtn">+</button>
             </div>
+                <div className="tags-container">
             {formData.vacunas.map((vacuna, i) => (
-              <div className="item full-width" key={i}>{vacuna}</div>
+                    <div className="vacuna-tag" key={i}>
+                      <span>{vacuna}</span>
+                      <button className="remove-tag-btn" onClick={() => handleRemoveVacuna(i)}>×</button>
+                    </div>
             ))}
-            <div className="item full-width">
-              <span className="label">Alergias</span>
+                </div>
+                <div className="editar-mascota-item full-width">
+              <span style={{ fontSize: '15px', fontWeight: 'bold', color: '#8B5C2A' }}>Alergias</span>
             </div>
-            <div className="item full-width">
+                <div className="editar-mascota-item full-width">
               <input
                 type="text"
                 placeholder="Añadir alergia"
                 value={nuevaAlergia}
                 onChange={(e) => setNuevaAlergia(e.target.value)}
-                className="input"
+                    className="editar-mascota-input"
                 style={{ flex: 1 }}
               />
               <button onClick={handleAddAlergia} className="addBtn">+</button>
             </div>
+                <div className="tags-container">
             {formData.alergias.map((alergia, i) => (
-              <div className="item full-width" key={i}>{alergia}</div>
+                    <div className="alergia-tag" key={i}>
+                      <span>{alergia}</span>
+                      <button className="remove-tag-btn" onClick={() => handleRemoveAlergia(i)}>×</button>
+                    </div>
             ))}
           </div>
-          <button className="button" onClick={handleSave} disabled={isLoading}>
-            {isLoading ? 'Guardando...' : 'Guardar Cambios'}
-          </button>
-          {showConfirmDelete ? (
-            <div className="confirm-delete" style={{ backgroundColor: '#dc3545', color: 'white', padding: 10, marginTop: 10, borderRadius: 8, textAlign: 'center' }}>
-              <p>¿Estás seguro de que deseas eliminar esta mascota?</p>
-              <button className="confirm" style={{ margin: 5, padding: '5px 15px', border: 'none', borderRadius: 4, cursor: 'pointer', backgroundColor: '#fff', color: '#dc3545' }} onClick={handleDelete}>Sí, eliminar</button>
-              <button className="cancel" style={{ margin: 5, padding: '5px 15px', border: '1px solid #fff', borderRadius: 4, cursor: 'pointer', backgroundColor: 'transparent', color: '#fff' }} onClick={() => setShowConfirmDelete(false)}>Cancelar</button>
+              </div>
+              <div className="botones-editar-mascota" style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '20px' }}>
+                <button className="save-button" onClick={handleSave} disabled={isLoading}>
+                  {isLoading ? 'Guardando...' : 'Guardar'}
+                </button>
+                <button className="save-button" style={{ backgroundColor: '#dc3545', width: '250px' }} onClick={handleDelete}>
+                  Eliminar Mascota
+                </button>
+              </div>
             </div>
-          ) : (
-            <button className="delete-button" style={{ marginTop: 10, width: '100%', padding: 12, backgroundColor: '#dc3545', color: 'white', fontWeight: 'bold', border: 'none', borderRadius: 8, cursor: 'pointer' }} onClick={handleDelete}>
-              Eliminar Mascota
-            </button>
-          )}
+          </div>
         </div>
       </div>
     </div>

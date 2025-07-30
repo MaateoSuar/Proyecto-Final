@@ -1,5 +1,6 @@
-import PerfilMascotas from "../componentes/PerfilMascotas";
-import '../estilos/perfilmascotas.css';
+import RegistroMascota from "../componentes/RegistroMascota";
+import '../estilos/PerfilMascotas.css';
+
 export default function PaginaRegistroMascotas() {
-    return <PerfilMascotas/>
+    return <RegistroMascota />
 }

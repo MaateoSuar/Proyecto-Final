@@ -18,14 +18,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 12px 12px 16px 12px;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   width: 100%;
 }
 
@@ -51,10 +51,10 @@
 }
 
 .nameInput {
-  margin-top: 15px;
+  margin-top: 8px;
   border: none;
   background: none;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
   color: #a57449;
   text-align: center;
@@ -76,9 +76,9 @@
 }
 
 .item {
-  padding: 12px 16px;
+  padding: 8px 10px;
   border-bottom: 1px solid #eee1bd;
-  font-size: 16px;
+  font-size: 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -187,50 +187,49 @@ input[type="number"] {
 /* Responsive */
 @media (max-width: 768px) {
   .container {
-    padding: 10px;
+    padding: 4px;
   }
-
-  .card {
-    max-width: 320px;
-    padding: 10px;
+  .card, .editar-mascota-card {
+    max-width: 220px !important;
+    width: 100% !important;
+    padding: 8px !important;
+    margin: 0 auto !important;
   }
-
-  .icon, .previewFoto {
-    width: 100px;
-    height: 100px;
-    font-size: 48px;
+  .editar-mascota-container {
+    padding: 0 !important;
   }
-
+  .icon, .previewFoto, .editar-mascota-foto {
+    width: 70px !important;
+    height: 70px !important;
+    min-width: 70px !important;
+    min-height: 70px !important;
+    max-width: 70px !important;
+    max-height: 70px !important;
+    font-size: 30px;
+  }
   .nameInput {
-    font-size: 20px;
+    font-size: 18px;
+    max-width: 90vw;
   }
-
-  .list {
+  .list, .editar-mascota-card .list {
     grid-template-columns: 1fr;
-    gap: 0;
-    padding: 0;
+    gap: 2px !important;
+    padding: 2px !important;
   }
-
-  .item {
-    font-size: 15px;
+  .editar-mascota-item, .item {
+    padding: 4px 4px !important;
+    font-size: 13px !important;
   }
-
-  .input {
-    font-size: 15px;
+  .addBtn, .save-button, .button {
+    font-size: 13px !important;
+    padding: 6px 10px !important;
   }
-
-  .label {
-    font-size: 15px;
+  .sidebar {
+    display: none !important;
   }
-
-  .addBtn {
-    padding: 4px 10px;
-    font-size: 15px;
-  }
-
-  .button {
-    font-size: 16px;
-    padding: 12px;
+  .main-content {
+    margin-left: 0 !important;
+    padding: 0 2px !important;
   }
 }
 
@@ -253,4 +252,211 @@ input[type="number"] {
 
 .delete-button:active {
   background-color: #b52a37;
+}
+
+/* Clases específicas para editar mascota */
+.editar-mascota-container {
+  background-color: #fdefce;
+  padding: 20px;
+  margin-top: 0px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.editar-mascota-input {
+  width: 100%;
+  border: 1px solid #a57449;
+  background-color: #fff4da;
+  color: #000;
+  font-size: 14px;
+  outline: none;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.editar-mascota-input:focus {
+  border-color: #8B5C2A;
+  box-shadow: 0 0 0 2px rgba(139, 92, 42, 0.1);
+}
+
+.editar-mascota-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee1bd;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.editar-mascota-foto {
+  width: 100px !important;
+  height: 100px !important;
+  min-width: 100px !important;
+  min-height: 100px !important;
+  max-width: 100px !important;
+  max-height: 100px !important;
+}
+
+.editar-mascota-card {
+  max-width: 4000px !important;
+  padding: 5px !important;
+}
+
+.editar-mascota-container {
+  min-height: 0 !important;
+}
+
+.editar-mascota-card .list {
+  padding: 10px !important;
+  gap: 10px !important;
+}
+
+.save-button {
+  background-color: #b77b4b;
+  color: white;
+  padding: 9px 30px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+  width: 200px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.save-button:hover {
+  background-color: #a57449;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-title {
+  color: #8B5C2A;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  padding: 10px;
+  border-bottom: 1px solid rgba(139, 92, 42, 0.2);
+}
+
+.sidebar-item img {
+  object-fit: cover;
+}
+
+.sidebar-menu {
+  margin-top: -30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.back-arrow {
+  font-size: 30px;
+  color: #8B5C2A;
+}
+
+/* Estilos para etiquetas de vacunas y alergias */
+.vacuna-tag, .alergia-tag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdefce;
+  color: #875e39;
+  padding: 8px 12px;
+  border-radius: 20px;
+  margin: 4px 0;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #e6d7b8;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.vacuna-tag:hover, .alergia-tag:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.remove-tag-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 8px;
+  transition: all 0.2s ease;
+}
+
+.remove-tag-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.tags-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.input, .editar-mascota-input, .editar-mascota-card input, .editar-mascota-card select {
+  padding: 8px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background-color: #fffadd;
+  font-size: 13px;
+  color: #000000;
+  margin-top: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+.input:hover, .editar-mascota-input:hover, .editar-mascota-card input:hover, .editar-mascota-card select:hover {
+  border-color: rgba(165, 116, 73, 0.5);
+}
+.input:focus, .editar-mascota-input:focus, .editar-mascota-card input:focus, .editar-mascota-card select:focus {
+  outline: none;
+  border-color: #a57449;
+  box-shadow: 0 2px 8px rgba(165, 116, 73, 0.3);
+}
+.label, .editar-mascota-card label {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  color: #8B5C2A;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.titulo-seccion-mascota {
+  font-size: 26px !important;
+  font-weight: bold;
+  color: #8B5C2A;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+.esterilizado-label {
+  font-size: 32px;
+  font-weight: bold;
+  color: #8B5C2A;
+  margin-left: 12px;
 }

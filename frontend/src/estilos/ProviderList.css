@@ -91,6 +91,15 @@ h3, h2 {
   padding: 0.5rem 0;
 }
 
+.filtros-categorias-movil {
+  display: none;
+}
+@media (max-width: 768px) {
+  .filtros-categorias-movil {
+    display: flex !important;
+  }
+}
+
 .category-button {
   background-color: #FEFAE0;
   color: #000;

@@ -12,6 +12,9 @@ router.post('/create', createManyPrestadores);
 // Ruta para actualizar la disponibilidad de un prestador
 router.put('/:proveedorId/availability', updateAvailability);
 
+// Ruta para actualizar toda la disponibilidad de un prestador
+router.put('/:proveedorId/full-availability', authMiddleware, updateFullAvailability);
+
 // Ruta para activar/desactivar un prestador
 router.put('/:prestadorId/toggle-status', togglePrestadorStatus);
 
@@ -22,8 +25,5 @@ router.delete('/:prestadorId', deletePrestador);
 
 // Ruta para obtener un prestador por su ID
 router.get('/:id', getPrestadorById);
-
-// obtener reviews de un prestador
-router.get('/:id/reviews', getReviewsFromProvider);
 
 module.exports = router; 

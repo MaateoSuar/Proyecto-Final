@@ -23,6 +23,17 @@ export default function PaginaUsuario() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab, location.search]);
 
+  useEffect(() => {
+    const handleToggleEditMode = () => {
+      setIsEditMode(!isEditMode);
+    };
+
+    window.addEventListener('toggleEditMode', handleToggleEditMode);
+    return () => {
+      window.removeEventListener('toggleEditMode', handleToggleEditMode);
+    };
+  }, [isEditMode]);
+
   const handleLogout = () => {
     localStorage.clear();
     navigate('/login');
@@ -30,80 +41,86 @@ export default function PaginaUsuario() {
 
   return (
     <div className="pagina-usuario">
-      <button
-        className="back-button"
-        style={{
-          position: 'absolute',
-          top: 16,
-          left: 16,
-          background: 'var(--background)',
-          color: '#8B5C2A',
-          border: 'none',
-          borderRadius: '6px',
-          padding: '8px 16px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          boxShadow: 'none',
-          zIndex: 10
-        }}
-        onClick={() => navigate('/inicio')}
-      >
-        <span className="back-arrow">&larr;</span>
-      </button>
-      <div className={`tabs${activeTab === 'perfil' ? ' tabs-perfil' : ''}`}
-        style={{ marginBottom: 0 }}>
-        <button 
-          className={`tab-button ${activeTab === 'perfil' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('perfil');
-            navigate('/profile?tab=perfil');
-          }}
+      {/* Barra lateral */}
+      <div className="sidebar">
+        {/* Botón de regreso */}
+        <button
+          className="back-button-sidebar"
+          onClick={() => navigate('/inicio')}
         >
-          Perfil
-        </button>
-        <button 
-          className={`tab-button ${activeTab === 'reservas' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('reservas');
-            navigate('/profile?tab=reservas');
-          }}
-        >
-        Reservas
-        </button>
-        <button 
-          className="tab-button cerrar-sesion"
-          onClick={handleLogout}
-        >
-          Cerrar Sesión
+          <span className="back-arrow">&larr;</span>
         </button>
 
-        {activeTab === 'perfil' && (
-        <button className="tab-button edit-button" 
-              onClick={() => setIsEditMode(!isEditMode)}
-              title={isEditMode ? "Cerrar edición" : "Editar perfil"}
-              style={{ marginBottom: '0' }}>
-          {isEditMode ? '❌' : '✏️'}
-        </button>
-        )}
+        {/* Menú principal */}
+        <div className="sidebar-menu">
+          <button
+            className={`sidebar-item ${activeTab === 'perfil' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('perfil');
+              navigate('/profile?tab=perfil');
+            }}
+          >
+            👤 Perfil
+          </button>
+          <button
+            className={`sidebar-item ${activeTab === 'reservas' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('reservas');
+              navigate('/profile?tab=reservas');
+            }}
+          >
+            📅 Reservas
+          </button>
+          <button
+            className="sidebar-item logout"
+            onClick={handleLogout}
+          >
+            🚪 Cerrar Sesión
+          </button>
+        </div>
 
-        
+        {/* Enlaces adicionales */}
+        <div className="sidebar-links">
+          <div className="sidebar-link">PetCare®</div>
+          <div className="sidebar-link" onClick={() => navigate('/sobre-nosotros')}>Sobre nosotros</div>
+          <div className="sidebar-link" onClick={() => navigate('/contacto')}>Contacto</div>
+        </div>
       </div>
       
-      <div className="tab-content">
-        {activeTab === 'perfil' && (
-          <div className="perfil-contenedor perfil-espaciado-movil">
+      {/* Contenido principal */}
+      <div className="main-content">
+        {activeTab === 'perfil' ? (
+          <div className="perfil-contenedor">
             <div className="avatar-centro-movil">
               <UsuarioEdit isEditMode={isEditMode} />
             </div>
+            {/* Botones móviles abajo, dentro del contenedor blanco */}
+            {!isEditMode && (
+              <div className="perfil-botones-movil">
+                <button
+                  className={`sidebar-item ${activeTab === 'reservas' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('reservas');
+                    navigate('/profile?tab=reservas');
+                  }}
+                >
+                  📅 Reservas
+                </button>
+                <button
+                  className="sidebar-item logout"
+                  onClick={handleLogout}
+                >
+                  🚪 Cerrar Sesión
+                </button>
+              </div>
+            )}
           </div>
-        )}
-
-        {activeTab === 'reservas' && (
+        ) : activeTab === 'reservas' ? (
           <MisReservas />
-        )}
+        ) : null}
+        {/* Montamos SelectorUbicacion oculto para que el modal funcione pero sin mostrar el recuadro */}
+        <SelectorUbicacion oculto={true} />
       </div>
-      {/* Montamos SelectorUbicacion oculto para que el modal funcione pero sin mostrar el recuadro */}
-      <SelectorUbicacion oculto={true} />
     </div>
   );
 }
