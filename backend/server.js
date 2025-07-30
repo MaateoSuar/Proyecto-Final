@@ -51,15 +51,11 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // 🔌 Socket.io listeners
 io.on('connection', socket => {
-  console.log('✅ Nuevo socket conectado:', socket.id);
-
   socket.on('joinSala', userId => {
-    console.log(`🧩 Usuario ${userId} unido a sala`);
     socket.join(userId);
   });
 
   socket.on('reservaRealizada', data => {
-    console.log('📥 Evento reservaRealizada recibido:', data);
     io.to(data.proveedorId).emit('notificacionReserva', {
       titulo: 'Nueva reserva',
       mensaje: `Tenés una nueva reserva para el ${data.fecha} a las ${data.hora}`,

@@ -9,7 +9,6 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendEmail({ to, subject, html }) {
-    console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
   try {
     await transporter.sendMail({
       from: `"ReservApp" <${process.env.EMAIL_USER}>`,
@@ -17,7 +16,6 @@ async function sendEmail({ to, subject, html }) {
       subject,
       html,
     });
-    console.log('Email enviado a:', to);
   } catch (error) {
     console.error('Error enviando email:', error);
   }

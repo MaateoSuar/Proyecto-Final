@@ -30,7 +30,7 @@ export default function Planes() {
 
         if (res.data.success) {
           const activeProviders = res.data.data.filter(p => p.isActive);
-          
+
           // Obtener un proveedor aleatorio de cada tipo
           const peluqueros = activeProviders.filter(p => p.services?.some(s => s.type === 'peluqueria'));
           const cuidadores = activeProviders.filter(p => p.services?.some(s => s.type === 'cuidado'));
@@ -52,8 +52,9 @@ export default function Planes() {
   }, [navigate]);
 
   const handleProviderClick = (provider) => {
+    console.log("Provider clickeado:", provider); // <-- agregá esto
+
     if (provider) {
-      // Determinar la categoría basada en el tipo de servicio del proveedor
       let categoria = '';
       if (provider.services?.some(s => s.type === 'peluqueria')) {
         categoria = 'peluqueria';
@@ -62,10 +63,18 @@ export default function Planes() {
       } else if (provider.services?.some(s => s.type === 'paseo')) {
         categoria = 'paseo';
       }
-      
-      navigate(`/proveedor/${provider._id}?categoria=${categoria}&from=inicio`);
+
+      if (!provider._id) {
+        toast.error('Error: proveedor sin ID');
+        return;
+      }
+
+      navigate(`/proveedor/${provider._id}?categoria=${categoria}&from=inicio`, {
+        state: { provider }
+      });
     }
   };
+
 
   const getServiceType = (provider) => {
     if (!provider?.services) return '';
