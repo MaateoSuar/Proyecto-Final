@@ -11,7 +11,8 @@
 }
 
 .report-btn{
-  border-radius: var(--radius);
+  max-width: 105px!important;
+  border-radius: 8px!important;
 }
 
 .spinner-button {
@@ -86,7 +87,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
-  font-size: 0.9rem;
+  font-size: 1em;
 }
 
 .cancel-button:hover {
@@ -109,6 +110,7 @@
 }
 
 .review-btn {
+  max-width: 105px!important;
   background-color: #28a745;
   color: white;
   border: none;

@@ -242,10 +242,10 @@ export default function UsuarioEdit({ isEditMode }) {
       
       {!showPasswordForm ? (
         <>
-          <form className="form" onSubmit={(e) => e.preventDefault()}>
+          <form className="form" style={{minWidth: '630px'}} onSubmit={(e) => e.preventDefault()}>
         <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
           {/* Información Personal */}
-          <div className="form-section">
+          <div style={{paddingRight: '40px'}} className="form-section">
             <h3 className="profile-section-title">Información Personal</h3>
             
             {/* Avatar dentro de la sección de información personal */}
@@ -319,9 +319,9 @@ export default function UsuarioEdit({ isEditMode }) {
 
           {/* Información de Contacto */}
           <div className="form-section">
-            <h3 className="profile-section-title">Información de Contacto</h3>
+            <h3 className="profile-section-title">Contacto</h3>
             <label>
-              <span>Correo electrónico</span>
+              <span style={{marginTop: '58px'}}>Correo electrónico</span>
               <div className="field-container">
                 <input
                   name="email"
