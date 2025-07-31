@@ -1,6 +1,7 @@
 import UsuarioEdit from '../componentes/UsuarioEdit';
 import MisReservas from '../componentes/MisReservas';
 import { useState, useEffect } from 'react';
+import BotonVolver from '../componentes/BotonVolver';
 import '../estilos/PaginaUsuario.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SelectorUbicacion from '../componentes/SelectorUbicacion';
@@ -41,42 +42,43 @@ export default function PaginaUsuario() {
 
   return (
     <div className="pagina-usuario">
+      <BotonVolver />
       {/* Barra lateral */}
       <div className="sidebar">
         {/* Botón de regreso */}
-        <button
+      <button
           className="back-button-sidebar"
-          onClick={() => navigate('/inicio')}
-        >
-          <span className="back-arrow">&larr;</span>
-        </button>
+        onClick={() => navigate('/inicio')}
+      >
+        <span className="back-arrow">&larr;</span>
+      </button>
 
         {/* Menú principal */}
         <div className="sidebar-menu">
-          <button
+        <button 
             className={`sidebar-item ${activeTab === 'perfil' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveTab('perfil');
-              navigate('/profile?tab=perfil');
-            }}
-          >
+          onClick={() => {
+            setActiveTab('perfil');
+            navigate('/profile?tab=perfil');
+          }}
+        >
             👤 Perfil
-          </button>
-          <button
+        </button>
+        <button 
             className={`sidebar-item ${activeTab === 'reservas' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveTab('reservas');
-              navigate('/profile?tab=reservas');
-            }}
-          >
+          onClick={() => {
+            setActiveTab('reservas');
+            navigate('/profile?tab=reservas');
+          }}
+        >
             📅 Reservas
-          </button>
-          <button
+        </button>
+        <button 
             className="sidebar-item logout"
-            onClick={handleLogout}
-          >
+          onClick={handleLogout}
+        >
             🚪 Cerrar Sesión
-          </button>
+        </button>
         </div>
 
         {/* Enlaces adicionales */}

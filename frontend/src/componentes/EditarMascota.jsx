@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import BotonVolver from './BotonVolver';
 import '../estilos/PerfilMascotas.css';
 
 export default function EditarMascota() {
@@ -214,6 +215,7 @@ export default function EditarMascota() {
 
   return (
     <div className="pagina-usuario">
+      <BotonVolver />
       {/* Barra lateral */}
       <div className="sidebar">
         {/* Botón de regreso */}

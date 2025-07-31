@@ -190,13 +190,16 @@ input[type="number"] {
     padding: 4px;
   }
   .card, .editar-mascota-card {
-    max-width: 220px !important;
+    max-width: 320px !important;
     width: 100% !important;
     padding: 8px !important;
     margin: 0 auto !important;
+    box-sizing: border-box !important;
   }
   .editar-mascota-container {
     padding: 0 !important;
+    box-sizing: border-box !important;
+    margin-top: 10px !important;
   }
   .icon, .previewFoto, .editar-mascota-foto {
     width: 70px !important;
@@ -229,7 +232,8 @@ input[type="number"] {
   }
   .main-content {
     margin-left: 0 !important;
-    padding: 0 2px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
 }
 
@@ -459,4 +463,40 @@ input[type="number"] {
   font-weight: bold;
   color: #8B5C2A;
   margin-left: 12px;
+}
+
+@media (max-width: 768px) {
+  .editar-mascota-input, .input, .editar-mascota-card input, .editar-mascota-card select {
+    font-size: 11px !important;
+    padding: 4px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .botones-accion-mascota {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+  }
+  .botones-accion-mascota .save-button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .botones-editar-mascota {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+    width: 100% !important;
+  }
+  .botones-editar-mascota button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    font-size: 18px !important;
+  }
 }
