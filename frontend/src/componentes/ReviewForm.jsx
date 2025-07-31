@@ -22,7 +22,7 @@ function StarRating({ rating, setRating }) {
 
 export default function ReviewForm({ reservaId, onClose, onSubmit }) {
   const [comment, setComment] = useState('');
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
