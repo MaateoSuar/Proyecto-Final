@@ -37,7 +37,9 @@ const ConditionalFooter = () => {
     '/registromascota',
     '/editar-mascota',
     '/sobre-nosotros',
-    '/contacto'
+    '/contacto',
+    '/proveedores',
+    '/proveedor'
   ];
   
   // Si la ruta actual está en la lista de rutas donde ocultar footer, no mostrar
