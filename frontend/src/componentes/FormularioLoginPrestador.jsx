@@ -8,6 +8,7 @@ export default function FormularioLoginCuidador() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -22,6 +23,8 @@ export default function FormularioLoginCuidador() {
       toast.warning('Por favor, completa todos los campos.');
       return;
     }
+
+    setLoading(true); // 👉 Activar loading
 
     try {
       const respuesta = await fetch(`${API_URL}/auth/login-cuidador`, {
@@ -40,7 +43,7 @@ export default function FormularioLoginCuidador() {
       if (!respuesta.ok) {
         throw new Error(data.msg || 'Credenciales inválidas');
       }
-      
+
       localStorage.setItem('token', data.token);
       localStorage.setItem('prestador', JSON.stringify(data.prestador));
 
@@ -49,6 +52,8 @@ export default function FormularioLoginCuidador() {
 
     } catch (error) {
       toast.error('Error al iniciar sesión: ' + error.message);
+    } finally {
+      setLoading(false); // 👉 Desactivar loading
     }
   };
 
@@ -89,8 +94,8 @@ export default function FormularioLoginCuidador() {
 
         <div className="olvide-contrasena">¿Olvidaste tu contraseña?</div>
 
-        <button className="boton-login" type="submit">
-          Ingresar
+        <button className="boton-login" type="submit" disabled={loading}>
+          {loading ? <div className="spinner"></div> : 'Ingresar'}
         </button>
       </form>
 

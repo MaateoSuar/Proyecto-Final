@@ -13,7 +13,7 @@ export default function FormularioRegistroCuidador() {
     confirmPassword: '',
     phone: '',
   });
-
+  const [loading, setLoading] = useState(false);
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [mostrarConfirmar, setMostrarConfirmar] = useState(false);
 
@@ -29,7 +29,7 @@ export default function FormularioRegistroCuidador() {
       toast.error('Las contraseñas no coinciden');
       return;
     }
-
+    setLoading(true);
     try {
       const respuesta = await fetch(`${API_URL}/auth/registro-cuidador`, {
         method: 'POST',
@@ -59,6 +59,8 @@ export default function FormularioRegistroCuidador() {
       navigate('/login-cuidador');
     } catch (error) {
       toast.error('Error en el registro: ' + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -150,7 +152,9 @@ export default function FormularioRegistroCuidador() {
             </div>
           </div>
 
-          <button type="submit" className="registro-boton">Registrarse</button>
+          <button type="submit" className="registro-boton" disabled={loading}>
+            {loading ? <div className="spinner"></div> : 'Registrarse'}
+          </button>
         </form>
 
         <div className="registro-login-link">
