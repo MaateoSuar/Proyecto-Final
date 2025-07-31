@@ -15,10 +15,15 @@ export default function HeaderPrestador() {
                 <div className="subtext">¡Buenos días!</div>
             </div>
         </div>
-        <div><button onClick={() => {
-            localStorage.clear();
-            navigate('/login-cuidador');
-        }}>Cerrar Sesion</button></div>
+        <div><button 
+            className="sidebar-item logout"
+            onClick={() => {
+                localStorage.clear();
+                navigate('/login-cuidador');
+            }}
+        >
+            🚪 Cerrar Sesión
+        </button></div>
         </>
     );
 }
