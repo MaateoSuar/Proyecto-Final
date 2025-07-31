@@ -329,6 +329,7 @@ const MisReservas = () => {
         <ChatReserva
           reservaId={reservaEnChat._id}
           onClose={() => setReservaEnChat(null)}
+          socket={window.socket}
         />
       )}
     </div>

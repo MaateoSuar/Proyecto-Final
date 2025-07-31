@@ -6,7 +6,7 @@ import '../estilos/chatReserva.css';
 const API_URL = import.meta.env.VITE_API_URL;
 const BACK_URL = import.meta.env.VITE_BACK_URL;
 
-const ChatReserva = ({ reservaId, onClose }) => {
+const ChatReserva = ({ reservaId, onClose, socket }) => {
   const [mensajes, setMensajes] = useState([]);
   const [nuevoMensaje, setNuevoMensaje] = useState('');
   const [nombrePrestador, setNombrePrestador] = useState('');
@@ -104,30 +104,28 @@ const ChatReserva = ({ reservaId, onClose }) => {
   }, [mensajes]);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userId = JSON.parse(localStorage.getItem('usuario'))?.id;
+    
+    if (!socket) return;
 
-    const socket = io(`${BACK_URL}`, {
-      auth: { token },
-    });
+    const userId = JSON.parse(localStorage.getItem('usuario'))?.id || JSON.parse(localStorage.getItem('prestador'))?.id;
 
     socket.emit('joinSala', userId);
 
-    socket.on('mensajeRecibido', (nuevo) => {
+    const handler = (nuevo) => {
       if (nuevo.reservaId === reservaId) {
         setMensajes(prev => {
           if (prev.some(m => m._id === nuevo._id)) return prev;
           return [...prev, nuevo];
         });
       }
-    });
+    };
 
-    socketRef.current = socket;
+    socket.on('mensajeRecibido', handler);
 
     return () => {
-      socket.disconnect();
+      socket.off('mensajeRecibido', handler);
     };
-  }, [reservaId]);
+  }, [reservaId, socket]);
 
   return (
     <div className="chat-reserva">

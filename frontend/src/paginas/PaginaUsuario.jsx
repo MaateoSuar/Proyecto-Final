@@ -5,16 +5,39 @@ import BotonVolver from '../componentes/BotonVolver';
 import '../estilos/PaginaUsuario.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SelectorUbicacion from '../componentes/SelectorUbicacion';
+import { io } from 'socket.io-client';
 
 export default function PaginaUsuario() {
+  const BACK_URL = import.meta.env.VITE_BACK_URL;
   const location = useLocation();
   function getTabFromQuery() {
     const params = new URLSearchParams(location.search);
     return params.get('tab') === 'reservas' ? 'reservas' : 'perfil';
   }
+  const [socket, setSocket] = useState(null);
   const [activeTab, setActiveTab] = useState(getTabFromQuery());
   const [isEditMode, setIsEditMode] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userId = JSON.parse(localStorage.getItem('usuario'))?.id;
+
+    if (!userId || !token) return;
+
+    const newSocket = io(`${BACK_URL}`, {
+      auth: { token },
+    });
+
+    window.socket = newSocket;
+    newSocket.emit('joinSala', userId);
+
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     setActiveTab(getTabFromQuery());
@@ -46,39 +69,39 @@ export default function PaginaUsuario() {
       {/* Barra lateral */}
       <div className="sidebar">
         {/* Botón de regreso */}
-      <button
+        <button
           className="back-button-sidebar"
-        onClick={() => navigate('/inicio')}
-      >
-        <span className="back-arrow">&larr;</span>
-      </button>
+          onClick={() => navigate('/inicio')}
+        >
+          <span className="back-arrow">&larr;</span>
+        </button>
 
         {/* Menú principal */}
         <div className="sidebar-menu">
-        <button 
+          <button
             className={`sidebar-item ${activeTab === 'perfil' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('perfil');
-            navigate('/profile?tab=perfil');
-          }}
-        >
+            onClick={() => {
+              setActiveTab('perfil');
+              navigate('/profile?tab=perfil');
+            }}
+          >
             👤 Perfil
-        </button>
-        <button 
+          </button>
+          <button
             className={`sidebar-item ${activeTab === 'reservas' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('reservas');
-            navigate('/profile?tab=reservas');
-          }}
-        >
+            onClick={() => {
+              setActiveTab('reservas');
+              navigate('/profile?tab=reservas');
+            }}
+          >
             📅 Reservas
-        </button>
-        <button 
+          </button>
+          <button
             className="sidebar-item logout"
-          onClick={handleLogout}
-        >
+            onClick={handleLogout}
+          >
             🚪 Cerrar Sesión
-        </button>
+          </button>
         </div>
 
         {/* Enlaces adicionales */}
@@ -88,7 +111,7 @@ export default function PaginaUsuario() {
           <div className="sidebar-link" onClick={() => navigate('/contacto')}>Contacto</div>
         </div>
       </div>
-      
+
       {/* Contenido principal */}
       <div className="main-content">
         {activeTab === 'perfil' ? (
