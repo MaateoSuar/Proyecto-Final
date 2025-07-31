@@ -55,12 +55,14 @@ export default function PaginaSobreNosotros() {
           </div>
         </div>
       </section>
-      <section className="sobre-cta-bg">
-        <div className="sobre-cta">
-          <h2>¿Listo para darle a tu mascota el mejor cuidado?</h2>
-          <button className="sobre-cta-btn" onClick={() => navigate('/inicio')}>Comenzar Ahora</button>
-      </div>
-      </section>
+      {!localStorage.getItem('prestador') && (
+        <section className="sobre-cta-bg">
+          <div className="sobre-cta">
+            <h2>¿Listo para darle a tu mascota el mejor cuidado?</h2>
+            <button className="sobre-cta-btn" onClick={() => navigate('/inicio')}>Comenzar Ahora</button>
+          </div>
+        </section>
+      )}
     </div>
   );
 } 
