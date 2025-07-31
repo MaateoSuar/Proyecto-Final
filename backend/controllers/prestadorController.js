@@ -177,6 +177,53 @@ const updateFullAvailability = async (req, res) => {
     }
 };
 
+// Actualizar servicios del prestador
+const updateServices = async (req, res) => {
+    try {
+        const { proveedorId } = req.params;
+        const { services } = req.body;
+
+        if (!proveedorId) {
+            return res.status(400).json({ success: false, message: 'Falta el ID del proveedor.' });
+        }
+
+        const prestador = await Prestador.findById(proveedorId);
+        if (!prestador) {
+            return res.status(404).json({ success: false, message: 'Prestador no encontrado.' });
+        }
+
+        // Validar que services sea un array
+        if (!Array.isArray(services)) {
+            return res.status(400).json({ success: false, message: 'Los servicios deben ser un array.' });
+        }
+
+        // Validar cada servicio
+        for (const service of services) {
+            if (!service.type || !service.price || service.price <= 0) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Cada servicio debe tener un tipo válido y un precio mayor a 0.' 
+                });
+            }
+        }
+
+        // Actualizar los servicios
+        prestador.services = services;
+
+        await prestador.save();
+
+        return res.status(200).json({
+            success: true,
+            message: 'Servicios actualizados correctamente.',
+            services: prestador.services
+        });
+
+    } catch (error) {
+        console.error('Error al actualizar servicios:', error);
+        return res.status(500).json({ success: false, message: 'Error interno del servidor.' });
+    }
+};
+
 // Activar/Desactivar prestador
 const togglePrestadorStatus = async (req, res) => {
     try {
@@ -290,6 +337,7 @@ module.exports = {
     createManyPrestadores,
     updateAvailability,
     updateFullAvailability,
+    updateServices,
     togglePrestadorStatus,
     deletePrestador,
     getPrestadorById,
