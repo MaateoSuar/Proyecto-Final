@@ -1,8 +1,11 @@
 // routes/prestador.js
 const express = require('express');
 const router = express.Router();
-const { getAllPrestadores, createManyPrestadores, updateAvailability, updateFullAvailability, updateServices, togglePrestadorStatus, deletePrestador, getPrestadorById, getHorariosDisponibles, getReviewsFromProvider } = require('../controllers/prestadorController');
+const { getAllPrestadores, createManyPrestadores, updateAvailability, updateFullAvailability, updateServices, togglePrestadorStatus, deletePrestador, getPrestadorById, getHorariosDisponibles, getReviewsFromProvider, updateProfileImage } = require('../controllers/prestadorController');
 const authMiddleware = require('../middlewares/authMiddleware.js');
+const upload = require('../middlewares/upload.js');
+const { storage } = require('../config/cloudinary.js');
+const multer = require('multer');
 
 // Ruta para obtener todos los prestadores con filtro opcional
 router.get('/', getAllPrestadores);
@@ -23,6 +26,9 @@ router.put('/:proveedorId/services', authMiddleware, updateServices);
 router.put('/:prestadorId/toggle-status', togglePrestadorStatus);
 
 router.get('/:prestadorId/horarios-disponibles', getHorariosDisponibles);
+
+// Ruta para actualizar imagen de perfil del prestador
+router.put('/:prestadorId/profile-image', authMiddleware, multer({ storage }).single('image'), updateProfileImage);
 
 // Ruta para eliminar un prestador
 router.delete('/:prestadorId', deletePrestador);

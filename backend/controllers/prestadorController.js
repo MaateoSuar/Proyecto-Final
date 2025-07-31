@@ -332,6 +332,49 @@ const getPrestadorById = async (req, res) => {
     }
 };
 
+// Actualizar imagen de perfil del prestador
+const updateProfileImage = async (req, res) => {
+    try {
+        const { prestadorId } = req.params;
+        
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: 'No se ha proporcionado ninguna imagen'
+            });
+        }
+
+        const prestador = await Prestador.findById(prestadorId);
+        if (!prestador) {
+            return res.status(404).json({
+                success: false,
+                message: 'Prestador no encontrado'
+            });
+        }
+
+        // La imagen ya se subió a Cloudinary a través del middleware
+        // req.file.path contiene la URL de la imagen en Cloudinary
+        prestador.profileImage = req.file.path;
+
+        await prestador.save();
+
+        res.json({
+            success: true,
+            message: 'Imagen de perfil actualizada correctamente',
+            data: {
+                profileImage: prestador.profileImage
+            }
+        });
+    } catch (error) {
+        console.error('Error al actualizar imagen de perfil:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar la imagen de perfil',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     getAllPrestadores,
     createManyPrestadores,
@@ -342,5 +385,6 @@ module.exports = {
     deletePrestador,
     getPrestadorById,
     getHorariosDisponibles,
-    getReviewsFromProvider
+    getReviewsFromProvider,
+    updateProfileImage
 }; 
