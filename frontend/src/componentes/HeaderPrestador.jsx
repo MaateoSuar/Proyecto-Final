@@ -87,7 +87,7 @@ export default function HeaderPrestador() {
                 <div className="subtext">¡Buenos días!</div>
             </div>
         </div>
-<<<<<<< Updated upstream
+        
         <div><button 
             className="sidebar-item logout"
             onClick={() => {
@@ -97,11 +97,6 @@ export default function HeaderPrestador() {
         >
             🚪 Cerrar Sesión
         </button></div>
-=======
-        <div><button onClick={() => {
-            localStorage.clear();
-            navigate('/login-cuidador');
-        }}>Cerrar Sesion</button></div>
         
         {/* Input file oculto */}
         <input
@@ -133,7 +128,6 @@ export default function HeaderPrestador() {
                 {notification.message}
             </div>
         )}
->>>>>>> Stashed changes
         </>
     );
 }
