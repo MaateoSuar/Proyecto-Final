@@ -18,8 +18,7 @@ export default function ProgramarDisponibilidad() {
   const [servicios, setServicios] = useState([
     { type: 'paseo', description: '', price: 0, activo: false },
     { type: 'cuidado', description: '', price: 0, activo: false },
-    { type: 'peluqueria', description: '', price: 0, activo: false },
-    { type: 'dentista', description: '', price: 0, activo: false }
+    { type: 'peluqueria', description: '', price: 0, activo: false }
   ]);
   const [loading, setLoading] = useState(false);
   const [prestadorData, setPrestadorData] = useState(null);
@@ -34,8 +33,7 @@ export default function ProgramarDisponibilidad() {
   const tiposServicios = [
     { key: 'paseo', label: 'Paseo de mascotas', icon: '🐕' },
     { key: 'cuidado', label: 'Cuidado de mascotas', icon: '🏠' },
-    { key: 'peluqueria', label: 'Peluquería canina', icon: '✂️' },
-    { key: 'dentista', label: 'Veterinario', icon: '🩺' }
+    { key: 'peluqueria', label: 'Peluquería canina', icon: '✂️' }
   ];
 
   useEffect(() => {
