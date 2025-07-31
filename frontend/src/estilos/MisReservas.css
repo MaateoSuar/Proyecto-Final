@@ -93,6 +93,21 @@
   background-color: #c82333;
 }
 
+.complete-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.9rem;
+}
+
+.complete-button:hover {
+  background-color: #218838;
+}
+
 .review-btn {
   background-color: #28a745;
   color: white;

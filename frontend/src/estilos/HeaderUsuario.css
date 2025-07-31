@@ -64,6 +64,39 @@
   background-color: #875e39;
 }
 
+/* Estilos para el botón de cerrar sesión (igual que en perfil) */
+.sidebar-item {
+  padding: 12px 16px;
+  border: none;
+  margin-top: 0px;
+  border-radius: 8px;
+  background-color: #fffadd;
+  color: #8B5C2A;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-item:hover {
+  background-color: #b77b4b;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(183, 123, 75, 0.3);
+}
+
+.sidebar-item.logout {
+  background-color: #ffe6e6;
+  color: #d63031;
+}
+
+.sidebar-item.logout:hover {
+  background-color: #d63031;
+  color: white;
+}
+
 @media (min-width: 768px) {
   .headerUsuario {
     padding: 0;
