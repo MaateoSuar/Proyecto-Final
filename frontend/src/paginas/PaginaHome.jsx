@@ -50,7 +50,6 @@ export default function PaginaHome() {
   return (
 
     <div className="pagina-home">
-      <BotonVolver />
       {isMobile ?
           <div className="header-container">
             <HeaderUsuario />
