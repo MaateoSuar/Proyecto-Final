@@ -143,6 +143,19 @@
   color: var(--primary);
 }
 
+/* Estilos específicos para estados de reserva */
+.reserva-status.cancelada {
+  color: #dc3545;
+}
+
+.reserva-status.completada {
+  color: #28a745;
+}
+
+.reserva-status.pendiente {
+  color: #ffc107;
+}
+
 .reservas-empty h3 {
   color: var(--primary);
   margin-bottom: 0.5rem;

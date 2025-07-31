@@ -232,7 +232,7 @@ const MisReservas = () => {
               <span className="reserva-date"> {formatearFechaCorta(reserva.date)} - {reserva.time}</span>
               {localStorage.getItem('prestador') && (<p className="reserva-pet">Usuario: <b>{reserva.user.fullName}</b></p>)}
               <p className="reserva-pet">Mascota: <b>{reserva.pet.name}</b></p>
-              <b className="reserva-status">{upper(reserva.status)}</b>
+              <b className={`reserva-status ${reserva.status}`}>{upper(reserva.status)}</b>
             </div>
 
             {/* Acciones condicionales */}
