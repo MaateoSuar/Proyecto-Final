@@ -119,6 +119,19 @@
   color: #875e39;
 }
 
+.actualizar-ubicacion {
+    background: #000000;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background 0.2s;
+    margin-top: 5px;
+    width: 100%;
+}
 .cerrar-modal {
   background: none;
   border: none;
@@ -126,6 +139,29 @@
   color: #666;
   cursor: pointer;
   padding: 4px;
+}
+
+@keyframes bordeAnimado {
+  0% {
+    border-color: #a0522d;
+    box-shadow: 0 0 0 0 rgba(160, 82, 45, 0.5);
+  }
+  50% {
+    border-color: #ff9900;
+    box-shadow: 0 0 10px 3px rgba(255, 153, 0, 0.7);
+  }
+  100% {
+    border-color: #a0522d;
+    box-shadow: 0 0 0 0 rgba(160, 82, 45, 0.5);
+  }
+}
+
+.editando-ubicacion {
+  border: 2px solid #a0522d;
+  animation: bordeAnimado 2s infinite;
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
 }
 
 /* Lista de ubicaciones guardadas */

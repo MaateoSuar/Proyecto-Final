@@ -78,19 +78,29 @@ const SelectorUbicacion = ({ mobile, oculto }) => {
   const handleGuardar = async (e) => {
     e.preventDefault();
     if (!coordenadas) return alert('Primero selecciona una dirección.');
-    const nueva = {
+
+    const datos = {
       nombre: detalle.nombre,
       tipo: detalle.tipo,
       ...partes,
       coordenadas,
       referencia: detalle.referencia
     };
+
     try {
-      const res = await guardarUbicacion(nueva);
-      seleccionarUbicacion(res);
+      if (editando) {
+        await actualizarUbicacion(editando, datos);
+        seleccionarUbicacion({ _id: editando, ...datos });
+      } else {
+        const res = await guardarUbicacion(datos);
+        seleccionarUbicacion(res);
+      }
+
+      // Resetear estado después de guardar o editar
       setMostrarModal(false);
-      setDireccion('');
+      setEditando(null);
       setDetalle({ nombre: '', tipo: 'casa', referencia: '' });
+      setDireccion('');
       setCoordenadas(null);
       setPartes({});
     } catch (error) {
@@ -98,18 +108,28 @@ const SelectorUbicacion = ({ mobile, oculto }) => {
     }
   };
 
+
   // Función para iniciar edición
   const handleEditar = (ubicacion) => {
     setEditando(ubicacion._id);
-    setFormEdicion({
-      nombre: ubicacion.nombre,
-      tipo: ubicacion.tipo,
-      referencia: ubicacion.referencia || '',
-      provincia: ubicacion.provincia || '',
-      ciudad: ubicacion.ciudad || '',
-      direccion: `${ubicacion.calle || ''} ${ubicacion.numero || ''}`.trim(),
+    setMostrarModal(true); // asegurate que se abra el modal
+    setDetalle({
+      nombre: ubicacion.nombre || '',
+      tipo: ubicacion.tipo || 'casa',
+      referencia: ubicacion.referencia || ''
     });
+    setDireccion(`${ubicacion.calle || ''} ${ubicacion.numero || ''}`.trim());
+    setPartes({
+      calle: ubicacion.calle || '',
+      numero: ubicacion.numero || '',
+      ciudad: ubicacion.ciudad || '',
+      provincia: ubicacion.provincia || '',
+      pais: ubicacion.pais || ''
+    });
+    setCoordenadas(ubicacion.coordenadas || null);
+    setSugerencias([]);
   };
+
   // Función para guardar cambios
   const guardarEdicion = async (e) => {
     e.preventDefault();
@@ -151,7 +171,9 @@ const SelectorUbicacion = ({ mobile, oculto }) => {
                 {ubicacionesGuardadas.map(ubicacion => (
                   <div
                     key={ubicacion._id}
-                    className={`ubicacion-item ${ubicacionActual?._id === ubicacion._id ? 'seleccionada' : ''}`}
+                    className={`ubicacion-item 
+  ${ubicacionActual?._id === ubicacion._id ? 'seleccionada' : ''} 
+  ${editando === ubicacion._id ? 'editando-ubicacion' : ''}`}
                     onClick={() => {
                       seleccionarUbicacion(ubicacion);
                       setMostrarModal(false);
@@ -249,81 +271,30 @@ const SelectorUbicacion = ({ mobile, oculto }) => {
                   />
                 </div>
 
-                <button type="submit" className="guardar-ubicacion">Guardar ubicación</button>
+                {editando ? (
+                  <div className="botones-edicion">
+                    <button type="submit" className="guardar-ubicacion">Actualizar ubicación</button>
+                    <button
+                      type="button"
+                      className="actualizar-ubicacion"
+                      onClick={() => {
+                        setEditando(null);
+                        setDetalle({ nombre: '', tipo: 'casa', referencia: '' });
+                        setDireccion('');
+                        setCoordenadas(null);
+                        setPartes({});
+                        setSugerencias([]);
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
+                ) : (
+                  <button type="submit" className="guardar-ubicacion">Guardar ubicación</button>
+                )}
               </form>
             </div>
           </div>
-        )}
-        {editando && (
-          <form onSubmit={guardarEdicion} className="formulario-ubicacion">
-            <div className="campo-formulario">
-              <label>Nombre</label>
-              <input type="text" value={formEdicion.nombre} onChange={e => setFormEdicion(f => ({ ...f, nombre: e.target.value }))} required />
-            </div>
-            <div className="campo-formulario">
-              <label>Tipo</label>
-              <div className="tipos-ubicacion" role="radiogroup">
-                {['casa', 'trabajo', 'otro'].map(tipo => (
-                  <button
-                    type="button"
-                    key={tipo}
-                    role="radio"
-                    className={`tipo-btn ${formEdicion.tipo === tipo ? 'activo' : ''}`}
-                    aria-checked={formEdicion.tipo === tipo}
-                    onClick={() => setFormEdicion(f => ({ ...f, tipo }))}
-                  >
-                    {getIconoTipo(tipo)} {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="campo-formulario">
-              <label>Provincia</label>
-              <select
-                value={formEdicion.provincia}
-                onChange={e => setFormEdicion(f => ({ ...f, provincia: e.target.value, ciudad: '', direccion: '' }))}
-                required
-                className="provincia-select formulario-input"
-              >
-                <option value="">Selecciona una provincia</option>
-                {PROVINCIAS.map(p => (
-                  <option key={p} value={p}>{p}</option>
-                ))}
-              </select>
-            </div>
-            <div className="campo-formulario">
-              <label>Ciudad</label>
-              <select
-                value={formEdicion.ciudad}
-                onChange={e => setFormEdicion(f => ({ ...f, ciudad: e.target.value, direccion: '' }))}
-                required
-                className="ciudad-select formulario-input"
-                disabled={!formEdicion.provincia || !CIUDADES[formEdicion.provincia]}
-              >
-                <option value="">Selecciona una ciudad</option>
-                {(CIUDADES[formEdicion.provincia] || []).map(c => (
-                  <option key={c} value={c}>{c}</option>
-                ))}
-              </select>
-            </div>
-            <div className="campo-formulario">
-              <label>Dirección</label>
-              <input
-                type="text"
-                value={formEdicion.direccion}
-                onChange={e => setFormEdicion(f => ({ ...f, direccion: e.target.value }))}
-                required
-                className="formulario-input"
-                disabled={!formEdicion.provincia || !formEdicion.ciudad}
-              />
-            </div>
-            <div className="campo-formulario">
-              <label>Referencia (opcional)</label>
-              <input type="text" value={formEdicion.referencia} onChange={e => setFormEdicion(f => ({ ...f, referencia: e.target.value }))} />
-            </div>
-            <button type="submit" className="guardar-ubicacion">Guardar cambios</button>
-            <button type="button" className="borrar-ubicacion-btn" onClick={() => setEditando(null)}>Cancelar</button>
-          </form>
         )}
         {confirmarBorrado && (
           <div className="modal-confirmacion">
@@ -341,13 +312,13 @@ const SelectorUbicacion = ({ mobile, oculto }) => {
   }
 
   return (
-    <div className="selector-ubicacion" style={mobile ? { margin: '10px 0' } : {}}>
+    <div className="selector-ubicacion" style={mobile ? { margin: '10px 0', maxWidth: '2000px' } : {}}>
       {mobile ?
         <div className="ubicacion-principal" onClick={() => setMostrarModal(true)}>
           <FaMapMarkerAlt className="icono-ubicacion" />
           <div className="texto-ubicacion">
             {ubicacionActual ? (
-                <span className="direccion-ubicacion"><span className="etiqueta-ubicacion">{ubicacionActual.nombre}</span>       {ubicacionActual.calle} {ubicacionActual.numero}</span>
+              <span className="direccion-ubicacion"><span className="etiqueta-ubicacion">{ubicacionActual.nombre}</span>       {ubicacionActual.calle} {ubicacionActual.numero}</span>
             ) : <span className="sin-ubicacion">Seleccionar ubicación</span>}
           </div>
         </div>
@@ -376,7 +347,9 @@ const SelectorUbicacion = ({ mobile, oculto }) => {
               {ubicacionesGuardadas.map(ubicacion => (
                 <div
                   key={ubicacion._id}
-                  className={`ubicacion-item ${ubicacionActual?._id === ubicacion._id ? 'seleccionada' : ''}`}
+                  className={`ubicacion-item 
+  ${ubicacionActual?._id === ubicacion._id ? 'seleccionada' : ''} 
+  ${editando === ubicacion._id ? 'editando-ubicacion' : ''}`}
                   onClick={() => {
                     seleccionarUbicacion(ubicacion);
                     setMostrarModal(false);
@@ -474,7 +447,27 @@ const SelectorUbicacion = ({ mobile, oculto }) => {
                 />
               </div>
 
-              <button type="submit" className="guardar-ubicacion">Guardar ubicación</button>
+              {editando ? (
+                <div className="botones-edicion">
+                  <button type="submit" className="guardar-ubicacion">Actualizar ubicación</button>
+                  <button
+                    type="button"
+                    className="actualizar-ubicacion"
+                    onClick={() => {
+                      setEditando(null);
+                      setDetalle({ nombre: '', tipo: 'casa', referencia: '' });
+                      setDireccion('');
+                      setCoordenadas(null);
+                      setPartes({});
+                      setSugerencias([]);
+                    }}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              ) : (
+                <button type="submit" className="guardar-ubicacion">Guardar ubicación</button>
+              )}
             </form>
           </div>
         </div>
