@@ -16,6 +16,7 @@ export default function FormularioRegistro() {
     confirmPassword: '',
     country: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const [mostrarPassword, setMostrarPassword] = useState(false);
   const [mostrarConfirmar, setMostrarConfirmar] = useState(false);
@@ -32,6 +33,8 @@ export default function FormularioRegistro() {
       toast.error('Las contraseñas no coinciden');
       return;
     }
+
+    setLoading(true); // 👉 Inicia spinner
 
     try {
       const respuesta = await fetch(`${API_URL}/auth/register`, {
@@ -53,27 +56,20 @@ export default function FormularioRegistro() {
         throw new Error(data.message || 'Error al registrarse');
       }
 
-      // GUARDAR EN LOCALSTORAGE
       localStorage.setItem(
         'usuario',
         JSON.stringify({ firstName: formulario.firstName, lastName: formulario.lastName })
       );
 
-      toast.success('¡Cuenta creada con éxito! 🎉', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-
+      toast.success('¡Cuenta creada con éxito! 🎉');
       navigate('/login');
     } catch (error) {
       toast.error('Error en el registro: ' + error.message);
+    } finally {
+      setLoading(false); // 👉 Detiene spinner
     }
   };
+
 
 
   return (
@@ -164,7 +160,9 @@ export default function FormularioRegistro() {
             </div>
           </div>
 
-          <button type="submit" className="registro-boton">Registrarse</button>
+          <button type="submit" className="registro-boton" disabled={loading}>
+            {loading ? <div className="spinner"></div> : 'Registrarse'}
+          </button>
         </form>
 
         <div className="registro-login-link">
