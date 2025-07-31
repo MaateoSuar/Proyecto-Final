@@ -9,6 +9,7 @@ export default function FormularioLogin() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -38,11 +39,12 @@ export default function FormularioLogin() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     if (!correo || !contrasena) {
       toast.warning('Por favor, completa todos los campos.');
       return;
     }
+
+    setLoading(true); // 👉 Activar loading
 
     try {
       const respuesta = await fetch(`${API_URL}/auth/login`, {
@@ -64,23 +66,17 @@ export default function FormularioLogin() {
 
       localStorage.setItem('token', data.token);
       localStorage.setItem('usuario', JSON.stringify(data.usuario));
-      
-      // Emitir evento de cambio de token para que UbicacionContext cargue ubicaciones
       emitTokenChange();
-
       toast.success('¡Inicio de sesión exitoso!');
 
-      // Redirigir según el email
-      if (correo === 'admin@admin.com') {
-        navigate('/admin');
-      } else {
-        navigate('/inicio');
-      }
-
+      navigate(correo === 'admin@admin.com' ? '/admin' : '/inicio');
     } catch (error) {
       toast.error('Error al iniciar sesión: ' + error.message);
+    } finally {
+      setLoading(false); // 👉 Desactivar loading
     }
   };
+
 
   const handleGoogleLogin = () => {
     // Aquí irá la lógica de Google Sign-In
@@ -125,8 +121,8 @@ export default function FormularioLogin() {
 
         <div className="olvide-contrasena">¿Olvidaste tu contraseña?</div>
 
-        <button className="boton-login" type="submit">
-          Ingresar
+        <button className="boton-login" type="submit" disabled={loading}>
+          {loading ? <div className="spinner"></div> : 'Ingresar'}
         </button>
       </form>
 
