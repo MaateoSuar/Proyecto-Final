@@ -200,6 +200,10 @@ export default function EditarMascota() {
     }
   };
 
+  const handleCancelDelete = () => {
+    setShowConfirmDelete(false);
+  };
+
   if (isLoading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
@@ -397,9 +401,71 @@ export default function EditarMascota() {
                   {isLoading ? 'Guardando...' : 'Guardar'}
                 </button>
                 <button className="save-button" style={{ backgroundColor: '#dc3545', width: '250px' }} onClick={handleDelete}>
-                  Eliminar Mascota
+                  {showConfirmDelete ? 'Confirmar Eliminación' : 'Eliminar Mascota'}
                 </button>
               </div>
+              
+              {/* Modal de confirmación */}
+              {showConfirmDelete && (
+                <div style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  zIndex: 1000
+                }}>
+                  <div style={{
+                    backgroundColor: '#fceecf',
+                    padding: '30px',
+                    borderRadius: '10px',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)',
+                    maxWidth: '400px',
+                    width: '90%',
+                    textAlign: 'center'
+                  }}>
+                    <h3 style={{ color: '#dc3545', marginBottom: '15px' }}>⚠️ Confirmar Eliminación</h3>
+                    <p style={{ marginBottom: '20px', color: '#666' }}>
+                      ¿Estás seguro de que quieres eliminar a <strong>{formData.nombre}</strong>?
+                    </p>
+                    <p style={{ marginBottom: '25px', fontSize: '14px', color: '#999' }}>
+                      Esta acción no se puede deshacer.
+                    </p>
+                    <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                      <button 
+                        onClick={handleCancelDelete}
+                        style={{
+                          padding: '10px 20px',
+                          border: '1px solid #ccc',
+                          borderRadius: '5px',
+                          backgroundColor: '#f8f9fa',
+                          color: '#666',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Cancelar
+                      </button>
+                      <button 
+                        onClick={handleDelete}
+                        style={{
+                          padding: '10px 20px',
+                          border: 'none',
+                          borderRadius: '5px',
+                          backgroundColor: '#dc3545',
+                          color: 'white',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        Sí, Eliminar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
