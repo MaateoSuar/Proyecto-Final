@@ -242,7 +242,7 @@ export default function UsuarioEdit({ isEditMode }) {
       
       {!showPasswordForm ? (
         <>
-          <form className="form" style={{minWidth: '630px'}} onSubmit={(e) => e.preventDefault()}>
+          <form className="form" onSubmit={(e) => e.preventDefault()}>
         <div style={{ display: 'flex', gap: '20px', width: '100%' }}>
           {/* Información Personal */}
           <div style={{paddingRight: '40px'}} className="form-section">

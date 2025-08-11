@@ -298,13 +298,16 @@
   .back-text {
     display: none !important;
   }
+  
   .tabs {
     margin-bottom: 0 !important;
   }
+  
   .perfil-espaciado-movil {
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
+  
   .avatar-centro-movil {
     display: flex;
     flex-direction: column;
@@ -313,6 +316,7 @@
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
+  
   .avatar {
     margin-top: 8px !important;
     margin-bottom: 8px !important;
@@ -322,10 +326,13 @@
   /* En móviles, las secciones se apilan verticalmente */
   .form > div {
     flex-direction: column !important;
+    min-height: auto !important;
   }
   
   .form-section {
     margin-bottom: 0;
+    padding: 10px 15px !important;
+    min-height: auto !important;
   }
   
   /* En móviles, restaurar bordes redondeados */
@@ -348,13 +355,13 @@
     flex-direction: column;
     gap: 15px;
     margin-top: 20px;
-    height: 120px;
-    min-height: 120px;
+    height: auto !important;
+    min-height: auto !important;
   }
 
   .buttons-space {
-    height: 120px;
-    min-height: 120px;
+    height: auto !important;
+    min-height: auto !important;
     margin-top: 20px;
   }
 
@@ -369,6 +376,55 @@
     font-size: 14px !important;
     width: 100% !important;
     padding: 10px 0 !important;
+  }
+  
+  /* Ajustes específicos para móviles */
+  .container {
+    padding: 10px 5px 0 5px !important;
+    max-width: 100% !important;
+  }
+  
+  .form {
+    min-width: auto !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+  }
+  
+  .profile-section-title {
+    font-size: 18px !important;
+    height: 40px !important;
+    padding: 5px 0 8px 0 !important;
+  }
+  
+  .field-container {
+    height: 40px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .form-section .form label {
+    margin-bottom: 6px !important;
+    font-size: 11px !important;
+  }
+  
+  .form-section .form input,
+  .form-section .form select {
+    margin-top: 4px !important;
+    padding: 8px !important;
+    font-size: 13px !important;
+  }
+  
+  .form-section .avatar {
+    width: 100px !important;
+    height: 100px !important;
+    font-size: 50px !important;
+    margin: 5px auto 10px auto !important;
+  }
+  
+  .avatar-edit-icon {
+    right: 50px !important;
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 12px !important;
   }
 }
 

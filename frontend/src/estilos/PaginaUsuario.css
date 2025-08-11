@@ -160,8 +160,8 @@
 /* Botón de editar en el formulario */
 .edit-button-form {
   position: absolute;
-  top: 60px;
-  right: 10px;
+  top: 50px;
+  right: -15px;
   background-color: #fff;
   border: 1px solid #b77b4b;
   border-radius: 50%;
