@@ -58,10 +58,13 @@ h3, h2 {
   color: white;
 }
 
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .filter-menu {
-  position: absolute;
-  top: 2.5rem;
-  right: 0;
   background-color: #FEFAE0;
   border: 1px solid #ccc;
   border-radius: 8px;

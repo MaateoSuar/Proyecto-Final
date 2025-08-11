@@ -151,7 +151,6 @@
 
 /* Contenedor del perfil */
 .perfil-contenedor {
-  max-width: 800px;
   margin: 0 auto;
   margin-top: -40px;
   position: relative;
@@ -212,7 +211,7 @@
 }
 
 /* Responsive para móviles */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
   .sidebar {
     display: none;
   }

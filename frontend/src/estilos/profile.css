@@ -295,6 +295,16 @@
 }
 
 @media (max-width: 600px) {
+  .container{
+    width: 100%!important;
+  }
+  .perfil-contenedor {
+    width: 90%;
+  }
+  .pagina-usuario {
+   width: 100%!important;
+   
+  }
   .back-text {
     display: none !important;
   }
