@@ -115,11 +115,13 @@ export default function PaginaUsuario() {
       {/* Contenido principal */}
       <div className="main-content">
         {activeTab === 'perfil' ? (
-          <div className="perfil-contenedor">
-            <div className="avatar-centro-movil">
-              <UsuarioEdit isEditMode={isEditMode} />
+          <>
+            <div className="perfil-contenedor">
+              <div className="avatar-centro-movil">
+                <UsuarioEdit isEditMode={isEditMode} />
+              </div>
             </div>
-            {/* Botones móviles abajo, dentro del contenedor blanco */}
+            {/* Botones móviles fuera del contenedor del formulario */}
             {!isEditMode && (
               <div className="perfil-botones-movil">
                 <button
@@ -139,7 +141,7 @@ export default function PaginaUsuario() {
                 </button>
               </div>
             )}
-          </div>
+          </>
         ) : activeTab === 'reservas' ? (
           <MisReservas />
         ) : null}
