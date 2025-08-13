@@ -150,6 +150,12 @@
   }
 }
 
+@media (max-width: 767px) {
+  #planes {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) {
   .plans-box {
     margin-bottom: 30px;

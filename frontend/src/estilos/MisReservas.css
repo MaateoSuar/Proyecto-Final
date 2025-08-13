@@ -109,13 +109,24 @@
   background-color: #218838;
 }
 
+@media (max-width: 768px) {
+    .report-btn {
+        width: 100%!important;
+        max-width: none!important;
+    }
+    .review-btn {
+      max-width: none!important;
+      border-radius: 8px!important;
+    }
+}
+
 .review-btn {
-  max-width: 105px!important;
+  max-width: 105px;
   background-color: #28a745;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
-  border-radius: var(--radius);
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: 600;

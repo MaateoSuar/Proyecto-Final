@@ -84,7 +84,7 @@ export default function PaginaHome() {
             <Servicios />
           </div>
 
-          <div className="plans-box">
+          <div className="plans-box" id='planes'>
             <h2 className="section-title">Planes recomendados</h2>
             <Planes />
           </div>

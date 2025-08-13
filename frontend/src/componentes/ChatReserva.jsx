@@ -113,10 +113,12 @@ const ChatReserva = ({ reservaId, onClose, socket }) => {
 
     const handler = (nuevo) => {
       if (nuevo.reservaId === reservaId) {
-        setMensajes(prev => {
-          if (prev.some(m => m._id === nuevo._id)) return prev;
-          return [...prev, nuevo];
-        });
+        setTimeout(() => {
+          setMensajes(prev => {
+            if (prev.some(m => m._id === nuevo._id)) return prev;
+            return [...prev, nuevo];
+          });
+        }, 2000); // Espera 5 segundos antes de agregar el mensaje
       }
     };
 

@@ -274,15 +274,18 @@ const Reservar = () => {
       );
 
       if (resReserva.status === 201 && socket && socket.connected) {
-
-        socket?.emit('reservaRealizada', {
-          proveedorId: proveedor._id, // <- corregido con populate
-          userId, // <- obtenido del localStorage
-          reservaId: resReserva.data._id,
-          fecha: fechaISO,
-          hora: selectedTime,
-          mascota: misMascotas.find(p => p._id === mascotaSeleccionada)?.name || 'Mascota',
-        });
+        try {
+          socket?.emit('reservaRealizada', {
+            proveedorId: proveedor._id, // <- corregido con populate
+            userId, // <- obtenido del localStorage
+            reservaId: resReserva.data._id,
+            fecha: fechaISO,
+            hora: selectedTime,
+            mascota: misMascotas.find(p => p._id === mascotaSeleccionada)?.name || 'Mascota',
+          });
+        } catch (error) {
+          console.error('Error al emitir evento de reserva:', error);
+        }
         try {
           await cargarReservas();
 
