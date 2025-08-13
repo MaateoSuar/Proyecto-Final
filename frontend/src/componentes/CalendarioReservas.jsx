@@ -2,15 +2,26 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
-import '../estilos/calendarioReservas.css'; // Asegúrate de tener estilos para el calendario
+import '../estilos/calendarioReservas.css';
 import { es } from 'date-fns/locale';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function CalendarioReservas() {
   const [reservas, setReservas] = useState([]);
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(new Date());
   const [detalles, setDetalles] = useState([]);
+
+  // Función para parsear fecha sin que se cambie por la zona horaria
+  const parseFechaLocal = (isoDate) => {
+    if (!isoDate) return null;
+    const fechaObj = new Date(isoDate);
+    return new Date(
+      fechaObj.getUTCFullYear(),
+      fechaObj.getUTCMonth(),
+      fechaObj.getUTCDate()
+    );
+  };
 
   useEffect(() => {
     const cargarReservas = async () => {
@@ -32,38 +43,12 @@ export default function CalendarioReservas() {
     cargarReservas();
   }, []);
 
-  // Días con reservas - con validación de fechas
+  // Días con reservas
   const fechasReservadas = reservas
-    .map(r => {
-      try {
-        // Verificar que la fecha existe y es válida
-        if (!r.date) return null;
-        
-        // Intentar parsear la fecha de diferentes formatos
-        let fecha;
-        if (r.date.includes('T')) {
-          // Si ya tiene formato ISO
-          fecha = new Date(r.date);
-        } else {
-          // Si es solo fecha, agregar tiempo
-          fecha = new Date(r.date + 'T00:00:00');
-        }
-        
-        // Verificar que la fecha es válida
-        if (isNaN(fecha.getTime())) {
-          console.warn('Fecha inválida encontrada:', r.date);
-          return null;
-        }
-        
-        return fecha;
-      } catch (error) {
-        console.error('Error al procesar fecha:', r.date, error);
-        return null;
-      }
-    })
-    .filter(fecha => fecha !== null); // Filtrar fechas nulas
+    .map(r => parseFechaLocal(r.date))
+    .filter(fecha => fecha !== null);
 
-  // Al seleccionar un día, mostrar detalles de reservas de ese día
+  // Al seleccionar un día
   const handleChange = (date) => {
     if (!date) {
       setFechaSeleccionada(null);
@@ -73,32 +58,17 @@ export default function CalendarioReservas() {
 
     setFechaSeleccionada(date);
     const detallesDia = reservas.filter(r => {
-      try {
-        if (!r.date) return false;
-        
-        let fechaReserva;
-        if (r.date.includes('T')) {
-          fechaReserva = new Date(r.date);
-        } else {
-          fechaReserva = new Date(r.date + 'T00:00:00');
-        }
-        
-        if (isNaN(fechaReserva.getTime())) return false;
-        
-        return (
-          fechaReserva.getFullYear() === date.getFullYear() &&
-          fechaReserva.getMonth() === date.getMonth() &&
-          fechaReserva.getDate() === date.getDate()
-        );
-      } catch (error) {
-        console.error('Error al comparar fechas:', error);
-        return false;
-      }
+      const fechaReserva = parseFechaLocal(r.date);
+      return (
+        fechaReserva.getFullYear() === date.getFullYear() &&
+        fechaReserva.getMonth() === date.getMonth() &&
+        fechaReserva.getDate() === date.getDate()
+      );
     });
     setDetalles(detallesDia);
   };
 
-  // Personalizar días con reservas - solo si hay fechas válidas
+  // Resaltar días
   const highlightWithRanges = fechasReservadas.length > 0 ? [
     {
       'react-datepicker__day--highlighted-custom-1': fechasReservadas,
@@ -107,9 +77,9 @@ export default function CalendarioReservas() {
 
   return (
     <div style={{ padding: 16 }}>
-      <h2 style={{ textAlign: 'center', marginBottom: 16 }}>Calendario de Reservas</h2>
+      <h2 style={{ textAlign: 'center', marginBottom: 26 }}>Calendario de Reservas</h2>
 
-      <div className="contenedor-calendario-detalles">
+      <div className="contenedor-calendario-detalles" style={{marginBottom: 20}}>
         <DatePicker
           locale={es}
           inline
@@ -142,4 +112,4 @@ export default function CalendarioReservas() {
       </div>
     </div>
   );
-} 
+}

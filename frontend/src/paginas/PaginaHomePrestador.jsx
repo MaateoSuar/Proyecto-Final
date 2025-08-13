@@ -52,22 +52,18 @@ export default function PaginaHome() {
       <div className="header-container">
         <HeaderPrestador />
       </div>
-      <div className='content-container'>
-        <div className="dashboard-grid">
-          <div className="dashboard-section">
-            {socket && <MisReservas />}
-          </div>
-          <div className="dashboard-section">
-            <CalendarioReservas />
-            <button 
-                className="btn-programar-disponibilidad"
-                onClick={irAProgramarDisponibilidad}
-              >
-                Programar Disponibilidad
-              </button>
-          </div>
-          <div className="dashboard-section">
-          </div>
+      <div className="dashboard-section">
+        {socket && <MisReservas />}
+      </div>
+      <div className="dashboard-section">
+        <CalendarioReservas />
+        <button
+          className="btn-programar-disponibilidad"
+          onClick={irAProgramarDisponibilidad}
+        >
+          Programar Disponibilidad
+        </button>
+        <div className="dashboard-section">
         </div>
       </div>
       <div className="footer">

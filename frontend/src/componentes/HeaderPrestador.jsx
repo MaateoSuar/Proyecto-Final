@@ -71,7 +71,7 @@ export default function HeaderPrestador() {
 
     return (<>
         <div className="headerUsuario">
-            <div className="avatar" onClick={triggerFileInput} style={{ cursor: 'pointer' }}>
+            <div className="avatar" onClick={triggerFileInput} style={{ cursor: 'pointer', display:'none' }}>
                 {isUploading ? (
                     <div className="loading">
                         <span>Cargando...</span>
