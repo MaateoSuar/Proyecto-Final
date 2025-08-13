@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import Switch from 'react-switch';
 import '../estilos/admin.css';
 import axios from 'axios';
+import { he } from 'date-fns/locale';
 
 export default function PaginaAdmin() {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -309,6 +310,8 @@ export default function PaginaAdmin() {
                             {prestador.isActive ? 'Desactivar' : 'Activar'}
                           </button>
                           <button
+                          style={{marginTop: '0'
+                          }}
                             onClick={() => eliminarPrestador(prestador._id, prestador.name)}
                             className="delete-button"
                           >
