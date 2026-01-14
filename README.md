@@ -9,17 +9,17 @@ Take a look at PetCare Hub in action. The interface is designed to be intuitive 
 1. The Marketplace & Search
 The core of the application, allowing users to browse and filter professionals based on their specific needs.
 
-<div align="center"> <img src="Proyecto-Final/Screenshots/92shots_so.png" alt="Landing Page and Search" width="800px"> <p><em>Figure 1: Main Landing Page showing service categories.</em></p> </div>
+<div align="center"> <img src="Screenshots/92shots_so.png" alt="Landing Page and Search" width="800px"> <p><em>Figure 1: Main Landing Page showing service categories.</em></p> </div>
 
 2. Professional Profiles & Booking
 Detailed profiles give owners confidence in who they are hiring.
 
-<div align="center" style="display: flex; justify-content: space-around;"> <img src="Proyecto-Final/Screenshots/203shots_so.png" alt="Service Provider Profile" width="45%"> <img src="path/to/your/booking-modal-image.png" alt="Booking Flow" width="45%"> </div> <p align="center"><em>Figure 2: Left: A Walker's profile with reviews. Right: The appointment booking interface.</em></p>
+<div align="center" style="display: flex; justify-content: space-around;"> <img src="Proyecto-Final/Screenshots/203shots_so.png" alt="Service Provider Profile" width="45%"> </div> <p align="center"><em>Figure 2: Left: A Walker's profile with reviews. Right: The appointment booking interface.</em></p>
 
 3. Pet Profiles & Management
 Owners can create and manage detailed profiles for their pets, including medical notes, habits, and photos, which are shared with service providers upon booking.
 
-<div align="center"> <img src="Proyecto-Final/Screenshots/564shots_so.png" alt="Pet Profile View" width="800px"> <p><em>Figure 3: Detailed Pet Profile view with breed info, age, and special care instructions.</em></p> </div>
+<div align="center"> <img src="Screenshots/564shots_so.png" alt="Pet Profile View" width="800px"> <p><em>Figure 3: Detailed Pet Profile view with breed info, age, and special care instructions.</em></p> </div>
 
 🚀 Key Features
 Service Marketplace: Browse through categories including Walkers, Sitters, Groomers, and Vets.
