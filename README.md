@@ -14,7 +14,7 @@ The core of the application, allowing users to browse and filter professionals b
 2. Professional Profiles & Booking
 Detailed profiles give owners confidence in who they are hiring.
 
-<div align="center" style="display: flex; justify-content: space-around;"> <img src="Proyecto-Final/Screenshots/203shots_so.png" alt="Service Provider Profile" width="45%"> </div> <p align="center"><em>Figure 2: Left: A Walker's profile with reviews. Right: The appointment booking interface.</em></p>
+<div align="center" style="display: flex; justify-content: space-around;"> <img src="Screenshots/203shots_so.png" alt="Service Provider Profile" width="45%"> </div> <p align="center"><em>Figure 2: Left: A Walker's profile with reviews. Right: The appointment booking interface.</em></p>
 
 3. Pet Profiles & Management
 Owners can create and manage detailed profiles for their pets, including medical notes, habits, and photos, which are shared with service providers upon booking.
